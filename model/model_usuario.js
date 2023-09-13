@@ -19,7 +19,6 @@ const mdlSelectAllUsuario = async () => {
     date_format(usuario.data_nascimento, '%d-%m-%Y') as data_nascimento,
     date_format(usuario.data_criacao, '%d-%m-%Y %H:%i') as data_criacao, 
     usuario.email,
-    usuario.senha,
     usuario.foto,
     usuario.status_usuario,
     endereco.logradouro,
@@ -34,7 +33,6 @@ from tbl_usuario as usuario
     let rsEnderecoUsuario = await prisma.$queryRawUnsafe(sql)
 
     if (rsEnderecoUsuario.length > 0) {
-        console.log("Model");
         return rsEnderecoUsuario
     } else {
         return false

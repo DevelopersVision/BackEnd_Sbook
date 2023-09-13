@@ -94,8 +94,6 @@ let controllerLogin = require('./controller/controller_login.js')
 app.get('/v1/sbook/usuario', bodyParserJSON, cors(), async function (request, response) {
     let dadosUsuario = await controllerUsuario.ctlGetUsuario()
 
-    console.log(dadosUsuario)
-
     response.status(dadosUsuario.status)
     response.json(dadosUsuario)
 })
@@ -104,8 +102,6 @@ app.get('/v1/sbook/usuario/:id', bodyParserJSON, cors(), async function (request
     let idUsuario = request.params.id
 
     let dadosUsuario = await controllerUsuario.ctlGetUsuarioByID(idUsuario)
-
-    console.log(dadosUsuario)
 
     response.status(dadosUsuario.status)
     response.json(dadosUsuario)
