@@ -1,0 +1,41 @@
+const generosList = [
+    "Ação",
+    "Arte",
+    "Autoajuda",
+    "Autobiografia",
+    "Aventura",
+    "Biografia",
+    "Conto",
+    "Crimes Reais",
+    "Distopia",
+    "Ensaios",
+    "Fantasia",
+    "Ficção Contemporânea",
+    "Ficção Feminina",
+    "Ficção científica",
+    "Ficção Policial",
+    "Ficção histórica",
+    "Gastronomia",
+    "Graphic Novel",
+    "História",
+    "Horror",
+    "Humanidades e Ciências Sociais",
+    "Humor",
+    "Infantil",
+    "LGBTQ+",
+    "New adult",
+    "Novela",
+    "Paternidade e família",
+    "Realismo mágico",
+    "Religião e Espiritualidade",
+    "Romance",
+    "Suspense",
+    "Technologia e Ciência",
+    "Thriller",
+    "Viagem",
+    "Young adult"
+]
+
+module.exports = {
+    generosList
+}
