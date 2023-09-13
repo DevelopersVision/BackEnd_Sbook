@@ -213,11 +213,20 @@ app.get('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (req
 
 const controllerUsuarioGenero = require('./controller/controller_usuario-genero.js')
 
-app.get('/v1/sbook/generos', cors(), async function (request, response) {
-    let dadosGeneros = await controllerUsuarioGenero.ctlGetGeneros()
+app.get('/v1/sbook/generos/:id', cors(), async function (request, response) {
+    let idUsuario = request.params.id
 
-    response.status(dadosGeneros.status)
-    response.json(dadosGeneros)
+    if(idUsuario){
+        let dadosGeneros = await controllerUsuarioGenero.ctlGetGenerosPreferidosByIdUsuario(idUsuario)
+
+        response.status(dadosGeneros.status)
+        response.json(dadosGeneros)
+    }else{
+        let dadosGeneros = await controllerUsuarioGenero.ctlGetGeneros()
+
+        response.status(dadosGeneros.status)
+        response.json(dadosGeneros)
+    }
 })
 
 app.post('/v1/sbook/generos-preferidos', cors(), bodyParserJSON,async function (request, response) {
@@ -230,6 +239,25 @@ app.post('/v1/sbook/generos-preferidos', cors(), bodyParserJSON,async function (
         let dadosBody = request.body
 
         let generosPreferidos = await controllerUsuarioGenero.ctlInserirUsuarioGenero(dadosBody)
+
+        response.status(generosPreferidos.status)
+        response.json(generosPreferidos)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+})
+
+app.put('/v1/sbook/generos-preferidos', cors(), bodyParserJSON,async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let generosPreferidos = await controllerUsuarioGenero.ctlAtualizarGenerosPreferidosByIdUsuario(dadosBody)
 
         response.status(generosPreferidos.status)
         response.json(generosPreferidos)

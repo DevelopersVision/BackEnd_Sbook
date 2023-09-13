@@ -59,8 +59,21 @@ const mdlInsertUsuarioGenero = async (id_usuario, id_generoPreferido) => {
     }
 }
 
+const mdlDelteGenerosPreferidosByIdUsuario = async (idUsuario) => {
+    let sql = `delete from tbl_usuario_genero where tbl_usuario_genero.id_usuario = ${idUsuario}`
+
+    let rsUsuarioPreferido = await prisma.$executeRawUnsafe(sql)
+
+    if(rsUsuarioPreferido){
+        return true
+    }else{
+        return false
+    }
+}
+
 module.exports = {
     mdlSelectGeneroPreferidoByIdUsuario,
     mdlSelectGeneroPreferidoLastID,
-    mdlInsertUsuarioGenero
+    mdlInsertUsuarioGenero,
+    mdlDelteGenerosPreferidosByIdUsuario
 }
