@@ -209,23 +209,23 @@ app.get('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (req
 
 const controllerUsuarioGenero = require('./controller/controller_usuario-genero.js')
 
+app.get('/v1/sbook/generos', cors(), async function (request, response) {
+    let dadosGeneros = await controllerUsuarioGenero.ctlGetGeneros()
+
+    response.status(dadosGeneros.status)
+    response.json(dadosGeneros)
+})
+
 app.get('/v1/sbook/generos/:id', cors(), async function (request, response) {
     let idUsuario = request.params.id
 
-    if(idUsuario){
-        let dadosGeneros = await controllerUsuarioGenero.ctlGetGenerosPreferidosByIdUsuario(idUsuario)
+    let dadosGeneros = await controllerUsuarioGenero.ctlGetGenerosPreferidosByIdUsuario(idUsuario)
 
-        response.status(dadosGeneros.status)
-        response.json(dadosGeneros)
-    }else{
-        let dadosGeneros = await controllerUsuarioGenero.ctlGetGeneros()
-
-        response.status(dadosGeneros.status)
-        response.json(dadosGeneros)
-    }
+    response.status(dadosGeneros.status)
+    response.json(dadosGeneros)
 })
 
-app.post('/v1/sbook/generos-preferidos', cors(), bodyParserJSON,async function (request, response) {
+app.post('/v1/sbook/generos-preferidos', cors(), bodyParserJSON, async function (request, response) {
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
 
@@ -244,7 +244,7 @@ app.post('/v1/sbook/generos-preferidos', cors(), bodyParserJSON,async function (
     }
 })
 
-app.put('/v1/sbook/generos-preferidos', cors(), bodyParserJSON,async function (request, response) {
+app.put('/v1/sbook/generos-preferidos', cors(), bodyParserJSON, async function (request, response) {
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
 
@@ -263,6 +263,31 @@ app.put('/v1/sbook/generos-preferidos', cors(), bodyParserJSON,async function (r
     }
 })
 
+/*****************************************************************************************************************
+* Objetivo: API de escolhe de gêneros preferidos
+* Data: 08/09/2023
+* Autor: Luiz
+* Versão: 1.0
+******************************************************************************************************************/
+
+const controllerEstadoLivro = require('./controller/controller_estado-livro')
+
+app.get('/v1/sbook/estado-livro', cors(), async function (request, response) {
+    let dadosEstadoLivro = await controllerEstadoLivro.ctlGetEstadoLivro()
+
+    response.status(dadosEstadoLivro.status)
+    response.json(dadosEstadoLivro)
+})
+
+app.get('/v1/sbook/estado-livro/:id', cors(), async function (request, response) {
+    let idEstadoLivro = request.params.id
+
+    let dadosEstadoLivro = await controllerEstadoLivro.ctlGetEstadoLivroByID(idEstadoLivro)
+
+    response.status(dadosEstadoLivro.status)
+    response.json(dadosEstadoLivro)
+})
+
 
 /*****************************************************************************************************************
 * Objetivo: API de dados estáticos
@@ -272,29 +297,33 @@ app.put('/v1/sbook/generos-preferidos', cors(), bodyParserJSON,async function (r
 ******************************************************************************************************************/
 
 //Import do arquivo controller que irá solicitar a model os dados do Banco
-const modelIdioma = require('./model/model_idiomas.js')
+const modelEstaticos = require('./model/estatico/model_estaticos.js')
 
 const idiomas = require('./controller/modulo/idiomas.js')
-
 app.post('/v1/sbook/inserir-idiomas', cors(), async function (request, response) {
 
-    let dadosIdioma = await modelIdioma.adicionarIdiomas(idiomas.languagesList)
+    let dadosIdioma = await modelEstaticos.adicionarIdiomas(idiomas.languagesList)
 
     response.status(dadosIdioma.status)
     response.json(dadosIdioma)
 })
 
-//Import do arquivo controller que irá solicitar a model os dados do Banco
-const modelGenero = require('./model/model_generos.js')
-
 const generos = require('./controller/modulo/generos.js')
-
 app.post('/v1/sbook/inserir-generos', cors(), async function (request, response) {
 
-    let dadosGenero = await modelGenero.adicionarGeneros(generos.generosList)
+    let dadosGenero = await modelEstaticos.adicionarGeneros(generos.generosList)
 
     response.status(dadosGenero.status)
     response.json(dadosGenero)
+})
+
+const estadosLivros = require('./controller/modulo/estados-livros.js')
+app.post('/v1/sbook/inserir-estados-livros', cors(), async function (request, response) {
+
+    let dadosEstadoLivro = await modelEstaticos.adicionarEstadosLivros(estadosLivros.estadoLivrosList)
+
+    response.status(dadosEstadoLivro.status)
+    response.json(dadosEstadoLivro)
 })
 
 app.listen(8080, function () {

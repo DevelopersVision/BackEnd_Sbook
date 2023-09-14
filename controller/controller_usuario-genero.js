@@ -1,6 +1,6 @@
 /**************************************************************************************
  *  Objetivo: Responsável por controlar generos preferidos do usuario
- *  Autor: Luiz gustavo
+ *  Autor: Luiz Gustavo e Felipe Graciano
  *  Data: 13/09/2023
  *  Versão: 1.0
  **************************************************************************************/

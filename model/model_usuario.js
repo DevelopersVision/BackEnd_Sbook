@@ -1,6 +1,6 @@
 /**************************************************************************************
  *  Objetivo: Responsável pela manipulação de dados dos Usuários que serão registrados na nossa plataforma
- *  Autor: Luiz Gustavo
+ *  Autor: Luiz Gustavo e Felipe Graciano
  *  Data: 04/09/2023
  *  Versão: 1.0
  **************************************************************************************/
