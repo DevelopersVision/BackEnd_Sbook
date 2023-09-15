@@ -1,6 +1,6 @@
 /**************************************************************************************
  *  Objetivo: Responsável por gerenciar funções de dados estáticos
- *  Autor: Luiz Gustavo
+ *  Autor: Luiz Gustavo e Felipe Graciano
  *  Data: 14/09/2023
  *  Versão: 1.0
  **************************************************************************************/

@@ -288,6 +288,31 @@ app.get('/v1/sbook/estado-livro/:id', cors(), async function (request, response)
     response.json(dadosEstadoLivro)
 })
 
+/*****************************************************************************************************************
+* Objetivo: API de manipulação de dados do anuncio com o tipo anuncio
+* Data: 15/09/2023
+* Autor: Luiz
+* Versão: 1.0
+******************************************************************************************************************/
+
+const controllerAnuncioTipoAnuncio = require('./controller/controller_anuncio-tipo-anuncio.js')
+
+app.get('/v1/sbook/tipo-anuncio', cors(), async function (request, response) {
+    let dadosTipoAnuncio = await controllerAnuncioTipoAnuncio.ctlGetTipoAnuncio()
+
+    response.status(dadosTipoAnuncio.status)
+    response.json(dadosTipoAnuncio)
+})
+
+app.get('/v1/sbook/anuncio-tipo-anuncio/:idAnuncio', cors(), async function (request, response) {
+    let idAnuncio = request.params.idAnuncio
+
+    let dadosTipoAnuncio = await controllerAnuncioTipoAnuncio.ctlGetTipoAnuncioByIdAnuncio(idAnuncio)
+
+    response.status(dadosTipoAnuncio.status)
+    response.json(dadosTipoAnuncio)
+})
+
 
 /*****************************************************************************************************************
 * Objetivo: API de dados estáticos

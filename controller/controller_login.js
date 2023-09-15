@@ -32,11 +32,11 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
 
             dadosUsuarioJSON.status = message.SUCCESS_REQUEST.status
             dadosUsuarioJSON.message = message.SUCCESS_REQUEST.message
-            dadosUsuarioJSON.usuario = dadosUsuario
+            dadosUsuarioJSON.usuario = dadosUsuario[0]
 
             return dadosUsuarioJSON
         } else {
-            return message.ERROR_INTERNAL_SERVER
+            return message.ERROR_REGISTER_NOT_FOUND
         }
     }
 }

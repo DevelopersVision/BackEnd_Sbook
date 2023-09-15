@@ -29,7 +29,7 @@ const ctlGetUsuario = async () => {
 
 const ctlGetUsuarioByID = async function (id) {
     if (id == null || id == undefined || isNaN(id)) {
-        return false
+        return message.ERROR_REQUIRE_FIELDS
     } else {
         let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(id)
 
