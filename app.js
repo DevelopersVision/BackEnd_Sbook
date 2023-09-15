@@ -326,6 +326,15 @@ app.post('/v1/sbook/inserir-estados-livros', cors(), async function (request, re
     response.json(dadosEstadoLivro)
 })
 
+const tiposAnuncios = require('./controller/modulo/tipos-anuncios.js')
+app.post('/v1/sbook/inserir-tipos-anuncios', cors(), async function (request, response) {
+
+    let dadosTiposAnuncios = await modelEstaticos.adicionarTiposAnuncios(tiposAnuncios.tiposAnunciosList)
+
+    response.status(dadosTiposAnuncios.status)
+    response.json(dadosTiposAnuncios)
+})
+
 app.listen(8080, function () {
     console.log('Servidor aguardando requisições na porta 8080');
 })
