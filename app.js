@@ -182,22 +182,40 @@ app.get('/v1/sbook/esqueci-senha/:email', cors(), async function (request, respo
     response.json(dadosUsuario)
 })
 
-app.get('/v1/sbook/validar-token', cors(), bodyParserJSON, async function (request, response) {
-    let body = request.body
+app.post('/v1/sbook/validar-token', cors(), bodyParserJSON, async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
 
-    let dadosUsuario = await controllerEmail.ctlValidarToken(body)
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let body = request.body
 
-    response.status(200)
-    response.json(dadosUsuario)
+        let dadosUsuario = await controllerEmail.ctlValidarToken(body)
+
+        response.status(dadosUsuario.status)
+        response.json(dadosUsuario)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
 })
 
-app.get('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (request, response) {
-    let body = request.body
+app.post('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
 
-    let dadosUsuario = await controllerUsuario.ctlAterarSenha(body)
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let body = request.body
 
-    response.status(200)
-    response.json(dadosUsuario)
+        let dadosUsuario = await controllerUsuario.ctlAterarSenha(body)
+
+        response.status(200)
+        response.json(dadosUsuario)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
 })
 
 /*****************************************************************************************************************
@@ -311,6 +329,23 @@ app.get('/v1/sbook/anuncio-tipo-anuncio/:idAnuncio', cors(), async function (req
 
     response.status(dadosTipoAnuncio.status)
     response.json(dadosTipoAnuncio)
+})
+
+/*****************************************************************************************************************
+* Objetivo: API de manipulação de dados do anuncio
+* Data: 15/09/2023
+* Autor: Luiz
+* Versão: 1.0
+******************************************************************************************************************/
+
+const controllerAnuncio = require('./controller/controller_anuncio.js')
+
+app.get('/v1/sbook/anuncio', cors(), async function (request, response) {
+    console.log('teste');
+    let dadosAnuncio = await controllerAnuncio.ctlGetAnuncios()
+
+    // response.status(dadosTipoAnuncio.status)
+    // response.json(dadosTipoAnuncio)
 })
 
 

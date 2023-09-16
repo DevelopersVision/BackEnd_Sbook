@@ -8,6 +8,7 @@
 var message = require('./modulo/config.js')
 
 var anuncioTipoAnuncioDAO = require('../model/model_anuncio-tipo-anuncio.js')
+var anuncioDAO = require('../model/model_anuncio.js')
 
 const ctlGetTipoAnuncio = async () => {
     let dadosTipoAnuncio = await anuncioTipoAnuncioDAO.mdlSelectAllTipoAnuncio()
