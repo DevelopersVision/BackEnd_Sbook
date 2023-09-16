@@ -32,7 +32,7 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
 
             dadosUsuarioJSON.status = message.SUCCESS_REQUEST.status
             dadosUsuarioJSON.message = message.SUCCESS_REQUEST.message
-            dadosUsuarioJSON.usuario = dadosUsuario[0]
+            dadosUsuarioJSON.usuario = dadosUsuario
 
             return dadosUsuarioJSON
         } else if(dadosUsuario && dadosUsuario[0].status_usuario == false) {
