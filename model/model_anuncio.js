@@ -32,8 +32,11 @@ const mdlSelectAllAnuncio = async () => {
     anuncio.id_idioma,
     idioma.nome as nome_idioma,
     anuncio.id_editora,
-    editora.nome as nome_editora
+    editora.nome as nome_editora,
+    foto.foto
     from tbl_anuncio as anuncio
+        inner join tbl_foto as foto
+            on foto.id_anuncio = anuncio.id
     	inner join tbl_usuario as usuario
 	    	on usuario.id = anuncio.id_usuario
 	    inner join tbl_endereco as endereco 

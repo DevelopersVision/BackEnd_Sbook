@@ -7,6 +7,8 @@
 
 var message = require('./modulo/config.js')
 var anuncioDAO = require('../model/model_anuncio.js')
+var anuncioGeneroDAO = require('../model/model_anuncio-genero.js')
+var anuncioTipoAnuncio = require('../model/model_anuncio-tipo-anuncio.js')
 
 const ctlGetAnuncios = async () => {
     let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio()
@@ -14,7 +16,12 @@ const ctlGetAnuncios = async () => {
     if(dadosAnuncio){
         let listaAnuncios = []
 
-        dadosAnuncio.forEach(anuncio => {
+        for (let index = 0; index < dadosAnuncio.length; index++) {
+            const anuncio = dadosAnuncio[index];
+            
+            let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
+            let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
+
             let anuncioJSON = {
                 anuncio: {
                     id: anuncio.id,
@@ -26,6 +33,7 @@ const ctlGetAnuncios = async () => {
                     preco: anuncio.preco,
                     descricao: anuncio.descricao,
                     numero_paginas: anuncio.numero_paginas,
+                    foto: anuncio.foto
                 },
                 idioma: {
                     id: anuncio.id_idioma, 
@@ -43,10 +51,17 @@ const ctlGetAnuncios = async () => {
                 editora: {
                     id: anuncio.id_editora,
                     nome: anuncio.nome_editora
-                }
+                },
+                generos: generosAnuncio,
+                tipo_anuncio: tiposAnuncio,
+                autores: []
             }
-
+            
             listaAnuncios.push(anuncioJSON)
+        }
+
+        dadosAnuncio.forEach(async anuncio => {
+            
         });
 
         let dadosAnuncioJSON = {
