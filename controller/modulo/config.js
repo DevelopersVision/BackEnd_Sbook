@@ -38,6 +38,8 @@ const ERROR_INVALID_TOKEN = {status: 400, message: 'O TOKEN É INVÁLIDO, OU SEJ
 
 const ERROR_TOKEN_EXPIRADO = {status: 400, message: 'INTERVALO DE TEMPO ACABOU, TOKEN EXPIRADO'}
 
+const ERROR_USUARIO_DESATIVADO = {status: 403, message: 'O USUARIO ESTÁ CADASTRADO NO SISTEMA, MAS NÃO PODE REALIZAR O LOGIN, POIS A CONTA ESTÁ DESATIVADA'}
+
 /*************************************** MENSAGENS DE SUCESSO ***************************************/
 const SUCCESS_CREATED_ITEM = {status: 201, message: 'ITEM CRIADO COM SUCESSO'}
 
@@ -66,6 +68,7 @@ module.exports = {
     ERROR_INVALID_TOKEN,
     ERROR_INVALID_CPF,
     ERROR_TOKEN_EXPIRADO,
+    ERROR_USUARIO_DESATIVADO,
 
     //Exportes de sucesso
     SUCCESS_CREATED_ITEM,

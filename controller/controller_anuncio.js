@@ -9,6 +9,7 @@ var message = require('./modulo/config.js')
 var anuncioDAO = require('../model/model_anuncio.js')
 var anuncioGeneroDAO = require('../model/model_anuncio-genero.js')
 var anuncioTipoAnuncio = require('../model/model_anuncio-tipo-anuncio.js')
+var anuncioAutor = require('../model/model_anuncio_autor.js')
 
 const ctlGetAnuncios = async () => {
     let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio()
@@ -21,6 +22,7 @@ const ctlGetAnuncios = async () => {
             
             let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
             let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
+            let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
 
             let anuncioJSON = {
                 anuncio: {
@@ -54,15 +56,11 @@ const ctlGetAnuncios = async () => {
                 },
                 generos: generosAnuncio,
                 tipo_anuncio: tiposAnuncio,
-                autores: []
+                autores: autoresAnuncio
             }
-            
+
             listaAnuncios.push(anuncioJSON)
         }
-
-        dadosAnuncio.forEach(async anuncio => {
-            
-        });
 
         let dadosAnuncioJSON = {
             status: message.SUCCESS_REQUEST.status,

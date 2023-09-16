@@ -306,6 +306,42 @@ app.get('/v1/sbook/estado-livro/:id', cors(), async function (request, response)
     response.json(dadosEstadoLivro)
 })
 
+
+/*****************************************************************************************************************
+* Objetivo: API de controle de Usuario Temporario
+* Data: 04/09/2023
+* Autor: Luiz e Felipe
+* Versão: 1.0
+******************************************************************************************************************/
+
+app.get('/v1/sbook/validar-email-temp/:email', cors(), async function (request, response) {
+    let email = request.params.email
+
+    let dadosUsuario = await controllerEmail.ctlValidarEmail(email)
+
+    response.status(dadosUsuario.status)
+    response.json(dadosUsuario)
+})
+
+app.post('/v1/sbook/validar-token-temp', cors(), bodyParserJSON, async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let body = request.body
+
+        let dadosUsuario = await controllerEmail.ctlValidarTokenEmailTemp(body)
+
+        response.status(dadosUsuario.status)
+        response.json(dadosUsuario)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+})
+
+
 /*****************************************************************************************************************
 * Objetivo: API de manipulação de dados do anuncio com o tipo anuncio
 * Data: 15/09/2023

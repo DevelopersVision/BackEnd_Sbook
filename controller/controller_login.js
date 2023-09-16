@@ -23,8 +23,7 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
 
         let dadosUsuario = await loginDAO.mdlSelectUsuarioByEmailAndSenha(email, senha)
 
-        if (dadosUsuario) {
-
+        if (dadosUsuario && dadosUsuario.staus_usuario == true) {
             //Gera o token pelo jwt
             let tokenUser = await jwt.createJWT(dadosUsuario.id);
             //Adiciona uma chave np json com o token do usuario
@@ -35,6 +34,8 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
             dadosUsuarioJSON.usuario = dadosUsuario[0]
 
             return dadosUsuarioJSON
+        } else if(dadosUsuario && dadosUsuario.staus_usuario == false) {
+            return message.ERROR_USUARIO_DESATIVADO
         } else {
             return message.ERROR_REGISTER_NOT_FOUND
         }

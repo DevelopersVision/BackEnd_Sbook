@@ -102,10 +102,10 @@ const selectByEmail = async function (email_usuario) {
 
     let resultCheck = await prisma.$queryRawUnsafe(sqlEmail)
 
-    if (resultCheck[0].result == 1n) {
-        return false
-    } else {
+    if (resultCheck.length > 0) {
         return resultCheck
+    } else {
+        return false
     }
 }
 
