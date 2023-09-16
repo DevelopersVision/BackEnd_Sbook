@@ -126,6 +126,18 @@ app.post('/v1/sbook/login', cors(), bodyParserJSON, async function (request, res
     }
 })
 
+app.get('/v1/sbook/login', cors(), bodyParserJSON, async function (request, response) {
+
+    //Recebe os dados encaminhados na requisição
+    let body = request.body
+
+    let resultDadosUsuario = await controllerLogin.ctlAutenticarUsuarioByEmailAndSenha(body.email, body.senha)
+
+    response.status(resultDadosUsuario.status)
+    response.json(resultDadosUsuario)
+
+})
+
 app.post('/v1/sbook/registro-usuario', cors(), bodyParserJSON, async function (request, response) {
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
