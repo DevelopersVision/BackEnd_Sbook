@@ -9,7 +9,7 @@ var message = require('./modulo/config.js')
 
 var usuarioGeneroDAO = require('../model/model_usuario-genero.js')
 var usuarioDAO = require('../model/model_usuario.js')
-var generoDAO = require('../model/model_generos.js')
+var generoDAO = require('../model/model_genero.js')
 
 const ctlGetGeneros = async () => {
     let dadosGeneros = await generoDAO.mdlSelectAllGenero()

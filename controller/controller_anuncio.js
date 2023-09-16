@@ -16,9 +16,14 @@ const ctlGetAnuncios = async () => {
 
         dadosAnuncio.forEach(anuncio => {
             
-            console.log(anuncio);
-
-
+            let anuncioJSON = {
+                anuncio: {
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    ano_lancamento: anuncio.ano_lancamento,
+                    data_criacao: anuncio.data_criacao
+                }
+            }
         });
     }   
 }
