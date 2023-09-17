@@ -185,13 +185,21 @@ app.put('/v1/sbook/atualizar-usuario', verifyJWT, cors(), bodyParserJSON, async 
 ******************************************************************************************************************/
 const controllerEmail = require('./controller/controller_email.js')
 
-app.get('/v1/sbook/esqueci-senha/:email', cors(), async function (request, response) {
-    let email = request.params.email
+app.post('/v1/sbook/esqueci-senha/:email', cors(), async function (request, response) {
+    let contentType = request.headers['content-type']
 
-    let dadosUsuario = await controllerEmail.ctlEsqueciSenha(email)
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let email = request.params.email
 
-    response.status(200)
-    response.json(dadosUsuario)
+        let dadosUsuario = await controllerEmail.ctlEsqueciSenha(email)
+
+        response.status(200)
+        response.json(dadosUsuario)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE.message)
+    }
 })
 
 app.post('/v1/sbook/validar-token', cors(), bodyParserJSON, async function (request, response) {
@@ -212,7 +220,7 @@ app.post('/v1/sbook/validar-token', cors(), bodyParserJSON, async function (requ
     }
 })
 
-app.post('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (request, response) {
+app.put('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (request, response) {
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
 
