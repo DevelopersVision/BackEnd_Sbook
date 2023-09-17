@@ -190,9 +190,9 @@ app.post('/v1/sbook/esqueci-senha/:email', cors(), async function (request, resp
 
     //Validação para receber dados apenas no formato JSON
     if (String(contentType).toLowerCase() == 'application/json') {
-        let email = request.params.email
+        let body = request.body
 
-        let dadosUsuario = await controllerEmail.ctlEsqueciSenha(email)
+        let dadosUsuario = await controllerEmail.ctlEsqueciSenha(body.email)
 
         response.status(200)
         response.json(dadosUsuario)
