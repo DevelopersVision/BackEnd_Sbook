@@ -16,34 +16,39 @@ const moment = require('moment')
 const usuarioTemporarioDAO = require('../model/model.usuario-temporario.js')
 
 const ctlEsqueciSenha = async (email) => {
-    const user = await usuarioDAO.selectByEmail(email)
 
-    let id = user[0].id
-
-    if (!user) {
-        return message.ERROR_INVALID_EMAIL
+    if (email == '' || email == null || email == undefined || email.length > 255) {
+        return message.ERROR_REQUIRE_FIELDS
     } else {
-        const token = crypto.randomInt(1000, 9999)
+        const user = await usuarioDAO.selectByEmail(email)
 
-        const now = moment().add(10, 'minutes').format("YYYY-MM-DD HH:mm:ss")
+        let id = user[0].id
 
-        await usuarioDAO.mdlUpdateForgotPasswordUsuario(token, now, id)
+        if (!user) {
+            return message.ERROR_INVALID_EMAIL
+        } else {
+            const token = crypto.randomInt(1000, 9999)
 
-        let returnFunction = mailer.transport.sendMail({
-            to: email,
-            from: 'developersvision2023@gmail.com',
-            replyTo: 'developersvision2023@gmail.com',
-            subject: 'Recuperação de conta',
-            template: 'forgotPassword',
-            context: { token }
-        }).then(info => {
-            info.status = 200;
-            return info
-        }).catch(error => {
-            return error
-        })
+            const now = moment().add(10, 'minutes').format("YYYY-MM-DD HH:mm:ss")
 
-        return returnFunction
+            await usuarioDAO.mdlUpdateForgotPasswordUsuario(token, now, id)
+
+            let returnFunction = mailer.transport.sendMail({
+                to: email,
+                from: 'developersvision2023@gmail.com',
+                replyTo: 'developersvision2023@gmail.com',
+                subject: 'Recuperação de conta',
+                template: 'forgotPassword',
+                context: { token }
+            }).then(info => {
+                info.status = 200;
+                return info
+            }).catch(error => {
+                return error
+            })
+
+            return returnFunction
+        }
     }
 }
 
@@ -83,13 +88,13 @@ const ctlValidarEmail = async (email) => {
 
     const existingEmail = await usuarioTemporarioDAO.mdlSelectUsuarioTemporarioByEmail(email)
 
-    if(existingEmail){
+    if (existingEmail) {
         await usuarioTemporarioDAO.mdlDeleteUsuarioTemporarioById(existingEmail[0].id)
     }
 
     let insertUserTemp = await usuarioTemporarioDAO.mdlInsertUsuarioTemporario(email, token, now)
 
-    if(insertUserTemp){
+    if (insertUserTemp) {
         let dados = await usuarioTemporarioDAO.mdlSelectLastID()
 
         let returnFunction = mailer.transport.sendMail({
@@ -112,7 +117,7 @@ const ctlValidarEmail = async (email) => {
             email: dados[0].email,
             dadosEnvioEmal: await returnFunction
         }
-    
+
         return returnJSON
     }
 }
