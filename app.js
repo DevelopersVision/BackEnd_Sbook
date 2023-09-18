@@ -185,12 +185,14 @@ app.put('/v1/sbook/atualizar-usuario', verifyJWT, cors(), bodyParserJSON, async 
 ******************************************************************************************************************/
 const controllerEmail = require('./controller/controller_email.js')
 
-app.post('/v1/sbook/esqueci-senha/:email', cors(), async function (request, response) {
+app.post('/v1/sbook/esqueci-senha', cors(), bodyParserJSON, async function (request, response) {
     let contentType = request.headers['content-type']
 
     //Validação para receber dados apenas no formato JSON
     if (String(contentType).toLowerCase() == 'application/json') {
         let body = request.body
+
+        console.log(body);
 
         let dadosUsuario = await controllerEmail.ctlEsqueciSenha(body.email)
 
