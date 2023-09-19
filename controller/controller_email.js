@@ -84,9 +84,9 @@ const ctlValidarToken = async (dados) => {
         }else{
             returnFunction = message.ERROR_REGISTER_NOT_FOUND
         }
-
-        await usuarioDAO.mdlUpdateForgotPasswordUsuario(null, null, id)
     }
+
+    await usuarioDAO.mdlUpdateForgotPasswordUsuario(null, null, id)
     return returnFunction
 }
 
