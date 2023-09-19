@@ -65,7 +65,7 @@ const ctlValidarToken = async (dados) => {
     } else {
         let checkEmail = await usuarioDAO.selectByEmail(dados.email)
 
-        if (checkEmail) {
+        if (checkEmail.length > 0) {
             const now = moment().format("HH:mm")
             const token_expiress = moment(checkEmail[0].senha_reset_expiracao).add(3, 'hours').format("HH:mm:ss")
 
@@ -84,6 +84,8 @@ const ctlValidarToken = async (dados) => {
         }else{
             returnFunction = message.ERROR_REGISTER_NOT_FOUND
         }
+
+        await usuarioDAO.mdlUpdateForgotPasswordUsuario(null, null, id)
     }
     return returnFunction
 }
