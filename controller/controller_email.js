@@ -42,6 +42,8 @@ const ctlEsqueciSenha = async (email) => {
                 context: { token }
             }).then(info => {
                 info.status = 200;
+                info.email = email
+            
                 return info
             }).catch(error => {
                 return error
