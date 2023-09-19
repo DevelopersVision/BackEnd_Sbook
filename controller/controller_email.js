@@ -63,20 +63,24 @@ const ctlValidarToken = async (dados) => {
     } else {
         let checkEmail = await usuarioDAO.selectByEmail(dados.email)
 
-        const now = moment().format("HH:mm")
-        const token_expiress = moment(checkEmail[0].senha_reset_expiracao).add(3, 'hours').format("HH:mm:ss")
+        if (checkEmail) {
+            const now = moment().format("HH:mm")
+            const token_expiress = moment(checkEmail[0].senha_reset_expiracao).add(3, 'hours').format("HH:mm:ss")
 
-        if (!checkEmail) {
-            returnFunction = message.ERROR_INVALID_EMAIL
-        } else if (checkEmail[0].senha_reset_token != dados.token) {
-            returnFunction = message.ERROR_INVALID_TOKEN
-        } else if (checkEmail[0].senha_reset_token == dados.token && now < token_expiress) {
-            message.SUCCESS_VALID_TOKEN.id = checkEmail[0].id
-            returnFunction = message.SUCCESS_VALID_TOKEN
-        } else if (now > token_expiress) {
-            returnFunction = message.ERROR_TOKEN_EXPIRADO
-        } else {
-            returnFunction = message.ERROR_INTERNAL_SERVER
+            if (!checkEmail) {
+                returnFunction = message.ERROR_INVALID_EMAIL
+            } else if (checkEmail[0].senha_reset_token != dados.token) {
+                returnFunction = message.ERROR_INVALID_TOKEN
+            } else if (checkEmail[0].senha_reset_token == dados.token && now < token_expiress) {
+                message.SUCCESS_VALID_TOKEN.id = checkEmail[0].id
+                returnFunction = message.SUCCESS_VALID_TOKEN
+            } else if (now > token_expiress) {
+                returnFunction = message.ERROR_TOKEN_EXPIRADO
+            } else {
+                returnFunction = message.ERROR_INTERNAL_SERVER
+            }
+        }else{
+            returnFunction = message.ERROR_REGISTER_NOT_FOUND
         }
     }
     return returnFunction
