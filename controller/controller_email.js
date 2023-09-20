@@ -69,6 +69,11 @@ const ctlValidarToken = async (dados) => {
             const now = moment().format("HH:mm")
             const token_expiress = moment(checkEmail[0].senha_reset_expiracao).add(3, 'hours').format("HH:mm:ss")
 
+            console.log(checkEmail);
+            console.log(checkEmail[0].senha_reset_token);
+            console.log(now)
+            console.log(token_expiress)
+
             if (!checkEmail) {
                 returnFunction = message.ERROR_INVALID_EMAIL
             } else if (checkEmail[0].senha_reset_token != dados.token) {
