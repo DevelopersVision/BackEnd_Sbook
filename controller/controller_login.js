@@ -17,7 +17,7 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
     if (email == null || email == undefined || email == '' || email.length > 255 ||
         senha == null || senha == undefined || senha == ''
     ) {
-        return message.ERROR_INVALID_EMAIL_SENHA
+        return message.ERROR_REQUIRE_FIELDS
     } else {
         let dadosUsuarioJSON = {}
 
@@ -38,7 +38,7 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
         } else if(dadosUsuario && dadosUsuario[0].status_usuario == false) {
             return message.ERROR_USUARIO_DESATIVADO
         } else {
-            return message.ERROR_REGISTER_NOT_FOUND
+            return message.ERROR_INVALID_EMAIL_SENHA
         }
     }
 }
