@@ -412,6 +412,61 @@ app.get('/v1/sbook/anuncio/:id', cors(), async function (request, response) {
     response.json(dadosAnuncio)
 })
 
+/*****************************************************************************************************************
+* Objetivo: API de manipulação de anuncios favoritados
+* Data: 15/09/2023
+* Autor: Luiz
+* Versão: 1.0
+******************************************************************************************************************/
+const controllerAnunciosFavoritos = require('./controller/controller_anuncio_favoritados.js')
+
+app.get('/v1/sbook/anuncios-favoritados/:id', cors(), async function (request, response) {
+    let idUsuario = request.params.id
+
+    let dadosAnunciosFavoritos = await controllerAnunciosFavoritos.ctlGetAnunciosFavoritosDoUsuario(idUsuario)
+
+    response.status(dadosAnunciosFavoritos.status)
+    response.json(dadosAnunciosFavoritos)
+})
+
+app.post('/v1/sbook/favoritar-anuncio', cors(), bodyParserJSON, async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let favoritarAnuncio = await controllerAnunciosFavoritos.ctlInserirAnuncioAosFavoritos(dadosBody)
+
+        response.status(favoritarAnuncio.status)
+        response.json(favoritarAnuncio)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+})
+
+app.delete('/v1/sbook/remover-favorito', cors(), bodyParserJSON, async function (request, response){
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let removerAnuncioFavorito = await controllerAnunciosFavoritos.ctlDeletarAnuncioDosFavoritos(dadosBody)
+
+        response.status(removerAnuncioFavorito.status)
+        response.json(removerAnuncioFavorito)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+})
+
+
 
 /*****************************************************************************************************************
 * Objetivo: API de dados estáticos

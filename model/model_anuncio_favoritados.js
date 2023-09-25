@@ -13,7 +13,7 @@ var prisma = new PrismaClient()
 
 const mdlSelectAnunciosFavoritosDoUsuario = async (idUsuario) => {
 
-    let sql = `select tbl_usuario.id as id_usuario , tbl_usuario.nome as usuario, tbl_anuncio.id, tbl_anuncio.nome as favoritados,
+    let sql = `select  tbl_anuncio.id as id_anuncio, tbl_anuncio.nome as favoritados,
     tbl_anuncio.ano_lancamento,
     date_format(tbl_anuncio.data_criacao, '%d-%m-%Y %H:%i') as data_criacao,
     tbl_anuncio.status_anuncio, tbl_anuncio.edicao, tbl_anuncio.preco,
@@ -45,6 +45,41 @@ const mdlSelectAnunciosFavoritosDoUsuario = async (idUsuario) => {
     return rsAnunciosFavoritos
 }
 
+const mdlInsertAnuncioParaFavoritos = async (dadosBody) =>{
+
+    let sql = `insert into tbl_usuario_anuncio_favoritados(
+        id_usuario,
+        id_anuncio
+    ) values (
+        ${dadosBody.id_usuario},
+        ${dadosBody.id_anuncio}
+    )
+    `
+
+    let resultStatus = await prisma.$executeRawUnsafe(sql)
+
+    if(resultStatus){
+        return true
+    }else{
+        return false
+    }
+
+}
+
+const mdlDeleteAnuncioDosFavoritos = async (dadosBody) =>{
+    let sql = `delete from tbl_usuario_anuncio_favoritados where tbl_usuario_anuncio_favoritados.id_usuario = ${dadosBody.id_usuario} and tbl_usuario_anuncio_favoritados.id_anuncio = ${dadosBody.id_anuncio}`
+
+    let resultStatus = await prisma.$executeRawUnsafe(sql)
+
+    if(resultStatus){
+        return true
+    }else{
+        return false
+    }
+}
+
 module.exports = {
-    mdlSelectAnunciosFavoritosDoUsuario
+    mdlSelectAnunciosFavoritosDoUsuario,
+    mdlInsertAnuncioParaFavoritos,
+    mdlDeleteAnuncioDosFavoritos
 }
