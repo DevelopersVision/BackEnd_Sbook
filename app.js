@@ -254,7 +254,7 @@ app.get('/v1/sbook/generos', cors(), async function (request, response) {
     response.json(dadosGeneros)
 })
 
-app.get('/v1/sbook/generos/:id', cors(), async function (request, response) {
+app.get('/v1/sbook/generos-preferidos/:id', cors(), async function (request, response) {
     let idUsuario = request.params.id
 
     let dadosGeneros = await controllerUsuarioGenero.ctlGetGenerosPreferidosByIdUsuario(idUsuario)
@@ -465,7 +465,6 @@ app.delete('/v1/sbook/remover-favorito', cors(), bodyParserJSON, async function 
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
 })
-
 
 
 /*****************************************************************************************************************
