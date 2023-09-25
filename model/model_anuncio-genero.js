@@ -51,7 +51,7 @@ inner join tbl_foto as foto
 		on tbl_anuncio_genero.id_anuncio = anuncio.id
 	inner join tbl_genero as genero
 		on genero.id = tbl_anuncio_genero.id_genero
-where genero.id = ${idGenero}`
+where tbl_anuncio_genero.id_genero = ${idGenero}`
 
     let rsAnuncioGenero = await prisma.$queryRawUnsafe(sql)
 

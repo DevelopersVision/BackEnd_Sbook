@@ -22,6 +22,7 @@ const mdlSelectUsuarioByEmailAndSenha = async function(email, senha){
     usuario.cpf,
     usuario.status_usuario,
     usuario.foto,
+    usuario.id_endereco,
     endereco.logradouro,
     endereco.bairro,
     endereco.cidade,

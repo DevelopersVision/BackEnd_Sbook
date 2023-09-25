@@ -144,7 +144,10 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
     }
 }
 
+
+
 module.exports = {
     mdlSelectAllAnuncio,
-    mdlSelectAnuncioById
+    mdlSelectAnuncioById,
+    mdlSelectAnuncioByIdUsuario
 }

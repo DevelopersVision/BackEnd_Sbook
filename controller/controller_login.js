@@ -9,6 +9,7 @@
 var message = require('./modulo/config.js')
 
 var loginDAO = require('../model/model_login.js')
+var anuncioDAO = require('../model/model_anuncio.js')
 
 //Import biblioteca que gera e valida autenticidade do jwt
 var jwt = require('../middleware/middlewareJWT.js')
@@ -22,17 +23,43 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
         let dadosUsuarioJSON = {}
 
         let dadosUsuario = await loginDAO.mdlSelectUsuarioByEmailAndSenha(email, senha)
-        console.log(dadosUsuario);
 
         if (dadosUsuario && dadosUsuario[0].status_usuario == true) {
             //Gera o token pelo jwt
             let tokenUser = await jwt.createJWT(dadosUsuario.id);
+
             //Adiciona uma chave np json com o token do usuario
             dadosUsuarioJSON.token = tokenUser;
 
+            let dados = dadosUsuario[0]
+
+            let anuncios = await anuncioDAO.mdlSelectAnuncioByIdUsuario(dados.id)
+
+            let jsonUsuario = {
+                usuario: {
+                    id: dados.id_usuario,
+                    nome: dados.nome,
+                    telefone: dados.telefone,
+                    cpf: dados.cpf,
+                    data_nascimento: dados.data_nascimento,
+                    data_criacao: dados.data_criacao,
+                    email: dados.email,
+                    status_usuario: dados.status_usuario,
+                    foto: dados.foto
+                },
+                endereco: {
+                    id: dados.id_endereco,
+                    logradouro: dados.logradouro,
+                    bairro:dados.bairro,
+                    cidade: dados.cidade,
+                    estado: dados.estado
+                },
+                anuncios: anuncios
+            }
+
             dadosUsuarioJSON.status = message.SUCCESS_REQUEST.status
             dadosUsuarioJSON.message = message.SUCCESS_REQUEST.message
-            dadosUsuarioJSON.usuario = dadosUsuario
+            dadosUsuarioJSON.usuario = jsonUsuario
 
             return dadosUsuarioJSON
         } else if(dadosUsuario && dadosUsuario[0].status_usuario == false) {

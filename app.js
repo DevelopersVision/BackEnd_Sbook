@@ -192,8 +192,6 @@ app.post('/v1/sbook/esqueci-senha', cors(), bodyParserJSON, async function (requ
     if (String(contentType).toLowerCase() == 'application/json') {
         let body = request.body
 
-        console.log(body);
-
         let dadosUsuario = await controllerEmail.ctlEsqueciSenha(body.email)
 
         response.status(200)
