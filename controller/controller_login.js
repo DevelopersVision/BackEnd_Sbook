@@ -9,7 +9,7 @@
 var message = require('./modulo/config.js')
 
 var loginDAO = require('../model/model_login.js')
-var anuncioDAO = require('../model/model_anuncio.js')
+var controllerAnuncios = require('./controller_anuncio.js')
 
 //Import biblioteca que gera e valida autenticidade do jwt
 var jwt = require('../middleware/middlewareJWT.js')
@@ -33,7 +33,7 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
 
             let dados = dadosUsuario[0]
 
-            let anuncios = await anuncioDAO.mdlSelectAnuncioByIdUsuario(dados.id)
+            let anuncios = await controllerAnuncios.ctlGetAnuncioByIdUsuario(dados.id_usuario)
 
             let jsonUsuario = {
                 usuario: {
@@ -54,7 +54,7 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
                     cidade: dados.cidade,
                     estado: dados.estado
                 },
-                anuncios: anuncios
+                anuncios: anuncios.anuncios
             }
 
             dadosUsuarioJSON.status = message.SUCCESS_REQUEST.status

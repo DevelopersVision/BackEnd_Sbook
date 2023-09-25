@@ -114,6 +114,9 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
     anuncio.status_anuncio,
     anuncio.numero_paginas,
     anuncio.id_estado_livro,
+    endereco.estado,
+    endereco.cidade,
+    endereco.bairro,
     estado_livro.estado as estado_livro,
     anuncio.id_idioma,
     idioma.nome as nome_idioma,
@@ -133,7 +136,7 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
-    where anuncio.id = ${id}`
+    where anuncio.id_usuario = ${idUsuario}`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
@@ -144,10 +147,52 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
     }
 }
 
+const mdlInsertAnuncio = async (dadosAnuncio) => {
+    let sql = `insert into tbl_anuncio(
+        nome,
+        numero_paginas,
+        ano_lancamento,
+        descricao,
+        data_criacao,
+        edicao,
+        isbn,
+        preco,
+        id_usuario,
+        id_estado_livro,
+        id_idioma,
+        id_editora
+        ) values (
+        "${dadosAnuncio.nome}",
+        ${dadosAnuncio.numero_paginas},
+        ${dadosAnuncio.ano_lancamento},
+        "${dadosAnuncio.descricao}",
+        current_timestamp(),
+        "${dadosAnuncio.edicao}",
+        ${dadosAnuncio.isbn},
+        ${dadosAnuncio.preco},
+        ${dadosAnuncio.id_usuario},
+        ${dadosAnuncio.id_estado_livro},
+        ${dadosAnuncio.id_idioma},
+        ${dadosAnuncio.id_editora}
+       );
+       
+    `  
+
+    let resultAnuncio = await prisma.$executeRawUnsafe(sql)
+
+    if(resultAnuncio){
+        return true
+    }else{
+        return false
+    }
+
+}
+
 
 
 module.exports = {
     mdlSelectAllAnuncio,
     mdlSelectAnuncioById,
-    mdlSelectAnuncioByIdUsuario
+    mdlSelectAnuncioByIdUsuario,
+    mdlInsertAnuncio
 }
