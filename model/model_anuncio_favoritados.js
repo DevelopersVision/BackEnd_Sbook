@@ -21,6 +21,7 @@ const mdlSelectAnunciosFavoritosDoUsuario = async (idUsuario) => {
     tbl_endereco.estado, tbl_endereco.cidade, tbl_endereco.bairro,
      tbl_estado_livro.estado as estado_livro, tbl_idioma.nome as idioma,
     tbl_anuncio.id_editora, tbl_editora.nome as editora,
+    tbl_autor.nome as autor,
     tbl_foto.foto as foto
         from tbl_usuario
         inner join tbl_usuario_anuncio_favoritados
@@ -36,8 +37,12 @@ const mdlSelectAnunciosFavoritosDoUsuario = async (idUsuario) => {
             inner join tbl_idioma
                 on tbl_anuncio.id_idioma = tbl_idioma.id
             inner join tbl_editora
-                on tbl_editora.id = tbl_anuncio.id_editora   
-            where tbl_usuario_anuncio_favoritados.id_usuario = ${idUsuario};`
+                on tbl_editora.id = tbl_anuncio.id_editora
+            inner join tbl_anuncio_autor
+				on tbl_anuncio_autor.id_anuncio = tbl_anuncio.id
+            inner join tbl_autor
+				on tbl_anuncio_autor.id_autor = tbl_autor.id
+            where tbl_usuario_anuncio_favoritados.id_usuario = ${idUsuario}`
 
 
     let rsAnunciosFavoritos = await prisma.$queryRawUnsafe(sql)
