@@ -13,7 +13,7 @@ var prisma = new PrismaClient()
 
 const mdlSelectAnunciosFavoritosDoUsuario = async (idUsuario) => {
 
-    let sql = `select  tbl_anuncio.id as id_anuncio, tbl_anuncio.nome as favoritados,
+    let sql = `select  tbl_anuncio.id as id_anuncio, tbl_anuncio.nome as nome_livro,
     tbl_anuncio.ano_lancamento,
     date_format(tbl_anuncio.data_criacao, '%d-%m-%Y %H:%i') as data_criacao,
     tbl_anuncio.status_anuncio, tbl_anuncio.edicao, tbl_anuncio.preco,
