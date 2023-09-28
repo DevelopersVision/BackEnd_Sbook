@@ -1,13 +1,17 @@
 /**************************************************************************************
- *  Objetivo: Responsável pela regra de negócios referente ao crud dos anúncios favoritados do usuário
- *  Autor: Felipe Graciano
- *  Data: 25/09/2023
- *  Versão: 1.0
- **************************************************************************************/
+*  Objetivo: Responsável pela regra de negócios referente ao crud dos anúncios favoritados do usuário
+*  Autor: Felipe Graciano
+*  Data: 25/09/2023
+*  Versão: 1.0
+**************************************************************************************/
 
- var message = require('./modulo/config.js')
+var message = require('./modulo/config.js')
 
- var anunciosFavoritadosDAO = require('../model/model_anuncio_favoritados.js')
+var anunciosFavoritadosDAO = require('../model/model_anuncio_favoritados.js')
+var anuncioGeneroDAO = require('../model/model_anuncio-genero.js')
+var anuncioTipoAnuncio = require('../model/model_anuncio-tipo-anuncio.js')
+var anuncioAutor = require('../model/model_anuncio_autor.js')
+var anuncioFotoDAO = require('../model/model_foto.js')
 
  const ctlGetAnunciosFavoritosDoUsuario = async (idUsuario) => {
     if(idUsuario == ''|| idUsuario == null || idUsuario == undefined || isNaN(idUsuario)){
@@ -17,14 +21,64 @@
 
         if (dadosAnunciosFavoritados) {
 
-            let anunciosFavotitadosJSON = {
+            let listaAnuncios = []
+
+            for (let index = 0; index < dadosAnunciosFavoritados.length; index++) {
+                const anuncio = dadosAnunciosFavoritados[index];
+
+    
+                let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id_anuncio)
+                let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id_anuncio)
+                let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id_anuncio)
+                let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id_anuncio)
+    
+                let anuncioJSON = {
+                    anuncio: {
+                        id: anuncio.id_anuncio,
+                        nome: anuncio.nome_livro,
+                        ano_lancamento: anuncio.ano_lancamento,
+                        data_criacao: anuncio.data_criacao,
+                        status_anuncio: anuncio.status_anuncio,
+                        edicao: anuncio.edicao,
+                        preco: anuncio.preco,
+                        descricao: anuncio.descricao,
+                        numero_paginas: anuncio.numero_paginas,
+                        anunciante: anuncio.anunciante
+                    },
+                    idioma: {
+                        id: anuncio.id_idioma,
+                        nome: anuncio.nome_idioma
+                    },
+                    endereco: {
+                        estado: anuncio.estado,
+                        cidade: anuncio.cidade,
+                        bairro: anuncio.bairro
+                    },
+                    estado_livro: {
+                        id: anuncio.id_estado_livro,
+                        estado: anuncio.estado_livro
+                    },
+                    editora: {
+                        id: anuncio.id_editora,
+                        nome: anuncio.nome_editora
+                    },
+                    foto: fotosAnuncio,
+                    generos: generosAnuncio,
+                    tipo_anuncio: tiposAnuncio,
+                    autores: autoresAnuncio
+                }
+    
+                listaAnuncios.push(anuncioJSON)
+            }
+    
+            let dadosAnuncioJSON = {
                 status: message.SUCCESS_REQUEST.status,
                 message: message.SUCCESS_REQUEST.message,
-                quantidade: dadosAnunciosFavoritados.length,
-                anuncios_favoritados: dadosAnunciosFavoritados
+                quantidae: listaAnuncios.length,
+                anuncios: listaAnuncios
             }
-
-            return anunciosFavotitadosJSON
+    
+            return dadosAnuncioJSON
         } else {
             return message.ERROR_INTERNAL_SERVER
         }
