@@ -22,7 +22,8 @@ const mdlSelectAnunciosFavoritosDoUsuario = async (idUsuario) => {
      tbl_estado_livro.estado as estado_livro, tbl_idioma.nome as idioma,
     tbl_anuncio.id_editora, tbl_editora.nome as editora,
     tbl_autor.nome as autor,
-    tbl_foto.foto as foto
+    tbl_foto.foto as foto,
+    tbl_tipo_anuncio.tipo
         from tbl_usuario
         inner join tbl_usuario_anuncio_favoritados
             on tbl_usuario_anuncio_favoritados.id_usuario = tbl_usuario.id
@@ -42,6 +43,10 @@ const mdlSelectAnunciosFavoritosDoUsuario = async (idUsuario) => {
 				on tbl_anuncio_autor.id_anuncio = tbl_anuncio.id
             inner join tbl_autor
 				on tbl_anuncio_autor.id_autor = tbl_autor.id
+                inner join tbl_anuncio_tipo_anuncio
+                on tbl_anuncio_tipo_anuncio.id_anuncio = tbl_anuncio.id
+            inner join tbl_tipo_anuncio
+                on tbl_anuncio_tipo_anuncio.id_tipo_anuncio = tbl_tipo_anuncio.id    
             where tbl_usuario_anuncio_favoritados.id_usuario = ${idUsuario}`
 
 
