@@ -78,8 +78,17 @@ const mdlDeleteAnuncioDosFavoritos = async (dadosBody) =>{
     }
 }
 
+const mdlCheckarSeOAnuncioEstaFavoritado = async(id_usuario, id_anuncio) =>{
+    let sql = `select COUNT(id_anuncio) as resultado FROM tbl_usuario_anuncio_favoritados WHERE id_usuario = ${id_usuario} and id_anuncio = ${id_anuncio}`
+
+    let resultStatus = await prisma.$queryRawUnsafe(sql)
+    
+    return resultStatus
+}
+
 module.exports = {
     mdlSelectAnunciosFavoritosDoUsuario,
     mdlInsertAnuncioParaFavoritos,
-    mdlDeleteAnuncioDosFavoritos
+    mdlDeleteAnuncioDosFavoritos,
+    mdlCheckarSeOAnuncioEstaFavoritado
 }

@@ -429,6 +429,16 @@ app.get('/v1/sbook/anuncios-favoritados/:id', cors(), async function (request, r
     response.json(dadosAnunciosFavoritos)
 })
 
+app.get('/v1/sbook/verificar-favorito/:user/:anuncio', cors(), bodyParserJSON, async function (request, response){
+    let idUsuario = request.params.user
+    let idAnuncio = request.params.anuncio
+
+    let dadosAnuncio = await controllerAnunciosFavoritos.verificarSeOAnuncioEstaFavoritado(idUsuario, idAnuncio)
+
+    response.status(dadosAnuncio.status)
+    response.json(dadosAnuncio)
+})
+
 app.post('/v1/sbook/favoritar-anuncio', cors(), bodyParserJSON, async function (request, response) {
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']

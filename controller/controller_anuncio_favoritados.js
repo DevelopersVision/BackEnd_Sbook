@@ -13,8 +13,8 @@ var anuncioTipoAnuncio = require('../model/model_anuncio-tipo-anuncio.js')
 var anuncioAutor = require('../model/model_anuncio_autor.js')
 var anuncioFotoDAO = require('../model/model_foto.js')
 
- const ctlGetAnunciosFavoritosDoUsuario = async (idUsuario) => {
-    if(idUsuario == ''|| idUsuario == null || idUsuario == undefined || isNaN(idUsuario)){
+const ctlGetAnunciosFavoritosDoUsuario = async (idUsuario) => {
+    if (idUsuario == '' || idUsuario == null || idUsuario == undefined || isNaN(idUsuario)) {
         return message.ERROR_INVALID_ID
     } else {
         let dadosAnunciosFavoritados = await anunciosFavoritadosDAO.mdlSelectAnunciosFavoritosDoUsuario(idUsuario)
@@ -26,12 +26,12 @@ var anuncioFotoDAO = require('../model/model_foto.js')
             for (let index = 0; index < dadosAnunciosFavoritados.length; index++) {
                 const anuncio = dadosAnunciosFavoritados[index];
 
-    
+
                 let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id_anuncio)
                 let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id_anuncio)
                 let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id_anuncio)
                 let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id_anuncio)
-    
+
                 let anuncioJSON = {
                     anuncio: {
                         id: anuncio.id_anuncio,
@@ -67,34 +67,34 @@ var anuncioFotoDAO = require('../model/model_foto.js')
                     tipo_anuncio: tiposAnuncio,
                     autores: autoresAnuncio
                 }
-    
+
                 listaAnuncios.push(anuncioJSON)
             }
-    
+
             let dadosAnuncioJSON = {
                 status: message.SUCCESS_REQUEST.status,
                 message: message.SUCCESS_REQUEST.message,
                 quantidae: listaAnuncios.length,
                 anuncios: listaAnuncios
             }
-    
+
             return dadosAnuncioJSON
         } else {
             return message.ERROR_INTERNAL_SERVER
         }
     }
- }
+}
 
 
- const ctlInserirAnuncioAosFavoritos = async (dadosBody) =>{
-    if(dadosBody.id_usuario == null || dadosBody.id_usuario == undefined || dadosBody.id_usuario == '' || isNaN(dadosBody.id_usuario) ||
-    dadosBody.id_anuncio == null || dadosBody.id_anuncio == undefined || dadosBody.id_anuncio == ''|| isNaN(dadosBody.id_anuncio)
-    ){
+const ctlInserirAnuncioAosFavoritos = async (dadosBody) => {
+    if (dadosBody.id_usuario == null || dadosBody.id_usuario == undefined || dadosBody.id_usuario == '' || isNaN(dadosBody.id_usuario) ||
+        dadosBody.id_anuncio == null || dadosBody.id_anuncio == undefined || dadosBody.id_anuncio == '' || isNaN(dadosBody.id_anuncio)
+    ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
         let resultDadosAnuncio = await anunciosFavoritadosDAO.mdlInsertAnuncioParaFavoritos(dadosBody)
 
-        if(resultDadosAnuncio){
+        if (resultDadosAnuncio) {
             let dadosAnuncioJSON = {}
             dadosAnuncioJSON.status = message.SUCCESS_CREATED_ITEM.status
             dadosAnuncioJSON.message = message.SUCCESS_CREATED_ITEM.message
@@ -105,17 +105,17 @@ var anuncioFotoDAO = require('../model/model_foto.js')
         }
     }
 
- }
+}
 
- const ctlDeletarAnuncioDosFavoritos = async (dadosBody) =>{
-    if(dadosBody.id_usuario == null || dadosBody.id_usuario == undefined || dadosBody.id_usuario == '' || isNaN(dadosBody.id_usuario) ||
-    dadosBody.id_anuncio == null || dadosBody.id_anuncio == undefined || dadosBody.id_anuncio == ''|| isNaN(dadosBody.id_anuncio)
-    ){
+const ctlDeletarAnuncioDosFavoritos = async (dadosBody) => {
+    if (dadosBody.id_usuario == null || dadosBody.id_usuario == undefined || dadosBody.id_usuario == '' || isNaN(dadosBody.id_usuario) ||
+        dadosBody.id_anuncio == null || dadosBody.id_anuncio == undefined || dadosBody.id_anuncio == '' || isNaN(dadosBody.id_anuncio)
+    ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
         let resultDadosAnuncio = await anunciosFavoritadosDAO.mdlDeleteAnuncioDosFavoritos(dadosBody)
 
-        if(resultDadosAnuncio){
+        if (resultDadosAnuncio) {
             let dadosAnuncioJSON = {}
             dadosAnuncioJSON.status = message.SUCCESS_DELETED_ITEM.status
             dadosAnuncioJSON.message = message.SUCCESS_DELETED_ITEM.message
@@ -126,10 +126,40 @@ var anuncioFotoDAO = require('../model/model_foto.js')
         }
     }
 
- }
+}
 
- module.exports = {
+const verificarSeOAnuncioEstaFavoritado = async (idUsuario, idAnuncio) => {
+    if (
+        idUsuario == null ||
+        idUsuario == undefined ||
+        idUsuario == '' ||
+        isNaN(idUsuario) ||
+        idAnuncio == null ||
+        idAnuncio == undefined ||
+        idAnuncio == '' ||
+        isNaN(idAnuncio)
+    ) {
+        return message.ERROR_INVALID_ID;
+    } else {
+        let result = await anunciosFavoritadosDAO.mdlCheckarSeOAnuncioEstaFavoritado(idUsuario, idAnuncio);
+
+        if (result[0].resultado == 0n) {
+            let jsonResultado = {}
+            jsonResultado.status = 400
+            jsonResultado.message = "Não Está favoritado"
+            return jsonResultado
+        } else {
+            let jsonResultado = {}
+            jsonResultado.status = 200
+            jsonResultado.message = "Está favoritado"
+            return jsonResultado
+        }
+    }
+};
+
+module.exports = {
     ctlGetAnunciosFavoritosDoUsuario,
     ctlInserirAnuncioAosFavoritos,
-    ctlDeletarAnuncioDosFavoritos
- }
+    ctlDeletarAnuncioDosFavoritos,
+    verificarSeOAnuncioEstaFavoritado
+}
