@@ -77,6 +77,7 @@ const mdlSelectUsuarioByID = async function (id) {
     usuario.email,
     usuario.foto,
     usuario.status_usuario,
+    endereco.id as id_endereco,
     endereco.logradouro,
     endereco.bairro,
     endereco.cidade,
