@@ -49,6 +49,7 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
                 },
                 endereco: {
                     id: dados.id_endereco,
+                    cep: dados.cep,
                     logradouro: dados.logradouro,
                     bairro:dados.bairro,
                     cidade: dados.cidade,
