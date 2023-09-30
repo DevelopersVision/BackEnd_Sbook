@@ -38,7 +38,7 @@ const ctlGetUsuarioByID = async function (id) {
             let dadosUsuarioJSON = {
                 status: message.SUCCESS_REQUEST.status,
                 message: message.SUCCESS_REQUEST.message,
-                dados: dadosUsuario
+                dados: dadosUsuario[0]
             }
 
             return dadosUsuarioJSON
