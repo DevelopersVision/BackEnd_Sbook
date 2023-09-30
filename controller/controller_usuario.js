@@ -100,7 +100,6 @@ const ctlAtalizarEnderecoUsuario = async function (dadosEnderecoUsuario) {
         dadosEnderecoUsuario.estado_endereco == '' || dadosEnderecoUsuario.estado_endereco == null || dadosEnderecoUsuario.estado_endereco == undefined || dadosEnderecoUsuario.estado_endereco.lenth > 50 ||
         dadosEnderecoUsuario.nome_usuario == '' || dadosEnderecoUsuario.nome_usuario == null || dadosEnderecoUsuario.nome_usuario == undefined || dadosEnderecoUsuario.nome_usuario.lenth > 60 ||
         dadosEnderecoUsuario.data_nascimento_usuario == '' || dadosEnderecoUsuario.data_nascimento_usuario == null || dadosEnderecoUsuario.data_nascimento_usuario == undefined ||
-        dadosEnderecoUsuario.senha_usuario == '' || dadosEnderecoUsuario.senha_usuario == null || dadosEnderecoUsuario.senha_usuario == undefined || dadosEnderecoUsuario.senha_usuario.lenth > 255 ||
         dadosEnderecoUsuario.cep_endereco == undefined || dadosEnderecoUsuario.cep_endereco.lenth > 10 || dadosEnderecoUsuario.cep_endereco == null
     ) {
         return message.ERROR_REQUIRE_FIELDS

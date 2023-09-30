@@ -167,8 +167,7 @@ const mdlupdateUsuario = async function (dadosEnderecoUsuario) {
         "${dadosEnderecoUsuario.estado_endereco}",
         "${dadosEnderecoUsuario.cep_endereco}",
         "${dadosEnderecoUsuario.nome_usuario}",
-        "${dadosEnderecoUsuario.data_nascimento_usuario}",
-        "${dadosEnderecoUsuario.senha_usuario}"
+        "${dadosEnderecoUsuario.data_nascimento_usuario}"
     );`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
