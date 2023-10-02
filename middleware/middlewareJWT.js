@@ -12,7 +12,7 @@ const jwt = require('jsonwebtoken') //npm i jsonwebtoken --save
 const SECRET = 'flbjt2023';
 
 //tempo de expiração da chave em segundos
-const EXPIRE = '30d';
+const EXPIRE = '90d';
 
 //Criação do JWT 
 const createJWT = async function(payload){
