@@ -103,6 +103,8 @@ const ctlAtalizarEnderecoUsuario = async function (dadosEnderecoUsuario) {
         dadosEnderecoUsuario.cep_endereco == undefined || dadosEnderecoUsuario.cep_endereco.lenth > 10 || dadosEnderecoUsuario.cep_endereco == null
     ) {
         return message.ERROR_REQUIRE_FIELDS
+    }else if(Object.keys(dadosEnderecoUsuario).length != 9){
+        return message.ERROR_INVALID_VALORES
     } else {
         let resultStatus = await usuarioDAO.mdlupdateUsuario(dadosEnderecoUsuario)
 
