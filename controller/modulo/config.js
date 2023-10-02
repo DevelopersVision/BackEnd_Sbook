@@ -40,6 +40,8 @@ const ERROR_TOKEN_EXPIRADO = {status: 400, message: 'INTERVALO DE TEMPO ACABOU, 
 
 const ERROR_USUARIO_DESATIVADO = {status: 403, message: 'O USUARIO ESTÁ CADASTRADO NO SISTEMA, MAS NÃO PODE REALIZAR O LOGIN, POIS A CONTA ESTÁ DESATIVADA'}
 
+const ERROR_INVALID_JSON = {status: 400, message: 'O JSON ENVIADO ESTÁ INVÁLIDA'}
+
 /*************************************** MENSAGENS DE SUCESSO ***************************************/
 const SUCCESS_CREATED_ITEM = {status: 201, message: 'ITEM CRIADO COM SUCESSO'}
 
