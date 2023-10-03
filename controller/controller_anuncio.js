@@ -36,7 +36,8 @@ const ctlGetAnuncios = async () => {
                     edicao: anuncio.edicao,
                     preco: anuncio.preco,
                     descricao: anuncio.descricao,
-                    numero_paginas: anuncio.numero_paginas
+                    numero_paginas: anuncio.numero_paginas,
+                    anunciante: anuncio.id_anunciante
                 },
                 idioma: {
                     id: anuncio.id_idioma,
@@ -104,7 +105,8 @@ const ctlGetAnuncioByID = async (idAnuncio) => {
                     edicao: anuncio.edicao,
                     preco: anuncio.preco,
                     descricao: anuncio.descricao,
-                    numero_paginas: anuncio.numero_paginas
+                    numero_paginas: anuncio.numero_paginas,
+                    anunciante: anuncio.id_anunciante
                 },
                 idioma: {
                     id: anuncio.id_idioma,

@@ -30,6 +30,7 @@ const mdlSelectAllAnuncio = async () => {
     anuncio.id_estado_livro,
     estado_livro.estado as estado_livro,
     anuncio.id_idioma,
+    anuncio.id_usuario as id_anunciante,
     idioma.nome as nome_idioma,
     anuncio.id_editora,
     editora.nome as nome_editora
@@ -73,6 +74,7 @@ const mdlSelectAnuncioById = async (id) => {
     anuncio.id_estado_livro,
     estado_livro.estado as estado_livro,
     anuncio.id_idioma,
+    anuncio.id_usuario as id_anunciante,
     idioma.nome as nome_idioma,
     anuncio.id_editora,
     editora.nome as nome_editora,
@@ -121,6 +123,7 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
     anuncio.id_idioma,
     idioma.nome as nome_idioma,
     anuncio.id_editora,
+    anuncio.id_usuario as id_anunciante,
     editora.nome as nome_editora,
     foto.foto
     from tbl_anuncio as anuncio
