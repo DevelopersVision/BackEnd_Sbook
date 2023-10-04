@@ -107,13 +107,13 @@ const ctlInserirAnuncioAosFavoritos = async (dadosBody) => {
 
 }
 
-const ctlDeletarAnuncioDosFavoritos = async (dadosBody) => {
-    if (dadosBody.id_usuario == null || dadosBody.id_usuario == undefined || dadosBody.id_usuario == '' || isNaN(dadosBody.id_usuario) ||
-        dadosBody.id_anuncio == null || dadosBody.id_anuncio == undefined || dadosBody.id_anuncio == '' || isNaN(dadosBody.id_anuncio)
+const ctlDeletarAnuncioDosFavoritos = async (id_usuario, id_anuncio) => {
+    if (id_usuario == null || id_usuario == undefined || id_usuario == '' || isNaN(id_usuario) ||
+        id_anuncio == null || id_anuncio == undefined || id_anuncio == '' || isNaN(id_anuncio)
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
-        let resultDadosAnuncio = await anunciosFavoritadosDAO.mdlDeleteAnuncioDosFavoritos(dadosBody)
+        let resultDadosAnuncio = await anunciosFavoritadosDAO.mdlDeleteAnuncioDosFavoritos(id_usuario, id_anuncio)
 
         if (resultDadosAnuncio) {
             let dadosAnuncioJSON = {}

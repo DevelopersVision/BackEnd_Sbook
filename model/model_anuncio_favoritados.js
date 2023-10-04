@@ -66,8 +66,8 @@ const mdlInsertAnuncioParaFavoritos = async (dadosBody) =>{
 
 }
 
-const mdlDeleteAnuncioDosFavoritos = async (dadosBody) =>{
-    let sql = `delete from tbl_usuario_anuncio_favoritados where tbl_usuario_anuncio_favoritados.id_usuario = ${dadosBody.id_usuario} and tbl_usuario_anuncio_favoritados.id_anuncio = ${dadosBody.id_anuncio}`
+const mdlDeleteAnuncioDosFavoritos = async (id_usuario, id_anuncio) =>{
+    let sql = `delete from tbl_usuario_anuncio_favoritados where tbl_usuario_anuncio_favoritados.id_usuario = ${id_usuario} and tbl_usuario_anuncio_favoritados.id_anuncio = ${id_anuncio}`
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 

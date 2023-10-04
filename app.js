@@ -458,23 +458,16 @@ app.post('/v1/sbook/favoritar-anuncio', cors(), bodyParserJSON, async function (
     }
 })
 
-app.delete('/v1/sbook/remover-favorito', cors(), bodyParserJSON, async function (request, response){
-    let contentType = request.headers['content-type']
+app.delete('/v1/sbook/remover-favorito/:user/:anuncio', cors(), bodyParserJSON, async function (request, response){
+    let idUsuario = request.params.user
+    let idAnuncio = request.params.anuncio
 
-    //Validação para receber dados apenas no formato JSON
-    if (String(contentType).toLowerCase() == 'application/json') {
-        //Recebe os dados encaminhados na requisição
-        let dadosBody = request.body
+    let dadosAnuncio = await controllerAnunciosFavoritos.ctlDeletarAnuncioDosFavoritos(idUsuario, idAnuncio)
 
-        let removerAnuncioFavorito = await controllerAnunciosFavoritos.ctlDeletarAnuncioDosFavoritos(dadosBody)
-
-        response.status(removerAnuncioFavorito.status)
-        response.json(removerAnuncioFavorito)
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
-    }
+    response.status(dadosAnuncio.status)
+    response.json(dadosAnuncio)
 })
+
 
 
 /*****************************************************************************************************************
