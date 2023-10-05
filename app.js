@@ -412,6 +412,15 @@ app.get('/v1/sbook/anuncio/:id', cors(), async function (request, response) {
     response.json(dadosAnuncio)
 })
 
+app.get('/v1/sbook/anuncio-usuario/:id', cors(), async function (request, response) {
+    let id = request.params.id
+
+    let dadosAnuncio = await controllerAnuncio.ctlGetAnuncioByIdUsuario(id)
+
+    response.status(dadosAnuncio.status)
+    response.json(dadosAnuncio)
+})
+
 /*****************************************************************************************************************
 * Objetivo: API de manipulação de anuncios favoritados
 * Data: 15/09/2023

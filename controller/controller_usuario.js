@@ -77,6 +77,7 @@ const ctlInserirEnderecoUsuario = async (dadosEnderecoUsuario) => {
                 let novoUsuario = await usuarioDAO.mdlSelectLastEnderecoUsuarioID()
 
                 let dadosEnderecoUsuarioJSON = {
+                    id: novoUsuario[0].id_usuario,
                     status: message.SUCCESS_CREATED_ITEM.status,
                     message: message.SUCCESS_CREATED_ITEM.message,
                     usuario: novoUsuario

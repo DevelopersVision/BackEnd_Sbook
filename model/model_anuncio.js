@@ -143,8 +143,12 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
+    console.log(rsAnuncio);
+
     if (rsAnuncio.length > 0) {
         return rsAnuncio
+    }else if(rsAnuncio == 0){
+        return null
     } else {
         return false
     }

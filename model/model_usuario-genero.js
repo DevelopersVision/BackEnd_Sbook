@@ -22,11 +22,9 @@ const mdlSelectGeneroPreferidoByIdUsuario = async (idUsuario) => {
 
     let rsGeneroPreferido = await prisma.$queryRawUnsafe(sql)
 
-    if (rsGeneroPreferido.length > 0) {
+    
         return rsGeneroPreferido;
-    } else {
-        return false
-    }
+    
 }
 
 const mdlSelectGeneroPreferidoLastID = async (idUsuario) => {

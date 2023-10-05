@@ -33,7 +33,11 @@ const ctlGetGenerosPreferidosByIdUsuario = async (idUsuario) => {
     if (idUsuario == '' || isNaN(idUsuario) || idUsuario == undefined) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
-        let dadosGenerosPreferidos = await usuarioGeneroDAO.mdlSelectGeneroPreferidoByIdUsuario(idUsuario)
+
+        let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(idUsuario)
+
+        if(dadosUsuario){
+            let dadosGenerosPreferidos = await usuarioGeneroDAO.mdlSelectGeneroPreferidoByIdUsuario(idUsuario)
 
         if (dadosGenerosPreferidos) {
 
@@ -46,8 +50,16 @@ const ctlGetGenerosPreferidosByIdUsuario = async (idUsuario) => {
 
             return dadosGenerosJSON
         } else {
-            return message.ERROR_INTERNAL_SERVER
+            let dadosGenerosJSON = {
+                generos_preferidos: dadosGenerosPreferidos
+            }
+            return dadosGenerosJSON
         }
+        } else {
+            return message.ERROR_INVALID_ID
+        }
+
+        
     }
 }
 
