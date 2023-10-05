@@ -106,7 +106,7 @@ const mdlSelectAnuncioById = async (id) => {
     }
 }
 
-const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
+const mdlSelectAnuncioByIdUsuario = async (idUsuario, page) => {
     let sql = `select 
     anuncio.id, 
     anuncio.nome, 
@@ -142,7 +142,8 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
-    where anuncio.id_usuario = ${idUsuario}`
+    where anuncio.id_usuario = ${idUsuario}
+    order by id asc limit 10 offset ${page}0`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
@@ -195,16 +196,14 @@ const mdlSelectAnuncioByLocalização = async (bairro, cidade, estado, page) => 
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
-    order by field(endereco.bairro, 'Jandiraa') desc, 
-	    case when endereco.bairro = 'Jardim Belvaol' THEN 1 ELSE 2 END,
-	    case when endereco.cidade = 'Jandira' THEN 1 ELSE 2 END,
-        case when endereco.estado = 'SP' THEN 1 ELSE 2 END,
+    order by field(endereco.bairro, '${bairro}') desc, 
+	    case when endereco.bairro = '${bairro}' THEN 1 ELSE 2 END,
+	    case when endereco.cidade = '${cidade}' THEN 1 ELSE 2 END,
+        case when endereco.estado = '${estado}' THEN 1 ELSE 2 END,
     bairro asc, 
     cidade asc,
     estado asc
-    
-    limit 10 offset ${page}0
-`
+    order by id asc limit 10 offset ${page}0`
     
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
