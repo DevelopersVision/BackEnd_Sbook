@@ -13,8 +13,8 @@ var anuncioAutor = require('../model/model_anuncio_autor.js')
 var anuncioFotoDAO = require('../model/model_foto.js')
 var usuarioDAO = require('../model/model_usuario.js')
 
-const ctlGetAnuncios = async () => {
-    let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio()
+const ctlGetAnuncios = async (page) => {
+    let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio(page)
 
     if (dadosAnuncio) {
         let listaAnuncios = []
@@ -67,15 +67,16 @@ const ctlGetAnuncios = async () => {
         }
 
         let dadosAnuncioJSON = {
-            status: message.SUCCESS_REQUEST.status,
-            message: message.SUCCESS_REQUEST.message,
-            quantidade: listaAnuncios.length,
-            anuncios: listaAnuncios
-        }
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                quantidade: listaAnuncios.length,
+                anuncios: listaAnuncios
+            }   
+
 
         return dadosAnuncioJSON
     } else {
-        return message.ERROR_INTERNAL_SERVER
+        return message.ERROR_REGISTER_NOT_FOUND
     }
 }
 
@@ -234,6 +235,11 @@ const ctlGetAnuncioByIdUsuario = async (idUsuario) => {
             }
         }
     }
+}
+
+const ctlGetAnuncioByLocalizacao = async (bairro, ) => {
+
+
 }
 
 const ctlInserirAnuncio = async (dadosAnuncio) => {

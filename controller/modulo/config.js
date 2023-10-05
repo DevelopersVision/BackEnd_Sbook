@@ -53,6 +53,9 @@ const SUCCESS_REQUEST = {status: 200, message: 'REQUISIÇÃO BEM SUCEDIDA'}
 
 const SUCCESS_VALID_TOKEN = {status: 200, message: 'TOKEN VÁLIDO'}
 
+/*************************************** MENSAGENS DE ALERTA ***************************************/
+const ALERT_PAGE = "ESTE ENDPOINT RETORNA INÚMEROS DADOS E VOCÊ ESTÁ USANDO SEM PAGINAÇÃO"
+
 
 module.exports = {
     //Exportes de erro
@@ -77,5 +80,8 @@ module.exports = {
     SUCCESS_UPDATED_ITEM,
     SUCCESS_DELETED_ITEM,
     SUCCESS_REQUEST,
-    SUCCESS_VALID_TOKEN
+    SUCCESS_VALID_TOKEN,
+
+    //Exportes de alert
+    ALERT_PAGE
 }

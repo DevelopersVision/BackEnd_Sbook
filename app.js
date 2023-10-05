@@ -397,7 +397,9 @@ app.get('/v1/sbook/anuncio-tipo-anuncio/:idAnuncio', cors(), async function (req
 const controllerAnuncio = require('./controller/controller_anuncio.js')
 
 app.get('/v1/sbook/anuncio', cors(), async function (request, response) {
-    let dadosAnuncio = await controllerAnuncio.ctlGetAnuncios()
+    let page = request.query.page
+
+    let dadosAnuncio = await controllerAnuncio.ctlGetAnuncios(page)
 
     response.status(dadosAnuncio.status)
     response.json(dadosAnuncio)
