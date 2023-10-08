@@ -151,7 +151,7 @@ const ctlGetAnuncioByID = async (idAnuncio) => {
     }
 }
 
-const ctlGetAnuncioByIdUsuario = async (idUsuario, page) => {
+const ctlGetAnuncioByIdUsuario = async (idUsuario) => {
 
     if (idUsuario == "" || idUsuario == null || idUsuario == undefined) {
         return message.ERROR_REQUIRE_FIELDS
@@ -162,7 +162,7 @@ const ctlGetAnuncioByIdUsuario = async (idUsuario, page) => {
         if (!verificarUsuario) {
             return message.ERROR_INVALID_ID
         } else {
-            let dadosAnuncio = await anuncioDAO.mdlSelectAnuncioByIdUsuario(idUsuario, page)
+            let dadosAnuncio = await anuncioDAO.mdlSelectAnuncioByIdUsuario(idUsuario)
 
             if (dadosAnuncio) {
                 let listaAnuncios = []

@@ -106,7 +106,7 @@ const mdlSelectAnuncioById = async (id) => {
     }
 }
 
-const mdlSelectAnuncioByIdUsuario = async (idUsuario, page) => {
+const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
     let sql = `select 
     anuncio.id, 
     anuncio.nome, 
@@ -142,12 +142,9 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario, page) => {
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
-    where anuncio.id_usuario = ${idUsuario}
-    order by id asc limit 10 offset ${page}0`
+    where anuncio.id_usuario = ${idUsuario}`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
-
-    console.log(rsAnuncio);
 
     if (rsAnuncio.length > 0) {
         return rsAnuncio
