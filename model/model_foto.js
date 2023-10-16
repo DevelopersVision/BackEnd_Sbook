@@ -24,6 +24,23 @@ const mdlSelectFotoByIdAnuncio = async (idAnuncio) => {
     }
 }
 
+const mdlInsertFotoScale = async (arrayFotos) => {
+    for (let i = 0; i < arrayFotos.length; i++) {
+        const foto = array[i];
+
+        let sql = `insert into tbl_foto(
+            id_anuncio, foto
+            ) values (
+                ${foto.id_anunciante}, 
+                '${foto.foto}'
+            )`
+
+        await prisma.$executeRawUnsafe(sql)
+    }
+}
+
+
 module.exports = {
-    mdlSelectFotoByIdAnuncio
+    mdlSelectFotoByIdAnuncio,
+    mdlInsertFotoScale
 }

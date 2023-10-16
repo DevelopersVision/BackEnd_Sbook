@@ -328,13 +328,36 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
         dadosAnuncio.id_usuario == "" || dadosAnuncio.id_usuario == null || dadosAnuncio.id_usuario == undefined || isNaN(dadosAnuncio.id_usuario) ||
         dadosAnuncio.id_estado_livro == "" || dadosAnuncio.id_estado_livro == null || dadosAnuncio.id_estado_livro == undefined || isNaN(dadosAnuncio.id_estado_livro) ||
         dadosAnuncio.id_idioma == "" || dadosAnuncio.id_idioma == null || dadosAnuncio.id_idioma == undefined || isNaN(dadosAnuncio.id_idioma) ||
-        dadosAnuncio.id_editora == "" || dadosAnuncio.id_editora == null || dadosAnuncio.id_editora == undefined || isNaN(dadosAnuncio.id_editora)
+        dadosAnuncio.id_editora == "" || dadosAnuncio.id_editora == null || dadosAnuncio.id_editora == undefined || isNaN(dadosAnuncio.id_editora) ||
+        dadosAnuncio.fotos == "" || dadosAnuncio.fotos == null || dadosAnuncio.fotos == undefined || dadosAnuncio.fotos.length == 0 ||
+        dadosAnuncio.tipos_anuncio == null || dadosAnuncio.tipo_anuncio == "" || dadosAnuncio.tipo_anuncio.length == 0 || dadosAnuncio.tipo_anuncio == undefined ||
+        dadosAnuncio.generos == null || dadosAnuncio.generos == undefined || dadosAnuncio.generos == "" || dadosAnuncio.generos.length == 0 || 
+        dadosAnuncio.autores == null || dadosAnuncio.autores == undefined || dadosAnuncio.autores == "" || dadosAnuncio.autores.length == 0 
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
-        
+        let dadosAnuncioPrincipal = await anuncioDAO.mdlInsertAnuncio(dadosAnuncio)
 
+        if(dadosAnuncioPrincipal){
+            let novoAnuncio = await anuncioDAO.mdlSelectAnuncioLastId()
 
+            await anuncioAutor.mdlInsertAnuncioAutorScale(dadosAnuncio.autores)
+            await anuncioFotoDAO.mdlInsertFotoScale(dadosAnuncio.fotos)
+            await anuncioGeneroDAO.mdlInsertIdAnuncioIdGeneroScale(dadosAnuncio.generos)
+            await anuncioTipoAnuncio.mdlInsertIdAnuncioIdTipoAnuncioScale(dadosAnuncio.tipos_anuncio)
+
+            let dadosNovoAnuncio = await ctlGetAnuncioByID(novoAnuncio[0].id)
+
+            let dadosAnuncioJSON = {
+                status: message.SUCCESS_CREATED_ITEM.status,
+                message: message.SUCCESS_CREATED_ITEM.message,
+                anuncio_novo: dadosNovoAnuncio
+            }
+
+            return dadosAnuncioJSON
+        }else{
+            return message.ERROR_INTERNAL_SERVER
+        }
     }
 }
 

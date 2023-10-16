@@ -82,6 +82,19 @@ where anuncio_genero.id_anuncio = ${idAnuncio}`
     }
 }
 
+const mdlInsertIdAnuncioIdGeneroScale = async (arrayIdsAnuncioGenero) => {
+ 
+    for (let i = 0; i < arrayIdsAnuncioGenero.length; i++) {
+        const idsAnuncioGenero = array[i];
+
+        let sql = `insert into tbl_anuncio_genero (id_anuncio, id_genero) values (${idsAnuncioGenero.id_anuncio}, ${idsAnuncioGenero.id_genero})`
+
+        await prisma.$executeRawUnsafe(sql)
+    }
+
+}
+
 module.exports = {
-    mdlSelectGeneroByIdAnuncio
+    mdlSelectGeneroByIdAnuncio,
+    mdlInsertIdAnuncioIdGeneroScale
 }

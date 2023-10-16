@@ -1,5 +1,5 @@
 /**************************************************************************************
-*  Objetivo: Responsável por gerenciar funções de dados do anuncio com o tipo anuncio
+*  Objetivo: Responsável por gerenciar funções de dados do anuncio com o autor
 *  Autor: Luiz Gustavo e Felipe Graciano
 *  Data: 15/09/2023
 *  Versão: 1.0
@@ -31,7 +31,27 @@ const mdlSelectAutorByIdAnuncio = async (idAnuncio) => {
     }
 }
 
+// const mdlInserirAutorByIdAnuncio = async (id)
+
+const mdlInsertAnuncioAutorScale = async (arrayAnuncioAutores) => {
+    for (let i = 0; i < arrayAnuncioAutores.length; i++) {
+        const autor = array[i];
+
+        let sql = `insert into tbl_autor(nome) values ("${autor.nome_autor}")`
+
+        await prisma.$executeRawUnsafe(sql)
+
+        let sqlLastId = `select tbl_autor.id, tbl_autor.nome from tbl_autor order by usuario.id desc limit 1`
+
+        let lastAutor = await prisma.$queryRawUnsafe(sqlLastId)
+
+        let sqlInsert = `insert into tbl_anuncio_autor(id_autor, id_anuncio) values (${lastAutor.id},${autor.id_anuncio})`
+
+        await prisma.$executeRawUnsafe(sqlInsert)
+    }
+}
 
 module.exports = {
-    mdlSelectAutorByIdAnuncio
+    mdlSelectAutorByIdAnuncio,
+    mdlInsertAnuncioAutorScale
 }

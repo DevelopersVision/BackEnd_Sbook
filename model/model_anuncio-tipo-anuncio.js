@@ -91,7 +91,21 @@ const mdlSelectAnuncioByIdTipoAnuncio = async (idTipoAnuncio) => {
     }
 }
 
+const mdlInsertIdAnuncioIdTipoAnuncioScale = async (arrayIdsAnuncioTipoAnuncio) => {
+ 
+    for (let i = 0; i < arrayIdsAnuncioTipoAnuncio.length; i++) {
+        const idsAnuncioTipoAnuncio = array[i];
+
+        let sql = `insert into tbl_anuncio_tipo_anuncio(id_anuncio, id_tipo_anuncio) values (${idsAnuncioTipoAnuncio.id_anuncio}, ${idsAnuncioTipoAnuncio.id_tipo_anuncio})`
+
+        await prisma.$executeRawUnsafe(sql)
+    }
+
+}
+
+
 module.exports = {
     mdlSelectAllTipoAnuncio,
     mdlSelectTipoAnuncioByIdAnuncio,
+    mdlInsertIdAnuncioIdTipoAnuncioScale
 }

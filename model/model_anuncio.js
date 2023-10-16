@@ -208,7 +208,53 @@ const mdlSelectAnuncioByLocalização = async (bairro, cidade, estado, page) => 
     }else{
         return false
     }
+}
 
+const mdlSelectAnuncioLastId = async () => {
+    let sql = `select 
+    anuncio.id, 
+    anuncio.nome, 
+    anuncio.ano_lancamento,
+    date_format(anuncio.data_criacao, '%d-%m-%Y %H:%i') as data_criacao,
+    anuncio.status_anuncio,
+    anuncio.edicao,
+    anuncio.preco,
+    anuncio.descricao,
+    anuncio.status_anuncio,
+    anuncio.numero_paginas,
+    endereco.estado,
+    endereco.cidade,
+    endereco.bairro,
+    anuncio.id_estado_livro,
+    estado_livro.estado as estado_livro,
+    anuncio.id_idioma,
+    anuncio.id_usuario as id_anunciante,
+    idioma.nome as nome_idioma,
+    anuncio.id_editora,
+    editora.nome as nome_editora,
+    foto.foto
+    from tbl_anuncio as anuncio
+        inner join tbl_foto as foto
+            on foto.id_anuncio = anuncio.id
+    	inner join tbl_usuario as usuario
+	    	on usuario.id = anuncio.id_usuario
+	    inner join tbl_endereco as endereco 
+    		on endereco.id = usuario.id_endereco
+	    inner join tbl_estado_livro as estado_livro
+		    on estado_livro.id = anuncio.id_estado_livro
+	    inner join tbl_idioma as idioma
+    		on anuncio.id_idioma = idioma.id
+	    inner join tbl_editora as editora
+		    on editora.id = anuncio.id_editora
+    order by anuncio.id desc limit 1`
+
+    let rsAnuncio = await prisma.$queryRawUnsafe(sql)
+
+    if (rsAnuncio.length > 0) {
+        return rsAnuncio
+    } else {
+        return false
+    }
 }
 
 const mdlInsertAnuncio = async (dadosAnuncio) => {
@@ -259,5 +305,6 @@ module.exports = {
     mdlSelectAnuncioById,
     mdlSelectAnuncioByIdUsuario,
     mdlSelectAnuncioByLocalização,
-    mdlInsertAnuncio
+    mdlInsertAnuncio,
+    mdlSelectAnuncioLastId
 }
