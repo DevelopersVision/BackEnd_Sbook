@@ -406,6 +406,17 @@ app.get('/v1/sbook/anuncio', cors(), async function (request, response) {
     response.json(dadosAnuncio)
 })
 
+app.get('/v1/sbook/anuncio-proximos', cors(), bodyParserJSON, async function (request, response) {
+
+    let page = request.query.page
+    let dadosBody = request.body
+
+    let dadosAnuncio = await controllerAnuncio.ctlGetAnuncioByLocalizacao(dadosBody.bairro, dadosBody.cidade, dadosBody.estado, page)
+
+    response.status(dadosAnuncio.status)
+    response.json(dadosAnuncio)
+})
+
 app.get('/v1/sbook/anuncio/:id', cors(), async function (request, response) {
     let id = request.params.id
 

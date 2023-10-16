@@ -70,7 +70,6 @@ const mdlSelectAnuncioById = async (id) => {
     anuncio.descricao,
     anuncio.status_anuncio,
     anuncio.numero_paginas,
-    anuncio.id_usuario,
     endereco.estado,
     endereco.cidade,
     endereco.bairro,
@@ -175,7 +174,7 @@ const mdlSelectAnuncioByLocalização = async (bairro, cidade, estado, page) => 
     endereco.estado,
     endereco.cidade,
     endereco.bairro,
-    anuncio.id_usuario as anunciante,
+    anuncio.id_usuario as id_anunciante,
     idioma.nome as nome_idioma,
     anuncio.id_editora,
     editora.nome as nome_editora,
@@ -199,8 +198,8 @@ const mdlSelectAnuncioByLocalização = async (bairro, cidade, estado, page) => 
         case when endereco.estado = '${estado}' THEN 1 ELSE 2 END,
     bairro asc, 
     cidade asc,
-    estado asc
-    order by id asc limit 10 offset ${page}0`
+    estado asc,
+    id asc limit 10 offset ${page}0`
     
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
