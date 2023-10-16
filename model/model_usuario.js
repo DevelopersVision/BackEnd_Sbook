@@ -180,11 +180,21 @@ const mdlupdateUsuario = async function (dadosEnderecoUsuario) {
 }
 
 const mdlUpdateForgotPasswordUsuario = async (passwordResetToken, passwordResetExpiress, id) => {
-    let sql = `update tbl_usuario set 
+    let sql
+
+    if(passwordResetExpiress == null){
+        sql = `update tbl_usuario set 
+            tbl_usuario.senha_reset_token = ${passwordResetToken},
+            tbl_usuario.senha_reset_expiracao = ${passwordResetExpiress}
+        where tbl_usuario.id = ${id}
+        `
+    }else{
+        sql = `update tbl_usuario set 
             tbl_usuario.senha_reset_token = ${passwordResetToken},
             tbl_usuario.senha_reset_expiracao = '${passwordResetExpiress}'
         where tbl_usuario.id = ${id}
         `
+    }
 
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 

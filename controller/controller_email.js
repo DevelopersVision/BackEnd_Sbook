@@ -43,7 +43,7 @@ const ctlEsqueciSenha = async (email) => {
             }).then(info => {
                 info.status = 200;
                 info.email = email
-            
+
                 return info
             }).catch(error => {
                 return error
@@ -65,33 +65,32 @@ const ctlValidarToken = async (dados) => {
     } else {
         let checkEmail = await usuarioDAO.selectByEmail(dados.email)
 
+        let id = checkEmail[0].id
+
         if (checkEmail.length > 0) {
             const now = moment().format("HH:mm")
             const token_expiress = moment(checkEmail[0].senha_reset_expiracao).add(3, 'hours').format("HH:mm:ss")
-
-            console.log(checkEmail);
-            console.log(checkEmail[0].senha_reset_token);
-            console.log(now)
-            console.log(token_expiress)
 
             if (!checkEmail) {
                 returnFunction = message.ERROR_INVALID_EMAIL
             } else if (checkEmail[0].senha_reset_token != dados.token) {
                 returnFunction = message.ERROR_INVALID_TOKEN
+            } else if (now > token_expiress) {
+                returnFunction = message.ERROR_TOKEN_EXPIRADO
             } else if (checkEmail[0].senha_reset_token == dados.token && now < token_expiress) {
                 message.SUCCESS_VALID_TOKEN.id = checkEmail[0].id
                 returnFunction = message.SUCCESS_VALID_TOKEN
-            } else if (now > token_expiress) {
-                returnFunction = message.ERROR_TOKEN_EXPIRADO
             } else {
                 returnFunction = message.ERROR_INTERNAL_SERVER
             }
-        }else{
+        } else {
             returnFunction = message.ERROR_REGISTER_NOT_FOUND
         }
+
+        await usuarioDAO.mdlUpdateForgotPasswordUsuario(null, null, id)
     }
 
-    await usuarioDAO.mdlUpdateForgotPasswordUsuario(null, null, id)
+
     return returnFunction
 }
 
