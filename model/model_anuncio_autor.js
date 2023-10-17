@@ -31,23 +31,28 @@ const mdlSelectAutorByIdAnuncio = async (idAnuncio) => {
     }
 }
 
-// const mdlInserirAutorByIdAnuncio = async (id)
 
-const mdlInsertAnuncioAutorScale = async (arrayAnuncioAutores) => {
+const mdlInsertAnuncioAutorScale = async (idAnuncio, arrayAnuncioAutores) => {
     for (let i = 0; i < arrayAnuncioAutores.length; i++) {
-        const autor = array[i];
+        const autor = arrayAnuncioAutores[i];
 
-        let sql = `insert into tbl_autor(nome) values ("${autor.nome_autor}")`
+        if (autor.status_autor) {
+            let sql = `insert into tbl_autor(nome) values ("${autor.nome_autor}")`
 
-        await prisma.$executeRawUnsafe(sql)
+            await prisma.$executeRawUnsafe(sql)
 
-        let sqlLastId = `select tbl_autor.id, tbl_autor.nome from tbl_autor order by usuario.id desc limit 1`
+            let sqlLastId = `select tbl_autor.id, tbl_autor.nome from tbl_autor order by tbl_autor.id desc limit 1`
 
-        let lastAutor = await prisma.$queryRawUnsafe(sqlLastId)
+            let lastAutor = await prisma.$queryRawUnsafe(sqlLastId)
 
-        let sqlInsert = `insert into tbl_anuncio_autor(id_autor, id_anuncio) values (${lastAutor.id},${autor.id_anuncio})`
+            let sqlInsert = `insert into tbl_anuncio_autor(id_autor, id_anuncio) values (${lastAutor.id},${idAnuncio})`
 
-        await prisma.$executeRawUnsafe(sqlInsert)
+            await prisma.$executeRawUnsafe(sqlInsert)
+        } else {
+            let sql = `insert into tbl_anuncio_autor(id_autor, id_anuncio) values (${autor.id_autor}, ${idAnuncio})`
+
+            await prisma.$executeRawUnsafe(sql)
+        }
     }
 }
 

@@ -82,12 +82,12 @@ where anuncio_genero.id_anuncio = ${idAnuncio}`
     }
 }
 
-const mdlInsertIdAnuncioIdGeneroScale = async (arrayIdsAnuncioGenero) => {
+const mdlInsertIdAnuncioIdGeneroScale = async (idAnuncio, arrayIdGenero) => {
  
-    for (let i = 0; i < arrayIdsAnuncioGenero.length; i++) {
-        const idsAnuncioGenero = array[i];
+    for (let i = 0; i < arrayIdGenero.length; i++) {
+        const idAnuncioGenero = arrayIdGenero[i];
 
-        let sql = `insert into tbl_anuncio_genero (id_anuncio, id_genero) values (${idsAnuncioGenero.id_anuncio}, ${idsAnuncioGenero.id_genero})`
+        let sql = `insert into tbl_anuncio_genero (id_anuncio, id_genero) values (${idAnuncio}, ${idAnuncioGenero})`
 
         await prisma.$executeRawUnsafe(sql)
     }

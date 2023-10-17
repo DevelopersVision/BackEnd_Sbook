@@ -406,7 +406,7 @@ app.get('/v1/sbook/anuncio', cors(), async function (request, response) {
     response.json(dadosAnuncio)
 })
 
-app.get('/v1/sbook/anuncio-proximos', cors(), bodyParserJSON, async function (request, response) {
+app.post('/v1/sbook/anuncio-proximos', cors(), bodyParserJSON, async function (request, response) {
 
     let page = request.query.page
     let dadosBody = request.body
@@ -433,6 +433,24 @@ app.get('/v1/sbook/anuncio-usuario/:id', cors(), async function (request, respon
 
     response.status(dadosAnuncio.status)
     response.json(dadosAnuncio)
+})
+
+app.post('/v1/sbook/publicar-anuncio', cors(), async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let body = request.body
+
+        let dadosAnuncio = await controllerAnuncio.ctlInserirAnuncio(body)
+
+        response.status(dadosAnuncio.status)
+        response.json(dadosAnuncio)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
 })
 
 /*****************************************************************************************************************

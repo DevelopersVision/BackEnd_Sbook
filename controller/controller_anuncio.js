@@ -12,6 +12,7 @@ var anuncioTipoAnuncio = require('../model/model_anuncio-tipo-anuncio.js')
 var anuncioAutor = require('../model/model_anuncio_autor.js')
 var anuncioFotoDAO = require('../model/model_foto.js')
 var usuarioDAO = require('../model/model_usuario.js')
+var anuncioEditoraDAO = require('../model/model_anuncio_editora.js')
 
 const ctlGetAnuncios = async (page) => {
     let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio(page)
@@ -328,7 +329,7 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
         dadosAnuncio.id_usuario == "" || dadosAnuncio.id_usuario == null || dadosAnuncio.id_usuario == undefined || isNaN(dadosAnuncio.id_usuario) ||
         dadosAnuncio.id_estado_livro == "" || dadosAnuncio.id_estado_livro == null || dadosAnuncio.id_estado_livro == undefined || isNaN(dadosAnuncio.id_estado_livro) ||
         dadosAnuncio.id_idioma == "" || dadosAnuncio.id_idioma == null || dadosAnuncio.id_idioma == undefined || isNaN(dadosAnuncio.id_idioma) ||
-        dadosAnuncio.id_editora == "" || dadosAnuncio.id_editora == null || dadosAnuncio.id_editora == undefined || isNaN(dadosAnuncio.id_editora) ||
+        dadosAnuncio.editora == "" || dadosAnuncio.id_editora == null || dadosAnuncio.id_editora == undefined ||
         dadosAnuncio.fotos == "" || dadosAnuncio.fotos == null || dadosAnuncio.fotos == undefined || dadosAnuncio.fotos.length == 0 ||
         dadosAnuncio.tipos_anuncio == null || dadosAnuncio.tipo_anuncio == "" || dadosAnuncio.tipo_anuncio.length == 0 || dadosAnuncio.tipo_anuncio == undefined ||
         dadosAnuncio.generos == null || dadosAnuncio.generos == undefined || dadosAnuncio.generos == "" || dadosAnuncio.generos.length == 0 || 
@@ -336,15 +337,18 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
+        let idEditora = await anuncioEditoraDAO.checkAnuncioEditora(dadosAnuncio.id_editora)
+
+        dadosAnuncioPrincipal.id_editora = idEditora
         let dadosAnuncioPrincipal = await anuncioDAO.mdlInsertAnuncio(dadosAnuncio)
 
         if(dadosAnuncioPrincipal){
             let novoAnuncio = await anuncioDAO.mdlSelectAnuncioLastId()
 
-            await anuncioAutor.mdlInsertAnuncioAutorScale(dadosAnuncio.autores)
-            await anuncioFotoDAO.mdlInsertFotoScale(dadosAnuncio.fotos)
-            await anuncioGeneroDAO.mdlInsertIdAnuncioIdGeneroScale(dadosAnuncio.generos)
-            await anuncioTipoAnuncio.mdlInsertIdAnuncioIdTipoAnuncioScale(dadosAnuncio.tipos_anuncio)
+            await anuncioAutor.mdlInsertAnuncioAutorScale(novoAnuncio[0].id, dadosAnuncio.autores)
+            await anuncioFotoDAO.mdlInsertFotoScale(novoAnuncio[0].id, dadosAnuncio.fotos)
+            await anuncioGeneroDAO.mdlInsertIdAnuncioIdGeneroScale(novoAnuncio[0].id, dadosAnuncio.generos)
+            await anuncioTipoAnuncio.mdlInsertIdAnuncioIdTipoAnuncioScale(novoAnuncio[0].id, dadosAnuncio.tipos_anuncio)
 
             let dadosNovoAnuncio = await ctlGetAnuncioByID(novoAnuncio[0].id)
 
@@ -389,5 +393,6 @@ module.exports = {
     ctlGetAnuncios,
     ctlGetAnuncioByID,
     ctlGetAnuncioByIdUsuario,
-    ctlGetAnuncioByLocalizacao
+    ctlGetAnuncioByLocalizacao,
+    ctlInserirAnuncio
 }

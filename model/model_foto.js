@@ -24,15 +24,15 @@ const mdlSelectFotoByIdAnuncio = async (idAnuncio) => {
     }
 }
 
-const mdlInsertFotoScale = async (arrayFotos) => {
+const mdlInsertFotoScale = async (id, arrayFotos) => {
     for (let i = 0; i < arrayFotos.length; i++) {
-        const foto = array[i];
+        const foto = arrayFotos[i];
 
         let sql = `insert into tbl_foto(
             id_anuncio, foto
             ) values (
-                ${foto.id_anunciante}, 
-                '${foto.foto}'
+                ${id}, 
+                '${foto}'
             )`
 
         await prisma.$executeRawUnsafe(sql)
