@@ -310,6 +310,82 @@ const mdlSelectAnuncioFromLastId = async () => {
     }
 }
 
+const mdlSelectsFiltros = async(arrayGenero, arrayEstado_livro)=>{
+    
+
+    let sql = `
+    select 
+        anuncio.id, 
+        anuncio.nome, 
+        anuncio.ano_lancamento,
+        date_format(anuncio.data_criacao, '%d-%m-%Y %H:%i') as data_criacao,
+        anuncio.status_anuncio,
+        anuncio.edicao,
+        anuncio.preco,
+        anuncio.descricao,
+        anuncio.status_anuncio,
+        anuncio.numero_paginas,
+        anuncio.id_usuario,
+        endereco.estado,
+        endereco.cidade,
+        endereco.bairro,
+        anuncio.id_estado_livro,
+        estado_livro.estado as estado_livro,
+        anuncio.id_idioma,
+        anuncio.id_usuario as id_anunciante,
+        idioma.nome as nome_idioma,
+        anuncio.id_editora,
+        editora.nome as nome_editora,
+        tbl_genero.nome as genero
+        from tbl_anuncio as anuncio
+            inner join tbl_usuario as usuario
+                on usuario.id = anuncio.id_usuario
+            inner join tbl_endereco as endereco 
+                on endereco.id = usuario.id_endereco
+            inner join tbl_estado_livro as estado_livro
+                on estado_livro.id = anuncio.id_estado_livro
+            inner join tbl_idioma as idioma
+                on anuncio.id_idioma = idioma.id
+            inner join tbl_editora as editora
+                on editora.id = anuncio.id_editora
+            inner join tbl_anuncio_genero
+                on tbl_anuncio_genero.id_anuncio = anuncio.id
+            inner join tbl_genero
+                on tbl_anuncio_genero.id_genero = tbl_genero.id
+                order by id asc;`
+
+    let rsAnuncio = await prisma.$queryRawUnsafe(sql)
+
+    let array = []
+
+    if(
+        arrayGenero == null || arrayGenero == "" || arrayGenero == undefined 
+    ){
+        
+        rsAnuncio = rsAnuncio.filter(rsAnuncio => rsAnuncio.estado_livro == arrayEstado_livro[0] || arrayEstado_livro[1])
+        
+
+    } else if(
+        arrayEstado_livro == null || arrayEstado_livro == "" || arrayEstado_livro == undefined
+    ){
+        
+        rsAnuncio = rsAnuncio.filter(rsAnuncio => rsAnuncio.genero == `${arrayGenero}`)
+
+        array.push(arrayGenero)
+
+        rsAnuncio = array
+    }
+
+
+    console.log("TESTEEEE" + rsAnuncio);
+
+    if (rsAnuncio) {
+        return rsAnuncio
+    } else {
+        return false
+    }
+}
+
 module.exports = {
     mdlSelectAllAnuncio,
     mdlSelectAnuncioById,
