@@ -298,7 +298,17 @@ const mdlInsertAnuncio = async (dadosAnuncio) => {
 
 }
 
+const mdlSelectAnuncioFromLastId = async () => {
+    let sql = `select * from tbl_anuncio order by tbl_anuncio.id desc limit 1`
 
+    let rsAnuncio = await prisma.$queryRawUnsafe(sql)
+
+    if (rsAnuncio.length > 0) {
+        return rsAnuncio
+    } else {
+        return false
+    }
+}
 
 module.exports = {
     mdlSelectAllAnuncio,
@@ -306,5 +316,6 @@ module.exports = {
     mdlSelectAnuncioByIdUsuario,
     mdlSelectAnuncioByLocalização,
     mdlInsertAnuncio,
-    mdlSelectAnuncioLastId
+    mdlSelectAnuncioLastId,
+    mdlSelectAnuncioFromLastId
 }

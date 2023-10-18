@@ -331,7 +331,7 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
         dadosAnuncio.id_idioma == "" || dadosAnuncio.id_idioma == null || dadosAnuncio.id_idioma == undefined || isNaN(dadosAnuncio.id_idioma) ||
         dadosAnuncio.editora == "" || dadosAnuncio.id_editora == null || dadosAnuncio.id_editora == undefined ||
         dadosAnuncio.fotos == "" || dadosAnuncio.fotos == null || dadosAnuncio.fotos == undefined || dadosAnuncio.fotos.length == 0 ||
-        dadosAnuncio.tipos_anuncio == null || dadosAnuncio.tipo_anuncio == "" || dadosAnuncio.tipo_anuncio.length == 0 || dadosAnuncio.tipo_anuncio == undefined ||
+        dadosAnuncio.tipos_anuncio == null || dadosAnuncio.tipos_anuncio == "" || dadosAnuncio.tipos_anuncio.length == 0 || dadosAnuncio.tipos_anuncio == undefined ||
         dadosAnuncio.generos == null || dadosAnuncio.generos == undefined || dadosAnuncio.generos == "" || dadosAnuncio.generos.length == 0 || 
         dadosAnuncio.autores == null || dadosAnuncio.autores == undefined || dadosAnuncio.autores == "" || dadosAnuncio.autores.length == 0 
     ) {
@@ -339,11 +339,11 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
     } else {
         let idEditora = await anuncioEditoraDAO.checkAnuncioEditora(dadosAnuncio.id_editora)
 
-        dadosAnuncioPrincipal.id_editora = idEditora
+        dadosAnuncio.id_editora = idEditora
         let dadosAnuncioPrincipal = await anuncioDAO.mdlInsertAnuncio(dadosAnuncio)
 
         if(dadosAnuncioPrincipal){
-            let novoAnuncio = await anuncioDAO.mdlSelectAnuncioLastId()
+            let novoAnuncio = await anuncioDAO.mdlSelectAnuncioFromLastId()
 
             await anuncioAutor.mdlInsertAnuncioAutorScale(novoAnuncio[0].id, dadosAnuncio.autores)
             await anuncioFotoDAO.mdlInsertFotoScale(novoAnuncio[0].id, dadosAnuncio.fotos)
@@ -355,7 +355,7 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
             let dadosAnuncioJSON = {
                 status: message.SUCCESS_CREATED_ITEM.status,
                 message: message.SUCCESS_CREATED_ITEM.message,
-                anuncio_novo: dadosNovoAnuncio
+                anuncio_novo: dadosNovoAnuncio.anuncios
             }
 
             return dadosAnuncioJSON

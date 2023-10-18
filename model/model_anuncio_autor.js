@@ -37,7 +37,7 @@ const mdlInsertAnuncioAutorScale = async (idAnuncio, arrayAnuncioAutores) => {
         const autor = arrayAnuncioAutores[i];
 
         if (autor.status_autor) {
-            let sql = `insert into tbl_autor(nome) values ("${autor.nome_autor}")`
+            let sql = `insert into tbl_autor(nome) values ('${autor.nome_autor}')`
 
             await prisma.$executeRawUnsafe(sql)
 
@@ -45,7 +45,7 @@ const mdlInsertAnuncioAutorScale = async (idAnuncio, arrayAnuncioAutores) => {
 
             let lastAutor = await prisma.$queryRawUnsafe(sqlLastId)
 
-            let sqlInsert = `insert into tbl_anuncio_autor(id_autor, id_anuncio) values (${lastAutor.id},${idAnuncio})`
+            let sqlInsert = `insert into tbl_anuncio_autor(id_autor, id_anuncio) values (${lastAutor[0].id},${idAnuncio})`
 
             await prisma.$executeRawUnsafe(sqlInsert)
         } else {

@@ -157,7 +157,7 @@ app.post('/v1/sbook/registro-usuario', cors(), bodyParserJSON, async function (r
     }
 })
 
-app.put('/v1/sbook/atualizar-usuario', verifyJWT, cors(), bodyParserJSON, async function (request, response) {
+app.put('/v1/sbook/atualizar-usuario', cors(), bodyParserJSON, async function (request, response) {
     let contentType = request.headers['content-type']
 
     //Validação para receber dados apenas no formato JSON
@@ -435,7 +435,7 @@ app.get('/v1/sbook/anuncio-usuario/:id', cors(), async function (request, respon
     response.json(dadosAnuncio)
 })
 
-app.post('/v1/sbook/publicar-anuncio', cors(), async function (request, response) {
+app.post('/v1/sbook/publicar-anuncio', cors(), bodyParserJSON, async function (request, response) {
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
 
