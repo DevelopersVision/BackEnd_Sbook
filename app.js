@@ -400,7 +400,7 @@ app.get('/v1/sbook/anuncio', cors(), async function (request, response) {
 
     let page = request.query.page
 
-    if (page != undefined) {
+    if (page) {
         let dadosAnuncio = await controllerAnuncio.ctlGetAnuncioPage(page)
 
         response.status(dadosAnuncio.status)

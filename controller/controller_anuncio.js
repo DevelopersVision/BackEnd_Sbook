@@ -17,91 +17,88 @@ var anuncioEditoraDAO = require('../model/model_anuncio_editora.js')
 const ctlGetAnuncios = async () => {
     let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio()
 
-    if(page == null || page == undefined){
-        return message.ERROR_REQUIRE_FIELDS
-    }else{
-        if (dadosAnuncio) {
-            let listaAnuncios = []
-    
-            for (let index = 0; index < dadosAnuncio.length; index++) {
-                const anuncio = dadosAnuncio[index];
-    
-                let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
-                let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
-                let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
-                let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
-    
-                let anuncioJSON = {
-                    anuncio: {
-                        id: anuncio.id,
-                        nome: anuncio.nome,
-                        ano_lancamento: anuncio.ano_lancamento,
-                        data_criacao: anuncio.data_criacao,
-                        status_anuncio: anuncio.status_anuncio,
-                        edicao: anuncio.edicao,
-                        preco: anuncio.preco,
-                        descricao: anuncio.descricao,
-                        numero_paginas: anuncio.numero_paginas,
-                        anunciante: anuncio.id_anunciante
-                    },
-                    idioma: {
-                        id: anuncio.id_idioma,
-                        nome: anuncio.nome_idioma
-                    },
-                    endereco: {
-                        estado: anuncio.estado,
-                        cidade: anuncio.cidade,
-                        bairro: anuncio.bairro
-                    },
-                    estado_livro: {
-                        id: anuncio.id_estado_livro,
-                        estado: anuncio.estado_livro
-                    },
-                    editora: {
-                        id: anuncio.id_editora,
-                        nome: anuncio.nome_editora
-                    },
-                    foto: fotosAnuncio,
-                    generos: generosAnuncio,
-                    tipo_anuncio: tiposAnuncio,
-                    autores: autoresAnuncio
-                }
-    
-                listaAnuncios.push(anuncioJSON)
+
+    if (dadosAnuncio) {
+        let listaAnuncios = []
+
+        for (let index = 0; index < dadosAnuncio.length; index++) {
+            const anuncio = dadosAnuncio[index];
+
+            let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
+            let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
+            let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
+            let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
+
+            let anuncioJSON = {
+                anuncio: {
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    ano_lancamento: anuncio.ano_lancamento,
+                    data_criacao: anuncio.data_criacao,
+                    status_anuncio: anuncio.status_anuncio,
+                    edicao: anuncio.edicao,
+                    preco: anuncio.preco,
+                    descricao: anuncio.descricao,
+                    numero_paginas: anuncio.numero_paginas,
+                    anunciante: anuncio.id_anunciante
+                },
+                idioma: {
+                    id: anuncio.id_idioma,
+                    nome: anuncio.nome_idioma
+                },
+                endereco: {
+                    estado: anuncio.estado,
+                    cidade: anuncio.cidade,
+                    bairro: anuncio.bairro
+                },
+                estado_livro: {
+                    id: anuncio.id_estado_livro,
+                    estado: anuncio.estado_livro
+                },
+                editora: {
+                    id: anuncio.id_editora,
+                    nome: anuncio.nome_editora
+                },
+                foto: fotosAnuncio,
+                generos: generosAnuncio,
+                tipo_anuncio: tiposAnuncio,
+                autores: autoresAnuncio
             }
-    
-            let dadosAnuncioJSON = {
-                    status: message.SUCCESS_REQUEST.status,
-                    message: message.SUCCESS_REQUEST.message,
-                    quantidade: listaAnuncios.length,
-                    anuncios: listaAnuncios
-                }   
-    
-    
-            return dadosAnuncioJSON
-        } else {
-            return message.ERROR_REGISTER_NOT_FOUND
+
+            listaAnuncios.push(anuncioJSON)
         }
+
+        let dadosAnuncioJSON = {
+            status: message.SUCCESS_REQUEST.status,
+            message: message.SUCCESS_REQUEST.message,
+            quantidade: listaAnuncios.length,
+            anuncios: listaAnuncios
+        }
+
+
+        return dadosAnuncioJSON
+    } else {
+        return message.ERROR_REGISTER_NOT_FOUND
     }
 }
 
 const ctlGetAnuncioPage = async (page) => {
-    let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio(page)
+    let dadosAnuncio = await anuncioDAO.mdlSelectAnuncioPage(page)
 
-    if(page == null || page == undefined){
+    if (page == null || page == undefined) {
         return message.ERROR_REQUIRE_FIELDS
-    }else{
+    } else {
         if (dadosAnuncio) {
             let listaAnuncios = []
-    
+
             for (let index = 0; index < dadosAnuncio.length; index++) {
                 const anuncio = dadosAnuncio[index];
-    
+
                 let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
                 let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
                 let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
                 let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
-    
+
                 let anuncioJSON = {
                     anuncio: {
                         id: anuncio.id,
@@ -137,18 +134,18 @@ const ctlGetAnuncioPage = async (page) => {
                     tipo_anuncio: tiposAnuncio,
                     autores: autoresAnuncio
                 }
-    
+
                 listaAnuncios.push(anuncioJSON)
             }
-    
+
             let dadosAnuncioJSON = {
-                    status: message.SUCCESS_REQUEST.status,
-                    message: message.SUCCESS_REQUEST.message,
-                    quantidade: listaAnuncios.length,
-                    anuncios: listaAnuncios
-                }   
-    
-    
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                quantidade: listaAnuncios.length,
+                anuncios: listaAnuncios
+            }
+
+
             return dadosAnuncioJSON
         } else {
             return message.ERROR_REGISTER_NOT_FOUND
@@ -312,78 +309,78 @@ const ctlGetAnuncioByIdUsuario = async (idUsuario) => {
     }
 }
 
-const ctlGetAnuncioByLocalizacao = async (bairro, cidade, estado, page ) => {
+const ctlGetAnuncioByLocalizacao = async (bairro, cidade, estado, page) => {
 
-    if(
+    if (
         bairro == "" || bairro == null || bairro == undefined ||
         cidade == "" || cidade == null || cidade == undefined ||
         estado == "" || estado == null || estado == undefined ||
         page == undefined || page == null
-    ){
+    ) {
         return message.ERROR_REQUIRE_FIELDS
-    }else{
+    } else {
         let dadosAnuncio = await anuncioDAO.mdlSelectAnuncioByLocalização(bairro, cidade, estado, page)
 
-        if(!dadosAnuncio){
+        if (!dadosAnuncio) {
             return message.ERROR_REGISTER_NOT_FOUND
-        }else{
+        } else {
             let listaAnuncios = []
 
-                for (let index = 0; index < dadosAnuncio.length; index++) {
-                    const anuncio = dadosAnuncio[index];
+            for (let index = 0; index < dadosAnuncio.length; index++) {
+                const anuncio = dadosAnuncio[index];
 
-                    let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
-                    let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
-                    let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
-                    let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
+                let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
+                let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
+                let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
+                let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
 
-                    let anuncioJSON = {
-                        anuncio: {
-                            id: anuncio.id,
-                            nome: anuncio.nome,
-                            ano_lancamento: anuncio.ano_lancamento,
-                            data_criacao: anuncio.data_criacao,
-                            status_anuncio: anuncio.status_anuncio,
-                            edicao: anuncio.edicao,
-                            preco: anuncio.preco,
-                            descricao: anuncio.descricao,
-                            numero_paginas: anuncio.numero_paginas,
-                            anunciante: anuncio.id_anunciantes
-                        },
-                        idioma: {
-                            id: anuncio.id_idioma,
-                            nome: anuncio.nome_idioma
-                        },
-                        endereco: {
-                            estado: anuncio.estado,
-                            cidade: anuncio.cidade,
-                            bairro: anuncio.bairro
-                        },
-                        estado_livro: {
-                            id: anuncio.id_estado_livro,
-                            estado: anuncio.estado_livro
-                        },
-                        editora: {
-                            id: anuncio.id_editora,
-                            nome: anuncio.nome_editora
-                        },
-                        foto: fotosAnuncio,
-                        generos: generosAnuncio,
-                        tipo_anuncio: tiposAnuncio,
-                        autores: autoresAnuncio
-                    }
-
-                    listaAnuncios.push(anuncioJSON)
+                let anuncioJSON = {
+                    anuncio: {
+                        id: anuncio.id,
+                        nome: anuncio.nome,
+                        ano_lancamento: anuncio.ano_lancamento,
+                        data_criacao: anuncio.data_criacao,
+                        status_anuncio: anuncio.status_anuncio,
+                        edicao: anuncio.edicao,
+                        preco: anuncio.preco,
+                        descricao: anuncio.descricao,
+                        numero_paginas: anuncio.numero_paginas,
+                        anunciante: anuncio.id_anunciantes
+                    },
+                    idioma: {
+                        id: anuncio.id_idioma,
+                        nome: anuncio.nome_idioma
+                    },
+                    endereco: {
+                        estado: anuncio.estado,
+                        cidade: anuncio.cidade,
+                        bairro: anuncio.bairro
+                    },
+                    estado_livro: {
+                        id: anuncio.id_estado_livro,
+                        estado: anuncio.estado_livro
+                    },
+                    editora: {
+                        id: anuncio.id_editora,
+                        nome: anuncio.nome_editora
+                    },
+                    foto: fotosAnuncio,
+                    generos: generosAnuncio,
+                    tipo_anuncio: tiposAnuncio,
+                    autores: autoresAnuncio
                 }
 
-                let dadosAnuncioJSON = {
-                    status: message.SUCCESS_REQUEST.status,
-                    message: message.SUCCESS_REQUEST.message,
-                    quantidade: listaAnuncios.length,
-                    anuncios: listaAnuncios
-                }
+                listaAnuncios.push(anuncioJSON)
+            }
 
-                return dadosAnuncioJSON
+            let dadosAnuncioJSON = {
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                quantidade: listaAnuncios.length,
+                anuncios: listaAnuncios
+            }
+
+            return dadosAnuncioJSON
         }
     }
 }
@@ -403,8 +400,8 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
         dadosAnuncio.editora == "" || dadosAnuncio.id_editora == null || dadosAnuncio.id_editora == undefined ||
         dadosAnuncio.fotos == "" || dadosAnuncio.fotos == null || dadosAnuncio.fotos == undefined || dadosAnuncio.fotos.length == 0 ||
         dadosAnuncio.tipos_anuncio == null || dadosAnuncio.tipos_anuncio == "" || dadosAnuncio.tipos_anuncio.length == 0 || dadosAnuncio.tipos_anuncio == undefined ||
-        dadosAnuncio.generos == null || dadosAnuncio.generos == undefined || dadosAnuncio.generos == "" || dadosAnuncio.generos.length == 0 || 
-        dadosAnuncio.autores == null || dadosAnuncio.autores == undefined || dadosAnuncio.autores == "" || dadosAnuncio.autores.length == 0 
+        dadosAnuncio.generos == null || dadosAnuncio.generos == undefined || dadosAnuncio.generos == "" || dadosAnuncio.generos.length == 0 ||
+        dadosAnuncio.autores == null || dadosAnuncio.autores == undefined || dadosAnuncio.autores == "" || dadosAnuncio.autores.length == 0
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
@@ -413,7 +410,7 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
         dadosAnuncio.id_editora = idEditora
         let dadosAnuncioPrincipal = await anuncioDAO.mdlInsertAnuncio(dadosAnuncio)
 
-        if(dadosAnuncioPrincipal){
+        if (dadosAnuncioPrincipal) {
             let novoAnuncio = await anuncioDAO.mdlSelectAnuncioFromLastId()
 
             await anuncioAutor.mdlInsertAnuncioAutorScale(novoAnuncio[0].id, dadosAnuncio.autores)
@@ -430,7 +427,7 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
             }
 
             return dadosAnuncioJSON
-        }else{
+        } else {
             return message.ERROR_INTERNAL_SERVER
         }
     }

@@ -45,7 +45,8 @@ const mdlSelectAllAnuncio = async () => {
 	    inner join tbl_idioma as idioma
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
-		    on editora.id = anuncio.id_editora`
+		    on editora.id = anuncio.id_editora
+    order by id asc`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
