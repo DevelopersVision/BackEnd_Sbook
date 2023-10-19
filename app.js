@@ -400,10 +400,17 @@ app.get('/v1/sbook/anuncio', cors(), async function (request, response) {
 
     let page = request.query.page
 
-    let dadosAnuncio = await controllerAnuncio.ctlGetAnuncios(page)
+    if (page != undefined) {
+        let dadosAnuncio = await controllerAnuncio.ctlGetAnuncioPage(page)
 
-    response.status(dadosAnuncio.status)
-    response.json(dadosAnuncio)
+        response.status(dadosAnuncio.status)
+        response.json(dadosAnuncio)
+    } else {
+        let dadosAnuncio = await controllerAnuncio.ctlGetAnuncios()
+
+        response.status(dadosAnuncio.status)
+        response.json(dadosAnuncio)
+    }
 })
 
 app.post('/v1/sbook/anuncio-proximos', cors(), bodyParserJSON, async function (request, response) {
@@ -470,7 +477,7 @@ app.get('/v1/sbook/anuncios-favoritados/:id', cors(), async function (request, r
     response.json(dadosAnunciosFavoritos)
 })
 
-app.get('/v1/sbook/verificar-favorito/:user/:anuncio', cors(), bodyParserJSON, async function (request, response){
+app.get('/v1/sbook/verificar-favorito/:user/:anuncio', cors(), bodyParserJSON, async function (request, response) {
     let idUsuario = request.params.user
     let idAnuncio = request.params.anuncio
 
@@ -499,7 +506,7 @@ app.post('/v1/sbook/favoritar-anuncio', cors(), bodyParserJSON, async function (
     }
 })
 
-app.delete('/v1/sbook/remover-favorito/:user/:anuncio', cors(), bodyParserJSON, async function (request, response){
+app.delete('/v1/sbook/remover-favorito/:user/:anuncio', cors(), bodyParserJSON, async function (request, response) {
     let idUsuario = request.params.user
     let idAnuncio = request.params.anuncio
 
