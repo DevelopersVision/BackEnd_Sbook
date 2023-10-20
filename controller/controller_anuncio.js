@@ -433,6 +433,96 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
     }
 }
 
+const ctlGetAnunciosThenFilter = async(array_estado_livro, arrayGeneros)=>{
+
+    let dadosAnuncio = await anuncioDAO.mdlSelectsAlAnunciosThenFilter(array_estado_livro, arrayGeneros)
+
+
+        if (dadosAnuncio) {
+            let listaAnuncios = []
+    
+            for (let index = 0; index < dadosAnuncio.length; index++) {
+                const anuncio = dadosAnuncio[index];
+    
+                let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
+                let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
+                let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
+                let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
+    
+                let anuncioJSON = {
+                    anuncio: {
+                        id: anuncio.id,
+                        nome: anuncio.nome,
+                        ano_lancamento: anuncio.ano_lancamento,
+                        data_criacao: anuncio.data_criacao,
+                        status_anuncio: anuncio.status_anuncio,
+                        edicao: anuncio.edicao,
+                        preco: anuncio.preco,
+                        descricao: anuncio.descricao,
+                        numero_paginas: anuncio.numero_paginas,
+                        anunciante: anuncio.id_anunciante
+                    },
+                    idioma: {
+                        id: anuncio.id_idioma,
+                        nome: anuncio.nome_idioma
+                    },
+                    endereco: {
+                        estado: anuncio.estado,
+                        cidade: anuncio.cidade,
+                        bairro: anuncio.bairro
+                    },
+                    estado_livro: {
+                        id: anuncio.id_estado_livro,
+                        estado: anuncio.estado_livro
+                    },
+                    editora: {
+                        id: anuncio.id_editora,
+                        nome: anuncio.nome_editora
+                    },
+                    foto: fotosAnuncio,
+                    generos: generosAnuncio,
+                    tipo_anuncio: tiposAnuncio,
+                    autores: autoresAnuncio
+                }
+                
+                if(array_estado_livro != null || array_estado_livro != "" || array_estado_livro != undefined ){
+                    
+                    //listaAnuncios = listaAnuncios.filter(listaAnuncios => listaAnuncios.endereco.cidade == "Jandira")
+                    listaAnuncios.push(anuncioJSON)
+                } else{
+                    console.log("dA 0 pra ele")
+                }
+
+                
+            }
+            listaAnuncios = listaAnuncios.filter(listaAnuncios => listaAnuncios.estado_livro.estado == array_estado_livro[0] ||listaAnuncios.estado_livro.estado == array_estado_livro[1])
+    
+            let dadosAnuncioJSON = {
+                    status: message.SUCCESS_REQUEST.status,
+                    message: message.SUCCESS_REQUEST.message,
+                    quantidade: listaAnuncios.length,
+                    anuncios: listaAnuncios
+                }   
+    
+    
+            return dadosAnuncioJSON
+        } else {
+            return message.ERROR_REGISTER_NOT_FOUND
+        }
+
+    // if(anuncios){
+    //     if(array_estado_livro != null || array_estado_livro != "" || array_estado_livro != undefined ){
+    //         let anunciosFiltrados = anuncios.filter(anuncios => anuncios.estado_livro == array_estado_livro[0] || anuncios.estado_livro == array_estado_livro[1])
+
+    //         return anunciosFiltrados
+    //     } else {
+    //         return anuncios
+    //     }
+    // } else {
+    //     return false
+    // }
+}
+
 /*
     nome,
     numero_paginas null,
@@ -463,5 +553,6 @@ module.exports = {
     ctlGetAnuncioByIdUsuario,
     ctlGetAnuncioByLocalizacao,
     ctlInserirAnuncio,
-    ctlGetAnuncioPage
+    ctlGetAnuncioPage,
+    ctlGetAnunciosThenFilter
 }

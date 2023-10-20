@@ -46,6 +46,7 @@ const mdlSelectAllAnuncio = async () => {
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
+    where anuncio.status_anuncio = true
     order by id asc`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
@@ -93,6 +94,7 @@ const mdlSelectAnuncioPage = async (page) => {
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
+        where anuncio.status_anuncio = true
         order by id asc limit 10 offset ${page}0`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
@@ -432,6 +434,53 @@ const mdlSelectsFiltros = async(arrayGenero, arrayEstado_livro)=>{
     }
 }
 
+const mdlSelectsAlAnunciosThenFilter = async(array_estados_livros, arrayGeneros)=>{
+    
+
+    let sql = `select 
+    anuncio.id, 
+    anuncio.nome, 
+    anuncio.ano_lancamento,
+    date_format(anuncio.data_criacao, '%d-%m-%Y %H:%i') as data_criacao,
+    anuncio.status_anuncio,
+    anuncio.edicao,
+    anuncio.preco,
+    anuncio.descricao,
+    anuncio.status_anuncio,
+    anuncio.numero_paginas,
+    anuncio.id_usuario,
+    endereco.estado,
+    endereco.cidade,
+    endereco.bairro,
+    anuncio.id_estado_livro,
+    estado_livro.estado as estado_livro,
+    anuncio.id_idioma,
+    anuncio.id_usuario as id_anunciante,
+    idioma.nome as nome_idioma,
+    anuncio.id_editora,
+    editora.nome as nome_editora
+    from tbl_anuncio as anuncio
+    	inner join tbl_usuario as usuario
+	    	on usuario.id = anuncio.id_usuario
+	    inner join tbl_endereco as endereco 
+    		on endereco.id = usuario.id_endereco
+	    inner join tbl_estado_livro as estado_livro
+		    on estado_livro.id = anuncio.id_estado_livro
+	    inner join tbl_idioma as idioma
+    		on anuncio.id_idioma = idioma.id
+	    inner join tbl_editora as editora
+		    on editora.id = anuncio.id_editora
+                order by id asc;`
+
+    let rsAnuncio = await prisma.$queryRawUnsafe(sql)
+
+    if (rsAnuncio.length > 0) {
+            return rsAnuncio
+    } else {
+             return false
+    }     
+}
+
 module.exports = {
     mdlSelectAllAnuncio,
     mdlSelectAnuncioById,
@@ -440,5 +489,6 @@ module.exports = {
     mdlInsertAnuncio,
     mdlSelectAnuncioLastId,
     mdlSelectAnuncioFromLastId,
-    mdlSelectAnuncioPage
+    mdlSelectAnuncioPage,
+    mdlSelectsAlAnunciosThenFilter
 }
