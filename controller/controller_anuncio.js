@@ -142,6 +142,7 @@ const ctlGetAnuncioPage = async (page) => {
                 status: message.SUCCESS_REQUEST.status,
                 message: message.SUCCESS_REQUEST.message,
                 quantidade: listaAnuncios.length,
+                page: parseInt(page),
                 anuncios: listaAnuncios
             }
 
