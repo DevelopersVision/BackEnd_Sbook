@@ -485,18 +485,38 @@ const ctlGetAnunciosThenFilter = async(array_estado_livro, arrayGeneros)=>{
                     tipo_anuncio: tiposAnuncio,
                     autores: autoresAnuncio
                 }
-                
-                if(array_estado_livro != null || array_estado_livro != "" || array_estado_livro != undefined ){
-                    
-                    //listaAnuncios = listaAnuncios.filter(listaAnuncios => listaAnuncios.endereco.cidade == "Jandira")
-                    listaAnuncios.push(anuncioJSON)
-                } else{
-                    console.log("dA 0 pra ele")
-                }
-
-                
+                listaAnuncios.push(anuncioJSON)
             }
-            listaAnuncios = listaAnuncios.filter(listaAnuncios => listaAnuncios.estado_livro.estado == array_estado_livro[0] ||listaAnuncios.estado_livro.estado == array_estado_livro[1])
+
+            console.log("Estado");
+            console.log(array_estado_livro);
+
+            console.log("Generos");
+            console.log(arrayGeneros);
+
+            if(array_estado_livro != null && array_estado_livro != "" && array_estado_livro != undefined &&  arrayGeneros != null && arrayGeneros != "" && arrayGeneros != undefined && arrayGeneros.length != 0){
+                console.log('morreu');
+                console.log(`0: ${listaAnuncios}`);
+
+                listaAnuncios = listaAnuncios.filter(listaAnuncios => listaAnuncios.estado_livro.estado == array_estado_livro[0] ||listaAnuncios.estado_livro.estado == array_estado_livro[1])
+
+                console.log(`1: ${listaAnuncios}`);
+
+                for (let index = 0; index < listaAnuncios.length; index++) {
+                    const anuncio = listaAnuncios[index];
+                    const element = anuncio.generos
+
+                    for (let index = 0; index < element.length; index++) {
+                        const genero = element[index];
+                     
+                        console.log(genero);
+                        listaAnuncios = listaAnuncios.filter(() => genero.nome == arrayGeneros[0] || genero.nome == arrayGeneros[1])
+                    }
+                }
+                // listaAnuncios = listaAnuncios.filter(listaAnuncios=> listaAnuncios.generos[0].nome == arrayGeneros[0] ||listaAnuncios.generos[0].nome == arrayGeneros[1] || listaAnuncios.generos[1].nome == arrayGeneros[0] || listaAnuncios.generos[1].nome == arrayGeneros[1])
+                
+                console.log(`2: ${listaAnuncios}`);
+            }
     
             let dadosAnuncioJSON = {
                     status: message.SUCCESS_REQUEST.status,
