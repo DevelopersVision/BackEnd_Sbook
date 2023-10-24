@@ -19,7 +19,7 @@ const ctlGetAutor = async function () {
         //criando um JSon com o atributo enderecos, para encaminhar um array de alunos
         dadosAutorJSON.status = message.SUCCESS_REQUEST.status
         dadosAutorJSON.quantidade = dadosAutor.length
-        dadosAutorJSON.enderecos = dadosAutor
+        dadosAutorJSON.autores = dadosAutor
         return dadosAutorJSON
     } else {
         return message.ERROR_REGISTER_NOT_FOUND

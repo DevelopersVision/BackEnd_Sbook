@@ -19,7 +19,7 @@
          //criando um JSon com o atributo enderecos, para encaminhar um array de alunos
          dadosIdiomaJSON.status = message.SUCCESS_REQUEST.status
          dadosIdiomaJSON.quantidade = dadosIdioma.length
-         dadosIdiomaJSON.enderecos = dadosIdioma
+         dadosIdiomaJSON.idiomas = dadosIdioma
          return dadosIdiomaJSON
      } else {
          return message.ERROR_REGISTER_NOT_FOUND
