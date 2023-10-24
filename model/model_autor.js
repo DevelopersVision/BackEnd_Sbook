@@ -27,6 +27,22 @@ const mdlSelectAllAutroes = async (page) => {
     }
 }
 
+const mdlSelectAutroes = async () => {
+    let sql = `select 
+        tbl_autor.id, 
+        tbl_autor.nome 
+    from tbl_autor`
+
+    let rsAnuncioAutor = await prisma.$queryRawUnsafe(sql)
+
+    if (rsAnuncioAutor.length > 0) {
+        return rsAnuncioAutor
+    } else {
+        return false
+    }
+}
+
 module.exports = {
-    mdlSelectAllAutroes
+    mdlSelectAllAutroes,
+    mdlSelectAutroes
 }

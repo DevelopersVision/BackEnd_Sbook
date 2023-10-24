@@ -576,6 +576,34 @@ app.delete('/v1/sbook/remover-favorito/:user/:anuncio', cors(), bodyParserJSON, 
 
 //Import do arquivo controller que irá solicitar a model os dados do Banco
 const modelEstaticos = require('./model/estatico/model_estaticos.js')
+const controllerAutor = require('./controller/controller_autor.js')
+const controllerIdioma = require('./controller/controller_idioma.js')
+const controllerEditora = require('./controller/controller_editora.js')
+
+app.get('/v1/sbook/idiomas', cors(), async function (request, response) {
+
+    let dadosIdioma = await controllerIdioma.ctlGetIdiomas()
+
+    response.status(dadosIdioma.status)
+    response.json(dadosIdioma)
+})
+
+app.get('/v1/sbook/autores', cors(), async function (request, response) {
+
+    let dadosAutores = await controllerAutor.ctlGetAutor()
+
+    response.status(dadosAutores.status)
+    response.json(dadosAutores)
+})
+
+app.get('/v1/sbook/editoras', cors(), async function (request, response) {
+
+    let dadosEditora = await controllerEditora.ctlgetEditora()
+
+    response.status(dadosEditora.status)
+    response.json(dadosEditora)
+})
+
 
 const idiomas = require('./controller/modulo/idiomas.js')
 app.post('/v1/sbook/inserir-idiomas', cors(), async function (request, response) {

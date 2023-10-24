@@ -33,6 +33,19 @@ const adicionarIdiomas = async (listaIdiomas) => {
     }
 }
 
+const mdlSelectAllIdiomas = async () => {
+    let sql = `select * from tbl_idioma`
+
+    let rsIdioma = await prisma.$queryRawUnsafe(sql)
+
+    if (rsIdioma.length > 0) {
+        return rsIdioma
+    }else{
+        return false
+    }
+}
+
+
 const adicionarGeneros = async (listaGeneros) => {
     let lista = []
 
@@ -103,5 +116,7 @@ module.exports = {
     adicionarIdiomas,
     adicionarGeneros,
     adicionarEstadosLivros,
-    adicionarTiposAnuncios
+    adicionarTiposAnuncios,
+
+    mdlSelectAllIdiomas
 }
