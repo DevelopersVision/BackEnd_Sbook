@@ -12,6 +12,55 @@
 //npm install @prisma/client --save
 //npx prisma migrate dev
 
+/************************************************************************************
+ * Configurações Node:
+ * 
+ * Express - dependencia para realizar requisições de API pelo protocolo HTTP 
+ *      npm install express --save
+ * 
+ * Nodemon - dependencia para atualizar o servidor sempre que houver alteração nos arquivos
+ *      npm install nodemonn --save-dev
+ * 
+ * Cors - dependencia para gerenciar permissões de requisição da API
+ *      npm install cors --save
+ * 
+ * Body-Parser - dependencia que gerencia o corpo das resquisições 
+ *      npm install body-parser --save
+ * 
+ * ************************************************************************************
+ * Configurações de recuperar conta:
+ * 
+ * NodeMailer - dependencia para enviar email com o código
+ *      npm install nodemailer --save
+ * 
+ * Moment - dependencia que manipula data facilmente
+ *      npm install moment --save
+ * 
+ * NodeMailer Express Handlebars - dependencia que consegue utlizar templates html para o email
+ *      npm install nodemailer-express-handlebars --save
+ * 
+ * ************************************************************************************
+ * Configuração do token JWT:
+ * 
+ * JSON Web Tokens - dependencia que gera o token e pede nas requisições
+ *      npm install jsonwebtoken --save
+ * 
+ * ************************************************************************************
+ * Configurações Prisma:
+ * 
+ * npm install prisma --save
+ * npx prisma init
+ * npm install @prisma/client --save
+ * npx prisma migrate dev
+ * 
+ * ************************************************************************************
+ * Configurações Mongo:
+ * 
+ * Mongoose - dependencia para realizar a conexão o monngoDB
+ *      npm install mongoose --save
+ * 
+ ************************************************************************************/
+
 //import das bibliotecas para API
 const express = require('express');
 const cors = require('cors');
