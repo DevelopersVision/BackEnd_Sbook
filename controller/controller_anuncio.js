@@ -449,43 +449,60 @@ const ctlGetAnunciosThenFilter = async(array_estado_livro, arrayGeneros)=>{
                 let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
                 let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
                 let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
+
+                
+                    let anuncioJSON = {
+                        anuncio: {
+                            id: anuncio.id,
+                            nome: anuncio.nome,
+                            ano_lancamento: anuncio.ano_lancamento,
+                            data_criacao: anuncio.data_criacao,
+                            status_anuncio: anuncio.status_anuncio,
+                            edicao: anuncio.edicao,
+                            preco: anuncio.preco,
+                            descricao: anuncio.descricao,
+                            numero_paginas: anuncio.numero_paginas,
+                            anunciante: anuncio.id_anunciante
+                        },
+                        idioma: {
+                            id: anuncio.id_idioma,
+                            nome: anuncio.nome_idioma
+                        },
+                        endereco: {
+                            estado: anuncio.estado,
+                            cidade: anuncio.cidade,
+                            bairro: anuncio.bairro
+                        },
+                        estado_livro: {
+                            id: anuncio.id_estado_livro,
+                            estado: anuncio.estado_livro
+                        },
+                        editora: {
+                            id: anuncio.id_editora,
+                            nome: anuncio.nome_editora
+                        },
+                        foto: fotosAnuncio,
+                        generos: generosAnuncio,
+                        tipo_anuncio: tiposAnuncio,
+                        autores: autoresAnuncio
+                    }
+                    
+
+                    if((array_estado_livro.includes(anuncio.estado_livro.estado)) && generosAnuncio.some((genero) => arrayGeneros.includes(genero.nome))){
+                        listaAnuncios.push(anuncioJSON)
+                        let dadosAnuncioJSON = {
+                            status: message.SUCCESS_REQUEST.status,
+                            message: message.SUCCESS_REQUEST.message,
+                            quantidade: listaAnuncios.length,
+                            anuncios: listaAnuncios
+                        }
+                        return dadosAnuncioJSON
+                    } else{
+                        return false
+                    }
     
-                let anuncioJSON = {
-                    anuncio: {
-                        id: anuncio.id,
-                        nome: anuncio.nome,
-                        ano_lancamento: anuncio.ano_lancamento,
-                        data_criacao: anuncio.data_criacao,
-                        status_anuncio: anuncio.status_anuncio,
-                        edicao: anuncio.edicao,
-                        preco: anuncio.preco,
-                        descricao: anuncio.descricao,
-                        numero_paginas: anuncio.numero_paginas,
-                        anunciante: anuncio.id_anunciante
-                    },
-                    idioma: {
-                        id: anuncio.id_idioma,
-                        nome: anuncio.nome_idioma
-                    },
-                    endereco: {
-                        estado: anuncio.estado,
-                        cidade: anuncio.cidade,
-                        bairro: anuncio.bairro
-                    },
-                    estado_livro: {
-                        id: anuncio.id_estado_livro,
-                        estado: anuncio.estado_livro
-                    },
-                    editora: {
-                        id: anuncio.id_editora,
-                        nome: anuncio.nome_editora
-                    },
-                    foto: fotosAnuncio,
-                    generos: generosAnuncio,
-                    tipo_anuncio: tiposAnuncio,
-                    autores: autoresAnuncio
-                }
-                listaAnuncios.push(anuncioJSON)
+                
+                
             }
 
             console.log("Estado");
@@ -493,40 +510,7 @@ const ctlGetAnunciosThenFilter = async(array_estado_livro, arrayGeneros)=>{
 
             console.log("Generos");
             console.log(arrayGeneros);
-
-            if(array_estado_livro != null && array_estado_livro != "" && array_estado_livro != undefined &&  arrayGeneros != null && arrayGeneros != "" && arrayGeneros != undefined && arrayGeneros.length != 0){
-                console.log('morreu');
-                console.log(`0: ${listaAnuncios}`);
-
-                listaAnuncios = listaAnuncios.filter(listaAnuncios => listaAnuncios.estado_livro.estado == array_estado_livro[0] ||listaAnuncios.estado_livro.estado == array_estado_livro[1])
-
-                console.log(`1: ${listaAnuncios}`);
-
-                for (let index = 0; index < listaAnuncios.length; index++) {
-                    const anuncio = listaAnuncios[index];
-                    const element = anuncio.generos
-
-                    for (let index = 0; index < element.length; index++) {
-                        const genero = element[index];
-                     
-                        console.log(genero);
-                        listaAnuncios = listaAnuncios.filter(() => genero.nome == arrayGeneros[0] || genero.nome == arrayGeneros[1])
-                    }
-                }
-                // listaAnuncios = listaAnuncios.filter(listaAnuncios=> listaAnuncios.generos[0].nome == arrayGeneros[0] ||listaAnuncios.generos[0].nome == arrayGeneros[1] || listaAnuncios.generos[1].nome == arrayGeneros[0] || listaAnuncios.generos[1].nome == arrayGeneros[1])
-                
-                console.log(`2: ${listaAnuncios}`);
-            }
-    
-            let dadosAnuncioJSON = {
-                    status: message.SUCCESS_REQUEST.status,
-                    message: message.SUCCESS_REQUEST.message,
-                    quantidade: listaAnuncios.length,
-                    anuncios: listaAnuncios
-                }   
-    
-    
-            return dadosAnuncioJSON
+            
         } else {
             return message.ERROR_REGISTER_NOT_FOUND
         }
@@ -543,6 +527,36 @@ const ctlGetAnunciosThenFilter = async(array_estado_livro, arrayGeneros)=>{
     //     return false
     // }
 }
+
+
+
+
+
+const array_estado_livro = ["Novo"];
+const arrayGeneros = ["Ficção Infantil"];
+
+ctlGetAnunciosThenFilter(array_estado_livro, arrayGeneros)
+    .then((result) => {
+        console.log("Resultado da função:");
+        console.log("Anuncios que vieram: ");
+        console.log(result.anuncios);
+        
+        //console.log("Generos que vieram: " + result.anuncios.generos);
+
+        // result.anuncios.forEach((anuncio) => {
+        //     console.log(`Anúncio ID: ${anuncio.anuncio.id}`);
+        //     console.log(`Anúncio: ${anuncio.anuncio.nome}`);
+        //     console.log("Gêneros:");
+
+            // Iterar pelos gêneros do anúncio
+            // anuncio.generos.forEach((genero) => {
+            //     console.log(`- ${genero.nome}`);
+            // });
+    //})
+})
+    .catch((error) => {
+        console.error("Erro ao chamar a função:", error);
+});
 
 /*
     nome,

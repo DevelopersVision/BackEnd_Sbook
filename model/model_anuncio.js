@@ -470,6 +470,7 @@ const mdlSelectsAlAnunciosThenFilter = async(array_estados_livros, arrayGeneros)
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
+            where anuncio.status_anuncio = true
                 order by id asc;`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
