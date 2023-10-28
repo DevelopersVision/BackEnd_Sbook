@@ -42,6 +42,10 @@ const ERROR_USUARIO_DESATIVADO = {status: 403, message: 'O USUARIO ESTÁ CADASTR
 
 const ERROR_INVALID_JSON = {status: 400, message: 'O JSON ENVIADO ESTÁ INVÁLIDA'}
 
+const ERRO_PRECO_DOACOAO = {status: 422, message: 'QUANDO FOR DOACAO O PRECO TEM QUE SER VAZIO ( OU SEJA = "" )'}
+
+const ERRO_INVALID_LENGTH_TIPO = {status: 422, message: 'OS TIPOS DE ANUNCIO NÃO PODE SER DOAÇÃO, TROCA E VENDA'}
+
 /*************************************** MENSAGENS DE SUCESSO ***************************************/
 const SUCCESS_CREATED_ITEM = {status: 201, message: 'ITEM CRIADO COM SUCESSO'}
 
@@ -74,6 +78,8 @@ module.exports = {
     ERROR_INVALID_CPF,
     ERROR_TOKEN_EXPIRADO,
     ERROR_USUARIO_DESATIVADO,
+    ERRO_PRECO_DOACOAO,
+    ERRO_INVALID_LENGTH_TIPO,
 
     //Exportes de sucesso
     SUCCESS_CREATED_ITEM,

@@ -12,7 +12,7 @@ var { PrismaClient } = require('@prisma/client')
 var prisma = new PrismaClient()
 
 const checkAnuncioEditora = async (anuncioEditora) => {
-    if(anuncioEditora.status_editora){
+    if(!anuncioEditora.status_editora){
         let sql = `insert into tbl_editora (nome) values ('${anuncioEditora.nome_editora}')`
 
         await prisma.$executeRawUnsafe(sql)

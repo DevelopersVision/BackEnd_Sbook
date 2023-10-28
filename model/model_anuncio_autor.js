@@ -36,7 +36,7 @@ const mdlInsertAnuncioAutorScale = async (idAnuncio, arrayAnuncioAutores) => {
     for (let i = 0; i < arrayAnuncioAutores.length; i++) {
         const autor = arrayAnuncioAutores[i];
 
-        if (autor.status_autor) {
+        if (!autor.status_autor) {
             let sql = `insert into tbl_autor(nome) values ('${autor.nome_autor}')`
 
             await prisma.$executeRawUnsafe(sql)

@@ -405,6 +405,10 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
         dadosAnuncio.autores == null || dadosAnuncio.autores == undefined || dadosAnuncio.autores == "" || dadosAnuncio.autores.length == 0
     ) {
         return message.ERROR_REQUIRE_FIELDS
+    } else if(dadosAnuncio.tipos_anuncio.length > 2){
+        return message.ERRO_INVALID_LENGTH_TIPO
+    } else if(dadosAnuncio.tipos_anuncio[0] == 1 || dadosAnuncio.tipos_anuncio[1] == 1 && dadosAnuncio.preco != ""){
+        return message.ERRO_PRECO_DOACOAO
     } else {
         let idEditora = await anuncioEditoraDAO.checkAnuncioEditora(dadosAnuncio.id_editora)
 
