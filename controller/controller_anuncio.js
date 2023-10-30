@@ -497,12 +497,11 @@ const ctlGetAnunciosThenFilter = async (array_estado_livro, arrayGeneros) => {
                 autores: autoresAnuncio,
             };
 
-            console.log(anuncio.estado_livro)
-            console.log(generosAnuncio.some((genero) => arrayGeneros.includes(genero.nome)))
+           
 
             if (
                 array_estado_livro.includes(anuncio.estado_livro) &&
-                generosAnuncio.some((genero) => arrayGeneros.includes(genero.nome))
+                Array.from(generosAnuncio).some((genero) => arrayGeneros.includes(genero.nome))
             ) {
                 listaAnuncios.push(anuncioJSON);
             }
@@ -533,8 +532,8 @@ const ctlGetAnunciosThenFilter = async (array_estado_livro, arrayGeneros) => {
 
 
 
-const array_estado_livro = ["Novo", "Usado"]; // Inclua estados válidos
-const arrayGeneros = ["Ficção Infantil", "Biografia"]; // Inclua gêneros válidos
+const array_estado_livro = ["Novo", "Seminovo"]; // Inclua estados válidos
+const arrayGeneros = ["Fantasia"]; // Inclua gêneros válidos
 
 ctlGetAnunciosThenFilter(array_estado_livro, arrayGeneros)
     .then((result) => {
