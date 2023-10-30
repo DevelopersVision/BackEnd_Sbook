@@ -434,7 +434,7 @@ const mdlSelectsFiltros = async(arrayGenero, arrayEstado_livro)=>{
     }
 }
 
-const mdlSelectsAlAnunciosThenFilter = async(array_estados_livros, arrayGeneros)=>{
+const mdlSelectsAlAnunciosThenFilter = async()=>{
     
 
     let sql = `select 
@@ -471,7 +471,7 @@ const mdlSelectsAlAnunciosThenFilter = async(array_estados_livros, arrayGeneros)
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
             where anuncio.status_anuncio = true
-                order by id asc;`
+                order by id asc`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
@@ -481,6 +481,11 @@ const mdlSelectsAlAnunciosThenFilter = async(array_estados_livros, arrayGeneros)
              return false
     }     
 }
+
+
+
+
+
 
 module.exports = {
     mdlSelectAllAnuncio,

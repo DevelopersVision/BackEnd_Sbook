@@ -438,129 +438,117 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
     }
 }
 
-const ctlGetAnunciosThenFilter = async(array_estado_livro, arrayGeneros)=>{
 
-    let dadosAnuncio = await anuncioDAO.mdlSelectsAlAnunciosThenFilter(array_estado_livro, arrayGeneros)
+const ctlGetAnunciosThenFilter = async (array_estado_livro, arrayGeneros) => {
 
+    if(array_estado_livro == null || array_estado_livro == undefined || array_estado_livro == "" ||
+    arrayGeneros == null || arrayGeneros == undefined || arrayGeneros == "" 
+    ){
+        return message.ERROR_REQUIRE_FIELDS
+    } else {
+
+
+        let dadosAnuncio = await anuncioDAO.mdlSelectsAlAnunciosThenFilter();
 
         if (dadosAnuncio) {
-            let listaAnuncios = []
-    
+            let listaAnuncios = [];
+
             for (let index = 0; index < dadosAnuncio.length; index++) {
-                const anuncio = dadosAnuncio[index];
-    
-                let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id)
-                let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id)
-                let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
-                let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
+            const anuncio = dadosAnuncio[index];
 
-                
-                    let anuncioJSON = {
-                        anuncio: {
-                            id: anuncio.id,
-                            nome: anuncio.nome,
-                            ano_lancamento: anuncio.ano_lancamento,
-                            data_criacao: anuncio.data_criacao,
-                            status_anuncio: anuncio.status_anuncio,
-                            edicao: anuncio.edicao,
-                            preco: anuncio.preco,
-                            descricao: anuncio.descricao,
-                            numero_paginas: anuncio.numero_paginas,
-                            anunciante: anuncio.id_anunciante
-                        },
-                        idioma: {
-                            id: anuncio.id_idioma,
-                            nome: anuncio.nome_idioma
-                        },
-                        endereco: {
-                            estado: anuncio.estado,
-                            cidade: anuncio.cidade,
-                            bairro: anuncio.bairro
-                        },
-                        estado_livro: {
-                            id: anuncio.id_estado_livro,
-                            estado: anuncio.estado_livro
-                        },
-                        editora: {
-                            id: anuncio.id_editora,
-                            nome: anuncio.nome_editora
-                        },
-                        foto: fotosAnuncio,
-                        generos: generosAnuncio,
-                        tipo_anuncio: tiposAnuncio,
-                        autores: autoresAnuncio
-                    }
-                    
+            let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id);
+            let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id);
+            let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id);
+            let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id);
 
-                    if((array_estado_livro.includes(anuncio.estado_livro.estado)) && generosAnuncio.some((genero) => arrayGeneros.includes(genero.nome))){
-                        listaAnuncios.push(anuncioJSON)
-                        let dadosAnuncioJSON = {
-                            status: message.SUCCESS_REQUEST.status,
-                            message: message.SUCCESS_REQUEST.message,
-                            quantidade: listaAnuncios.length,
-                            anuncios: listaAnuncios
-                        }
-                        return dadosAnuncioJSON
-                    } else{
-                        return false
-                    }
-    
-                
-                
+            let anuncioJSON = {
+                anuncio: {
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    ano_lancamento: anuncio.ano_lancamento,
+                    data_criacao: anuncio.data_criacao,
+                    status_anuncio: anuncio.status_anuncio,
+                    edicao: anuncio.edicao,
+                    preco: anuncio.preco,
+                    descricao: anuncio.descricao,
+                    numero_paginas: anuncio.numero_paginas,
+                    anunciante: anuncio.id_anunciante,
+                },
+                idioma: {
+                    id: anuncio.id_idioma,
+                    nome: anuncio.nome_idioma,
+                },
+                endereco: {
+                    estado: anuncio.estado,
+                    cidade: anuncio.cidade,
+                    bairro: anuncio.bairro,
+                },
+                estado_livro: {
+                    id: anuncio.id_estado_livro,
+                    estado: anuncio.estado_livro,
+                },
+                editora: {
+                    id: anuncio.id_editora,
+                    nome: anuncio.nome_editora,
+                },
+                foto: fotosAnuncio,
+                generos: generosAnuncio,
+                tipo_anuncio: tiposAnuncio,
+                autores: autoresAnuncio,
+            };
+
+            console.log(anuncio.estado_livro)
+            console.log(generosAnuncio.some((genero) => arrayGeneros.includes(genero.nome)))
+
+            if (
+                array_estado_livro.includes(anuncio.estado_livro) &&
+                generosAnuncio.some((genero) => arrayGeneros.includes(genero.nome))
+            ) {
+                listaAnuncios.push(anuncioJSON);
             }
-
-            console.log("Estado");
-            console.log(array_estado_livro);
-
-            console.log("Generos");
-            console.log(arrayGeneros);
-            
-        } else {
-            return message.ERROR_REGISTER_NOT_FOUND
         }
 
-    // if(anuncios){
-    //     if(array_estado_livro != null || array_estado_livro != "" || array_estado_livro != undefined ){
-    //         let anunciosFiltrados = anuncios.filter(anuncios => anuncios.estado_livro == array_estado_livro[0] || anuncios.estado_livro == array_estado_livro[1])
+        if (listaAnuncios.length > 0) {
+            let dadosAnuncioJSON = {
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                quantidade: listaAnuncios.length,
+                anuncios: listaAnuncios,
+            };
+            return dadosAnuncioJSON;
+        } else {
+            return message.ERROR_REGISTER_NOT_FOUND;
+        }
+    } else {
+        return message.ERROR_INVALID_CPF;
+    }
+    }
 
-    //         return anunciosFiltrados
-    //     } else {
-    //         return anuncios
-    //     }
-    // } else {
-    //     return false
-    // }
-}
+    
+};
+
+   
 
 
 
 
 
-const array_estado_livro = ["Novo"];
-const arrayGeneros = ["Ficção Infantil"];
+const array_estado_livro = ["Novo", "Usado"]; // Inclua estados válidos
+const arrayGeneros = ["Ficção Infantil", "Biografia"]; // Inclua gêneros válidos
 
 ctlGetAnunciosThenFilter(array_estado_livro, arrayGeneros)
     .then((result) => {
-        console.log("Resultado da função:");
-        console.log("Anuncios que vieram: ");
-        console.log(result.anuncios);
-        
-        //console.log("Generos que vieram: " + result.anuncios.generos);
-
-        // result.anuncios.forEach((anuncio) => {
-        //     console.log(`Anúncio ID: ${anuncio.anuncio.id}`);
-        //     console.log(`Anúncio: ${anuncio.anuncio.nome}`);
-        //     console.log("Gêneros:");
-
-            // Iterar pelos gêneros do anúncio
-            // anuncio.generos.forEach((genero) => {
-            //     console.log(`- ${genero.nome}`);
-            // });
-    //})
-})
+        if (result) {
+            console.log("Anúncios filtrados:");
+            console.log(result.anuncios);
+        } else {
+            console.log("Nenhum anúncio atende aos critérios de filtro.");
+        }
+    })
     .catch((error) => {
-        console.error("Erro ao chamar a função:", error);
-});
+        console.error("Erro ao chamar a função ctlGetAnunciosThenFilter:", error);
+    });
+
 
 /*
     nome,
