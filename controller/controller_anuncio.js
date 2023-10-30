@@ -439,7 +439,7 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
 }
 
 
-const ctlGetAnunciosThenFilter = async (array_estado_livro, arrayGeneros) => {
+const ctlGetAnunciosThenFilterByEstadoAndGenero = async (array_estado_livro, arrayGeneros) => {
 
     if(array_estado_livro == null || array_estado_livro == undefined || array_estado_livro == "" ||
     arrayGeneros == null || arrayGeneros == undefined || arrayGeneros == "" 
@@ -526,16 +526,216 @@ const ctlGetAnunciosThenFilter = async (array_estado_livro, arrayGeneros) => {
     
 };
 
+
+const ctlGetAnunciosThenFilterByEstadoOnly = async (array_estado_livro) => {
+
+    if(array_estado_livro == null || array_estado_livro == undefined || array_estado_livro == "" )
+    {
+        return message.ERROR_REQUIRE_FIELDS
+    } else {
+
+
+        let dadosAnuncio = await anuncioDAO.mdlSelectsAlAnunciosThenFilter();
+
+        if (dadosAnuncio) {
+            let listaAnuncios = [];
+
+            for (let index = 0; index < dadosAnuncio.length; index++) {
+            const anuncio = dadosAnuncio[index];
+
+            let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id);
+            let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id);
+            let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id);
+            let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id);
+
+            let anuncioJSON = {
+                anuncio: {
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    ano_lancamento: anuncio.ano_lancamento,
+                    data_criacao: anuncio.data_criacao,
+                    status_anuncio: anuncio.status_anuncio,
+                    edicao: anuncio.edicao,
+                    preco: anuncio.preco,
+                    descricao: anuncio.descricao,
+                    numero_paginas: anuncio.numero_paginas,
+                    anunciante: anuncio.id_anunciante,
+                },
+                idioma: {
+                    id: anuncio.id_idioma,
+                    nome: anuncio.nome_idioma,
+                },
+                endereco: {
+                    estado: anuncio.estado,
+                    cidade: anuncio.cidade,
+                    bairro: anuncio.bairro,
+                },
+                estado_livro: {
+                    id: anuncio.id_estado_livro,
+                    estado: anuncio.estado_livro,
+                },
+                editora: {
+                    id: anuncio.id_editora,
+                    nome: anuncio.nome_editora,
+                },
+                foto: fotosAnuncio,
+                generos: generosAnuncio,
+                tipo_anuncio: tiposAnuncio,
+                autores: autoresAnuncio,
+            };
+
+           
+
+            if (
+                array_estado_livro.includes(anuncio.estado_livro)
+            ) {
+                listaAnuncios.push(anuncioJSON);
+            }
+        }
+
+        if (listaAnuncios.length > 0) {
+            let dadosAnuncioJSON = {
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                quantidade: listaAnuncios.length,
+                anuncios: listaAnuncios,
+            };
+            return dadosAnuncioJSON;
+        } else {
+            return message.ERROR_REGISTER_NOT_FOUND;
+        }
+    } else {
+        return message.ERROR_INVALID_CPF;
+    }
+    }
+
+    
+};
+
+const ctlGetAnunciosThenFilterByGenerosOnly = async (arrayGeneros) => {
+
+    if(arrayGeneros == null || arrayGeneros == undefined || arrayGeneros == ""  )
+    {
+        return message.ERROR_REQUIRE_FIELDS
+    } else {
+
+
+        let dadosAnuncio = await anuncioDAO.mdlSelectsAlAnunciosThenFilter();
+
+        if (dadosAnuncio) {
+            let listaAnuncios = [];
+
+            for (let index = 0; index < dadosAnuncio.length; index++) {
+            const anuncio = dadosAnuncio[index];
+
+            let generosAnuncio = await anuncioGeneroDAO.mdlSelectGeneroByIdAnuncio(anuncio.id);
+            let tiposAnuncio = await anuncioTipoAnuncio.mdlSelectTipoAnuncioByIdAnuncio(anuncio.id);
+            let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id);
+            let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id);
+
+            let anuncioJSON = {
+                anuncio: {
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    ano_lancamento: anuncio.ano_lancamento,
+                    data_criacao: anuncio.data_criacao,
+                    status_anuncio: anuncio.status_anuncio,
+                    edicao: anuncio.edicao,
+                    preco: anuncio.preco,
+                    descricao: anuncio.descricao,
+                    numero_paginas: anuncio.numero_paginas,
+                    anunciante: anuncio.id_anunciante,
+                },
+                idioma: {
+                    id: anuncio.id_idioma,
+                    nome: anuncio.nome_idioma,
+                },
+                endereco: {
+                    estado: anuncio.estado,
+                    cidade: anuncio.cidade,
+                    bairro: anuncio.bairro,
+                },
+                estado_livro: {
+                    id: anuncio.id_estado_livro,
+                    estado: anuncio.estado_livro,
+                },
+                editora: {
+                    id: anuncio.id_editora,
+                    nome: anuncio.nome_editora,
+                },
+                foto: fotosAnuncio,
+                generos: generosAnuncio,
+                tipo_anuncio: tiposAnuncio,
+                autores: autoresAnuncio,
+            };
+
+           
+
+            if (
+                Array.from(generosAnuncio).some((genero) => arrayGeneros.includes(genero.nome))
+            ) {
+                listaAnuncios.push(anuncioJSON);
+            }
+        }
+
+        if (listaAnuncios.length > 0) {
+            let dadosAnuncioJSON = {
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                quantidade: listaAnuncios.length,
+                anuncios: listaAnuncios,
+            };
+            return dadosAnuncioJSON;
+        } else {
+            return message.ERROR_REGISTER_NOT_FOUND;
+        }
+    } else {
+        return message.ERROR_INVALID_CPF;
+    }
+    }
+
+    
+};
+
    
 
 
 
 
 
-const array_estado_livro = ["Novo", "Seminovo"]; // Inclua estados válidos
-const arrayGeneros = ["Fantasia"]; // Inclua gêneros válidos
+const array_estado_livro = ["Usado", "Seminovo"]; // Inclua estados válidos
+const arrayGeneros = ["Coleção", "Biografia"]; // Inclua gêneros válidos
 
-ctlGetAnunciosThenFilter(array_estado_livro, arrayGeneros)
+// ctlGetAnunciosThenFilterByEstadoAndGenero(array_estado_livro, arrayGeneros)
+//     .then((result) => {
+//         if (result) {
+//             console.log("Anúncios filtrados:");
+//             console.log(result.anuncios);
+//         } else {
+//             console.log("Nenhum anúncio atende aos critérios de filtro.");
+//         }
+//     })
+//     .catch((error) => {
+//         console.error("Erro ao chamar a função ctlGetAnunciosThenFilter:", error);
+//     });
+
+
+
+
+// ctlGetAnunciosThenFilterByEstadoOnly(array_estado_livro)
+//     .then((result) => {
+//         if (result) {
+//             console.log("Anúncios filtrados:");
+//             console.log(result.anuncios);
+//         } else {
+//             console.log("Nenhum anúncio atende aos critérios de filtro.");
+//         }
+//     })
+//     .catch((error) => {
+//         console.error("Erro ao chamar a função ctlGetAnunciosThenFilter:", error);
+//     });
+
+ctlGetAnunciosThenFilterByGenerosOnly(arrayGeneros)
     .then((result) => {
         if (result) {
             console.log("Anúncios filtrados:");
@@ -580,5 +780,7 @@ module.exports = {
     ctlGetAnuncioByLocalizacao,
     ctlInserirAnuncio,
     ctlGetAnuncioPage,
-    ctlGetAnunciosThenFilter
+    ctlGetAnunciosThenFilterByEstadoAndGenero,
+    ctlGetAnunciosThenFilterByEstadoOnly,
+    ctlGetAnunciosThenFilterByGenerosOnly
 }

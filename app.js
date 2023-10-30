@@ -472,6 +472,28 @@ app.post('/v1/sbook/anuncio-proximos', cors(), bodyParserJSON, async function (r
     response.status(dadosAnuncio.status)
     response.json(dadosAnuncio)
 })
+app.get('/v1/sbook/anuncios-filtros', cors(), async function (request, response) {
+    const array_estado_livro = request.query.array_estado_livro;
+    const array_generos = request.query.array_generos;
+
+    if (array_estado_livro != null && array_estado_livro != "" && array_generos != null && array_generos != "") {
+        let dadosAnunciosFiltrados = await controllerAnuncio.ctlGetAnunciosThenFilterByEstadoAndGenero(array_estado_livro, array_generos);
+        response.status(dadosAnunciosFiltrados.status);
+        response.json(dadosAnunciosFiltrados);
+    } else if (array_estado_livro != null && array_estado_livro != "") {
+        let dadosAnunciosFiltrados = await controllerAnuncio.ctlGetAnunciosThenFilterByEstadoOnly(array_estado_livro);
+        response.status(dadosAnunciosFiltrados.status);
+        response.json(dadosAnunciosFiltrados);
+    } else if (array_generos != null && array_generos != "") {
+        let dadosAnunciosFiltrados = await controllerAnuncio.ctlGetAnunciosThenFilterByGenerosOnly(array_generos);
+        response.status(dadosAnunciosFiltrados.status);
+        response.json(dadosAnunciosFiltrados);
+    } else {
+        response.status(400); // Status de Bad Request
+        response.json({ mensagem: 'Parâmetros inválidos' });
+    }
+});
+
 
 app.get('/v1/sbook/anuncio/:id', cors(), async function (request, response) {
     let id = request.params.id
