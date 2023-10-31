@@ -739,7 +739,7 @@ ctlGetAnunciosThenFilterByGenerosOnly(arrayGeneros)
     .then((result) => {
         if (result) {
             console.log("Anúncios filtrados:");
-            console.log(result.anuncios);
+           // console.log(result.anuncios);
         } else {
             console.log("Nenhum anúncio atende aos critérios de filtro.");
         }

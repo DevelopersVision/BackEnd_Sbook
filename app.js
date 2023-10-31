@@ -5,12 +5,14 @@
  *  Versão: 1.0
  **************************************************************************************/
 
-// (Para termos a conexão do projeto com o banco de dados, devemos utilizar a biblioteca prisma, sempre utilizar os comandos)
-// npm install prisma --save
-//npx prisma
-//npx prisma init
-//npm install @prisma/client --save
-//npx prisma migrate dev
+/**
+ * MongoDB:
+ * 
+ * Username: sbook_root
+ * Password: mXYEFk0a6E8GBJBj
+ * 
+ * StringConnection: mongodb+srv://LuizSilva:58bkPCPOaYKGIYhF@apicluster.dnx6rti.mongodb.net/ApiRest-NodeJs?retryWrites=true&w=majority
+ **/
 
 /************************************************************************************
  * Configurações Node:
@@ -65,12 +67,21 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-
+const mongoose = require('mongoose')
 
 //Cria o objeto app conforme a classe do express
 const app = express();
 
+//Constantes MongoDB
+const DB_USER = 'sbook_root'
+const DB_PASSWORD = 'mXYEFk0a6E8GBJBj'
+const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@sbookcluster.1itflnh.mongodb.net/Sbook-Chat?retryWrites=true&w=majority`
 
+const chatRoutes = require('./routes/chatRoutes')
+app.use('/v1/sbook/chat', chatRoutes)
+
+const messageRoutes = require('./routes/mensagemRoutes')
+app.use('/v1/sbook/message', messageRoutes)
 //Permissões do cors
 app.use((request, response, next) => {
     //Define quem poderá acessar a Api - '*' = Todos
@@ -663,6 +674,14 @@ app.post('/v1/sbook/inserir-tipos-anuncios', cors(), async function (request, re
     response.json(dadosTiposAnuncios)
 })
 
-app.listen(8080, function () {
-    console.log('Servidor aguardando requisições na porta 8080');
-})
+//Conexão com o banco
+mongoose
+    .connect(
+        STRING_CONNECTION
+    )
+    .then(() => {
+        app.listen(8080, function () {
+            console.log('Servidor aguardando requisições na porta 8080');
+        })        
+    })
+    .catch((err) => console.log(err))
