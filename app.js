@@ -237,6 +237,25 @@ app.put('/v1/sbook/atualizar-usuario', cors(), bodyParserJSON, async function (r
     }
 })
 
+app.put('/v1/sbook/atualizar-foto-usuario', cors(), bodyParserJSON, async function (request, response) {
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe o ID do aluno pelo parametro
+
+        //Recebe os dados dos aluno encaminhado no corpo da requisição
+        let dadosBody = request.body
+
+        let resultDadosUsuarioEndereco = await controllerUsuario.ctlAlterarFoto(dadosBody.id, dadosBody.foto)
+
+        response.status(resultDadosUsuarioEndereco.status)
+        response.json(resultDadosUsuarioEndereco)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE.message)
+    }
+})
 /*****************************************************************************************************************
 * Objetivo: API de controle de Email
 * Data: 04/09/2023
@@ -483,6 +502,7 @@ app.post('/v1/sbook/anuncio-proximos', cors(), bodyParserJSON, async function (r
     response.status(dadosAnuncio.status)
     response.json(dadosAnuncio)
 })
+
 app.get('/v1/sbook/anuncios-filtros', cors(), async function (request, response) {
     const array_estado_livro = request.query.array_estado_livro;
     const array_generos = request.query.array_generos;
@@ -565,6 +585,24 @@ app.put('/v1/sbook/encerrar-anuncio/:idAnuncio', cors(), bodyParserJSON, async f
 
     response.status(dadosAnuncio.status)
     response.json(dadosAnuncio)
+})
+
+app.put('/v1/sbook/anuncio', cors(), bodyParserJSON, async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let body = request.body
+
+        let dadosAnuncio = await controllerAnuncio.ctlAtualizarAnuncios(body)
+
+        response.status(dadosAnuncio.status)
+        response.json(dadosAnuncio)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
 })
 
 /*****************************************************************************************************************

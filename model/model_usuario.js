@@ -221,6 +221,20 @@ const mdlAlterPassword = async (id, password) => {
     }
 }
 
+const mdlUpdateFoto = async (id, foto) => {
+    let sql = `update tbl_usuario set 
+            tbl_usuario.foto= '${foto}'
+        where tbl_usuario.id = ${id}
+        `
+
+    let resultStatus = await prisma.$executeRawUnsafe(sql)
+
+    if (resultStatus) {
+        return true
+    } else {
+        return false
+    }
+}
 
 module.exports = {
     mdlSelectAllUsuario,
@@ -233,4 +247,5 @@ module.exports = {
     selectByEmail,
     mdlAlterPassword,
     mdlUpdateForgotPasswordUsuario,
+    mdlUpdateFoto
 }

@@ -17,9 +17,9 @@ const mdlSelectFotoByIdAnuncio = async (idAnuncio) => {
 
     let rsFoto = await prisma.$queryRawUnsafe(sql)
 
-    if(rsFoto.length > 0){
+    if (rsFoto.length > 0) {
         return rsFoto
-    }else{
+    } else {
         return false
     }
 }
@@ -39,8 +39,18 @@ const mdlInsertFotoScale = async (id, arrayFotos) => {
     }
 }
 
+const mdlAtualizarFotos = async (idAnuncio, arrayFotos) => {
+    const sql = `delete from tbl_foto where id_anuncio = ${idAnuncio}`
+
+    await prisma.$executeRawUnsafe(sql)
+
+    await mdlInsertFotoScale(idAnuncio, arrayFotos)
+
+}
+
 
 module.exports = {
     mdlSelectFotoByIdAnuncio,
-    mdlInsertFotoScale
+    mdlInsertFotoScale,
+    mdlAtualizarFotos
 }

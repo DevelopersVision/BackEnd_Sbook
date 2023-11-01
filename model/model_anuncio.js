@@ -127,11 +127,8 @@ const mdlSelectAnuncioById = async (id) => {
     anuncio.id_usuario as id_anunciante,
     idioma.nome as nome_idioma,
     anuncio.id_editora,
-    editora.nome as nome_editora,
-    foto.foto
+    editora.nome as nome_editora
     from tbl_anuncio as anuncio
-        inner join tbl_foto as foto
-            on foto.id_anuncio = anuncio.id
     	inner join tbl_usuario as usuario
 	    	on usuario.id = anuncio.id_usuario
 	    inner join tbl_endereco as endereco 
@@ -174,11 +171,8 @@ const mdlSelectAnuncioByIdUsuario = async (idUsuario) => {
     idioma.nome as nome_idioma,
     anuncio.id_editora,
     anuncio.id_usuario as id_anunciante,
-    editora.nome as nome_editora,
-    foto.foto
+    editora.nome as nome_editora
     from tbl_anuncio as anuncio
-        inner join tbl_foto as foto
-            on foto.id_anuncio = anuncio.id
     	inner join tbl_usuario as usuario
 	    	on usuario.id = anuncio.id_usuario
 	    inner join tbl_endereco as endereco 
@@ -509,6 +503,30 @@ const mdlEncerrarAnuncio = async (idAnuncio) => {
     }
 }
 
+const mdlUpdateAnuncio = async (dadosAnuncio) => {
+    const sql = `update tbl_anuncio
+        set nome = '${dadosAnuncio.nome}',
+        edicao = '${dadosAnuncio.edicao}',
+        numero_paginas = ${dadosAnuncio.numero_paginas},
+        ano_lancamento = ${dadosAnuncio.ano_lancamento},
+        descricao = '${dadosAnuncio.descricao}',
+        isbn = '${dadosAnuncio.isbn}',
+        preco = ${dadosAnuncio.preco},
+        id_editora = ${dadosAnuncio.id_editora},
+        id_estado_livro = ${dadosAnuncio.id_estado_livro},
+        id_idioma = ${dadosAnuncio.id_idioma}
+    where id = ${dadosAnuncio.id_anuncio}
+    `
+
+    const result = await prisma.$executeRawUnsafe(sql)
+
+    if (result) {
+        return true
+    } else {
+        return false
+    }
+}
+
 module.exports = {
     mdlSelectAllAnuncio,
     mdlSelectAnuncioById,
@@ -520,5 +538,6 @@ module.exports = {
     mdlSelectAnuncioPage,
     mdlSelectsAlAnunciosThenFilter,
     mdlDeleteAnuncio,
-    mdlEncerrarAnuncio
+    mdlEncerrarAnuncio,
+    mdlUpdateAnuncio
 }

@@ -56,7 +56,25 @@ const mdlInsertAnuncioAutorScale = async (idAnuncio, arrayAnuncioAutores) => {
     }
 }
 
+const mdlAtualizarIDAnuncioAutor = async (idAnuncio, arrayIdAutores) => {
+    const sql = `delete from tbl_anuncio_autor where id_anuncio = ${idAnuncio}`
+
+    await prisma.$executeRawUnsafe(sql)
+    
+    for (let i = 0; i < arrayIdAutores.length; i++) {
+        const idAutor = arrayIdAutores[i];
+
+        console.log(idAutor);
+
+        let sql = `insert into tbl_anuncio_autor(id_autor, id_anuncio) values (${idAutor}, ${idAnuncio})`
+
+        await prisma.$executeRawUnsafe(sql)
+    }
+
+}
+
 module.exports = {
     mdlSelectAutorByIdAnuncio,
-    mdlInsertAnuncioAutorScale
+    mdlInsertAnuncioAutorScale,
+    mdlAtualizarIDAnuncioAutor
 }

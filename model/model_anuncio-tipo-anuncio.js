@@ -92,7 +92,7 @@ const mdlSelectAnuncioByIdTipoAnuncio = async (idTipoAnuncio) => {
 }
 
 const mdlInsertIdAnuncioIdTipoAnuncioScale = async (idAnuncio, arrayIdTipoAnuncio) => {
- 
+
     for (let i = 0; i < arrayIdTipoAnuncio.length; i++) {
         const idTipoAnuncio = arrayIdTipoAnuncio[i];
 
@@ -103,9 +103,19 @@ const mdlInsertIdAnuncioIdTipoAnuncioScale = async (idAnuncio, arrayIdTipoAnunci
 
 }
 
+const mdlAtualizarIDAnuncioTipoAnuncio = async (idAnuncio, arrayIdTipoAnuncio) => {
+    const sql = `delete from tbl_anuncio_tipo_anuncio where id_anuncio = ${idAnuncio}`
+
+    await prisma.$executeRawUnsafe(sql)
+
+    await mdlInsertIdAnuncioIdTipoAnuncioScale(idAnuncio, arrayIdTipoAnuncio)
+
+}
+
 
 module.exports = {
     mdlSelectAllTipoAnuncio,
     mdlSelectTipoAnuncioByIdAnuncio,
-    mdlInsertIdAnuncioIdTipoAnuncioScale
+    mdlInsertIdAnuncioIdTipoAnuncioScale,
+    mdlAtualizarIDAnuncioTipoAnuncio
 }

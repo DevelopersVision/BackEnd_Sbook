@@ -129,7 +129,7 @@ const ctlAterarSenha = async (dados) => {
 
     if (
         dados.id == null || dados.id == undefined || isNaN(dados.id) ||
-        dados.password == null || dados.password == undefined || dados.password > 256
+        dados.password == null || dados.password == undefined || dados.password.length > 256
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
@@ -153,10 +153,37 @@ const ctlAterarSenha = async (dados) => {
 
 }
 
+const ctlAlterarFoto = async (id, foto) => {
+    if (
+        id == null || id == undefined || isNaN(id) ||
+        foto == null || foto == undefined
+    ) {
+        return message.ERROR_REQUIRE_FIELDS
+    } else {
+        let resultStatus = await usuarioDAO.mdlUpdateFoto(id, foto)
+
+        if (resultStatus) {
+
+            let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(id)
+
+            let dadosUsuarioJSON = {
+                status: message.SUCCESS_UPDATED_ITEM.status,
+                message: message.SUCCESS_UPDATED_ITEM.message,
+                usuario: dadosUsuario
+            }
+
+            return dadosUsuarioJSON
+        } else {
+            return message.ERROR_INTERNAL_SERVER
+        }
+    }
+}
+
 module.exports = {
     ctlGetUsuario,
     ctlInserirEnderecoUsuario,
     ctlGetUsuarioByID,
     ctlAtalizarEnderecoUsuario,
-    ctlAterarSenha
+    ctlAterarSenha,
+    ctlAlterarFoto
 }
