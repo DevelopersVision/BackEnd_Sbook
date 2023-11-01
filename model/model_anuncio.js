@@ -482,6 +482,17 @@ const mdlSelectsAlAnunciosThenFilter = async()=>{
     }     
 }
 
+const mdlDeleteAnuncio = async (idAnuncio) => {
+    const sql = `delete from tbl_anuncio where id = ${idAnuncio}`
+
+    const result = await prisma.$executeRawUnsafe(sql)
+
+    if(result){
+        return true
+    }else{
+        return false
+    }
+}
 
 
 
@@ -496,5 +507,6 @@ module.exports = {
     mdlSelectAnuncioLastId,
     mdlSelectAnuncioFromLastId,
     mdlSelectAnuncioPage,
-    mdlSelectsAlAnunciosThenFilter
+    mdlSelectsAlAnunciosThenFilter,
+    mdlDeleteAnuncio
 }

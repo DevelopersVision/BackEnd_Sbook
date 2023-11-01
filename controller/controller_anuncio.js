@@ -697,6 +697,27 @@ const ctlGetAnunciosThenFilterByGenerosOnly = async (arrayGeneros) => {
     
 };
 
+const ctlExcluirAnuncio = async (idAnuncio) => {
+    
+    if(idAnuncio == "" || idAnuncio == undefined || !idAnuncio || isNaN(idAnuncio) ){
+        return message.ERROR_REQUIRE_FIELDS
+    }else{
+        const checkID = await anuncioDAO.mdlSelectAnuncioById(idAnuncio)
+
+        if(checkID){
+            const deleteAnuncio = await anuncioDAO.mdlDeleteAnuncio(idAnuncio)
+
+            if(deleteAnuncio){
+                return message.SUCCESS_DELETED_ITEM
+            }else{
+                return message.ERROR_INTERNAL_SERVER
+            }
+        }else{
+            return message.ERROR_REGISTER_NOT_FOUND
+        }
+    }
+}
+
 const ctlGetALLAnunciosForSearchPage =  async () => {
     let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio()
 
@@ -851,5 +872,6 @@ module.exports = {
     ctlGetAnunciosThenFilterByEstadoAndGenero,
     ctlGetAnunciosThenFilterByEstadoOnly,
     ctlGetAnunciosThenFilterByGenerosOnly,
-    ctlGetALLAnunciosForSearchPage
+    ctlGetALLAnunciosForSearchPage,
+    ctlExcluirAnuncio
 }

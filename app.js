@@ -549,6 +549,15 @@ app.post('/v1/sbook/publicar-anuncio', cors(), bodyParserJSON, async function (r
     }
 })
 
+app.delete('/v1/sbook/anuncio/:idAnuncio', cors(), bodyParserJSON, async function (request, response) {
+    let idAnuncio = request.params.idAnuncio
+
+    let dadosAnuncio = await controllerAnuncio.ctlExcluirAnuncio(idAnuncio)
+
+    response.status(dadosAnuncio.status)
+    response.json(dadosAnuncio)
+})
+
 /*****************************************************************************************************************
 * Objetivo: API de manipulação de anuncios favoritados
 * Data: 15/09/2023
