@@ -240,6 +240,7 @@ const mdlSelectAnuncioByLocalização = async (bairro, cidade, estado, page) => 
     		on anuncio.id_idioma = idioma.id
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
+    where anuncio.status_anuncio = true
     order by field(endereco.bairro, '${bairro}') desc, 
 	    case when endereco.bairro = '${bairro}' THEN 1 ELSE 2 END,
 	    case when endereco.cidade = '${cidade}' THEN 1 ELSE 2 END,
@@ -248,12 +249,12 @@ const mdlSelectAnuncioByLocalização = async (bairro, cidade, estado, page) => 
     cidade asc,
     estado asc,
     id asc limit 10 offset ${page}0`
-    
+
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
-    if(rsAnuncio.length > 0){
+    if (rsAnuncio.length > 0) {
         return rsAnuncio
-    }else{
+    } else {
         return false
     }
 }
@@ -358,8 +359,8 @@ const mdlSelectAnuncioFromLastId = async () => {
     }
 }
 
-const mdlSelectsFiltros = async(arrayGenero, arrayEstado_livro)=>{
-    
+const mdlSelectsFiltros = async (arrayGenero, arrayEstado_livro) => {
+
 
     let sql = `
     select 
@@ -406,17 +407,17 @@ const mdlSelectsFiltros = async(arrayGenero, arrayEstado_livro)=>{
 
     let array = []
 
-    if(
-        arrayGenero == null || arrayGenero == "" || arrayGenero == undefined 
-    ){
-        
-        rsAnuncio = rsAnuncio.filter(rsAnuncio => rsAnuncio.estado_livro == arrayEstado_livro[0] || arrayEstado_livro[1])
-        
+    if (
+        arrayGenero == null || arrayGenero == "" || arrayGenero == undefined
+    ) {
 
-    } else if(
+        rsAnuncio = rsAnuncio.filter(rsAnuncio => rsAnuncio.estado_livro == arrayEstado_livro[0] || arrayEstado_livro[1])
+
+
+    } else if (
         arrayEstado_livro == null || arrayEstado_livro == "" || arrayEstado_livro == undefined
-    ){
-        
+    ) {
+
         rsAnuncio = rsAnuncio.filter(rsAnuncio => rsAnuncio.genero == `${arrayGenero}`)
 
         array.push(arrayGenero)
@@ -434,8 +435,8 @@ const mdlSelectsFiltros = async(arrayGenero, arrayEstado_livro)=>{
     }
 }
 
-const mdlSelectsAlAnunciosThenFilter = async()=>{
-    
+const mdlSelectsAlAnunciosThenFilter = async () => {
+
 
     let sql = `select 
     anuncio.id, 
@@ -476,10 +477,10 @@ const mdlSelectsAlAnunciosThenFilter = async()=>{
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
     if (rsAnuncio.length > 0) {
-            return rsAnuncio
+        return rsAnuncio
     } else {
-             return false
-    }     
+        return false
+    }
 }
 
 const mdlDeleteAnuncio = async (idAnuncio) => {
@@ -487,16 +488,26 @@ const mdlDeleteAnuncio = async (idAnuncio) => {
 
     const result = await prisma.$executeRawUnsafe(sql)
 
-    if(result){
+    if (result) {
         return true
-    }else{
+    } else {
         return false
     }
 }
 
+const mdlEncerrarAnuncio = async (idAnuncio) => {
+    const sql = `update tbl_anuncio
+	    set status_anuncio = false
+    where id = ${idAnuncio};`
 
+    const result = await prisma.$executeRawUnsafe(sql)
 
-
+    if (result) {
+        return true
+    } else {
+        return false
+    }
+}
 
 module.exports = {
     mdlSelectAllAnuncio,
@@ -508,5 +519,6 @@ module.exports = {
     mdlSelectAnuncioFromLastId,
     mdlSelectAnuncioPage,
     mdlSelectsAlAnunciosThenFilter,
-    mdlDeleteAnuncio
+    mdlDeleteAnuncio,
+    mdlEncerrarAnuncio
 }

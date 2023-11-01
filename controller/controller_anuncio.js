@@ -718,6 +718,27 @@ const ctlExcluirAnuncio = async (idAnuncio) => {
     }
 }
 
+const ctlEncerrarAnuncio = async (idAnuncio) => {
+    
+    if(idAnuncio == "" || idAnuncio == undefined || !idAnuncio || isNaN(idAnuncio) ){
+        return message.ERROR_REQUIRE_FIELDS
+    }else{
+        const checkID = await anuncioDAO.mdlSelectAnuncioById(idAnuncio)
+
+        if(checkID){
+            const encerrarAnuncio = await anuncioDAO.mdlEncerrarAnuncio
+
+            if(encerrarAnuncio){
+                return message.SUCCESS_UPDATED_ITEM
+            }else{
+                return message.ERROR_INTERNAL_SERVER
+            }
+        }else{
+            return message.ERROR_REGISTER_NOT_FOUND
+        }
+    }
+}
+
 const ctlGetALLAnunciosForSearchPage =  async () => {
     let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio()
 
@@ -873,5 +894,6 @@ module.exports = {
     ctlGetAnunciosThenFilterByEstadoOnly,
     ctlGetAnunciosThenFilterByGenerosOnly,
     ctlGetALLAnunciosForSearchPage,
-    ctlExcluirAnuncio
+    ctlExcluirAnuncio,
+    ctlEncerrarAnuncio
 }
