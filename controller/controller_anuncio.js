@@ -392,9 +392,6 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
         dadosAnuncio.numero_paginas == "" ||
         dadosAnuncio.ano_lancamento == "" || dadosAnuncio.ano_lancamento == null || dadosAnuncio.ano_lancamento == undefined ||
         dadosAnuncio.descricao == "" || dadosAnuncio.descricao == null || dadosAnuncio.descricao == undefined ||
-        dadosAnuncio.edicao == "" ||
-        dadosAnuncio.isbn == "" ||
-        dadosAnuncio.preco == "" ||
         dadosAnuncio.id_usuario == "" || dadosAnuncio.id_usuario == null || dadosAnuncio.id_usuario == undefined || isNaN(dadosAnuncio.id_usuario) ||
         dadosAnuncio.id_estado_livro == "" || dadosAnuncio.id_estado_livro == null || dadosAnuncio.id_estado_livro == undefined || isNaN(dadosAnuncio.id_estado_livro) ||
         dadosAnuncio.id_idioma == "" || dadosAnuncio.id_idioma == null || dadosAnuncio.id_idioma == undefined || isNaN(dadosAnuncio.id_idioma) ||
@@ -407,8 +404,6 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
         return message.ERROR_REQUIRE_FIELDS
     } else if(dadosAnuncio.tipos_anuncio.length > 2){
         return message.ERRO_INVALID_LENGTH_TIPO
-    } else if(dadosAnuncio.tipos_anuncio[0] == 1 || dadosAnuncio.tipos_anuncio[1] == 1 && dadosAnuncio.preco != ""){
-        return message.ERRO_PRECO_DOACOAO
     } else {
         let idEditora = await anuncioEditoraDAO.checkAnuncioEditora(dadosAnuncio.id_editora)
 
