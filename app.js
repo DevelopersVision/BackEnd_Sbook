@@ -505,6 +505,13 @@ app.get('/v1/sbook/anuncios-filtros', cors(), async function (request, response)
     }
 });
 
+app.get('/v1/sbook/todos-anuncios-for-search', cors(), async function (request, response) {
+
+    let dadosAnuncio = await controllerAnuncio.ctlGetALLAnunciosForSearchPage()
+    response.status(dadosAnuncio.status)
+    response.json(dadosAnuncio)
+})
+
 
 app.get('/v1/sbook/anuncio/:id', cors(), async function (request, response) {
     let id = request.params.id
