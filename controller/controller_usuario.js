@@ -91,7 +91,7 @@ const ctlInserirEnderecoUsuario = async (dadosEnderecoUsuario) => {
     }
 }
 
-const ctlAtalizarEnderecoUsuario = async function (dadosEnderecoUsuario) {
+const ctlAtualizarEnderecoUsuario = async function (dadosEnderecoUsuario) {
     if (
         dadosEnderecoUsuario.id_usuario == null || dadosEnderecoUsuario.id_usuario == undefined || isNaN(dadosEnderecoUsuario.id_usuario) ||
         dadosEnderecoUsuario.id_endereco == null || dadosEnderecoUsuario.id_endereco == undefined || isNaN(dadosEnderecoUsuario.id_endereco) ||
@@ -153,18 +153,18 @@ const ctlAterarSenha = async (dados) => {
 
 }
 
-const ctlAlterarFoto = async (id, foto) => {
+const ctlAlterarFoto = async (usuario) => {
     if (
-        id == null || id == undefined || isNaN(id) ||
-        foto == null || foto == undefined
+        usuario.id == null || usuario.id == undefined || isNaN(usuario.id) ||
+        usuario.foto == null || usuario.foto == undefined
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
-        let resultStatus = await usuarioDAO.mdlUpdateFoto(id, foto)
+        let resultStatus = await usuarioDAO.mdlUpdateFoto(usuario.id, usuario.foto)
 
         if (resultStatus) {
 
-            let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(id)
+            let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(usuario.id)
 
             let dadosUsuarioJSON = {
                 status: message.SUCCESS_UPDATED_ITEM.status,
@@ -183,7 +183,7 @@ module.exports = {
     ctlGetUsuario,
     ctlInserirEnderecoUsuario,
     ctlGetUsuarioByID,
-    ctlAtalizarEnderecoUsuario,
+    ctlAtualizarEnderecoUsuario,
     ctlAterarSenha,
     ctlAlterarFoto
 }

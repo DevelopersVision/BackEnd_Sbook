@@ -123,7 +123,7 @@ app.use('/v1/sbook/generos-preferidos', generosPreferidos)
 * Versão: 1.0
 ******************************************************************************************************************/
 const server = require('http').createServer(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, {cors: {origin: '*'}})
 
 io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
@@ -134,12 +134,14 @@ io.on('connection', socket => {
 
 
     socket.on('set_username', username => {
-        console.log('foi' + username);
+        console.log("Username: " + username);
         socket.data.username = username
     })
 
     socket.on('message', text => {
-        console.log(text + 'foi');
+        console.log("Mensagem: " + text);
+
+        
         io.emit('receive_message', {
             text,
             authorId: socket.id,
@@ -147,6 +149,8 @@ io.on('connection', socket => {
         })
     })
 })
+
+server.listen(3001, () => console.log('SERVER SOCKEET.IO LIGADO: 3001'))
 
 
 /*****************************************************************************************************************
@@ -241,7 +245,7 @@ app.put('/v1/sbook/atualizar-usuario', cors(), bodyParserJSON, async function (r
         //Recebe os dados dos aluno encaminhado no corpo da requisição
         let dadosBody = request.body
 
-        let resultDadosUsuarioEndereco = await controllerUsuario.ctlAtalizarEnderecoUsuario(dadosBody)
+        let resultDadosUsuarioEndereco = await controllerUsuario.ctlAtualizarEnderecoUsuario(dadosBody)
 
         response.status(resultDadosUsuarioEndereco.status)
         response.json(resultDadosUsuarioEndereco)
@@ -261,7 +265,7 @@ app.put('/v1/sbook/atualizar-foto-usuario', cors(), bodyParserJSON, async functi
         //Recebe os dados dos aluno encaminhado no corpo da requisição
         let dadosBody = request.body
 
-        let resultDadosUsuarioEndereco = await controllerUsuario.ctlAlterarFoto(dadosBody.id, dadosBody.foto)
+        let resultDadosUsuarioEndereco = await controllerUsuario.ctlAlterarFoto(dadosBody)
 
         response.status(resultDadosUsuarioEndereco.status)
         response.json(resultDadosUsuarioEndereco)
