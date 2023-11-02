@@ -58,6 +58,35 @@ const mdlSelectAllAnuncio = async () => {
     }
 }
 
+const mdlSelectAnuncioForTheFeed = async (page) => {
+    page = Number(page) - 1
+
+    const sql = `select
+        anuncio.id,
+        anuncio.nome,
+        anuncio.ano_lancamento,
+        date_format(anuncio.data_criacao, '%d-%m-%Y %H:%i') as data_criacao,
+        anuncio.status_anuncio,
+        anuncio.preco,
+        anuncio.id_usuario,
+        anuncio.id_estado_livro,
+        estado_livro.estado as estado_livro
+    from tbl_anuncio as anuncio
+	    inner join tbl_estado_livro as estado_livro
+		    on estado_livro.id = anuncio.id_estado_livro
+    where anuncio.status_anuncio = true
+    order by id asc limit 8 offset ${page}0
+    `
+
+    let rsAnuncio = await prisma.$queryRawUnsafe(sql)
+
+    if (rsAnuncio.length > 0) {
+        return rsAnuncio
+    } else {
+        return false
+    }
+}
+
 const mdlSelectAnuncioPage = async (page) => {
     page = Number(page) - 1
 
@@ -539,5 +568,6 @@ module.exports = {
     mdlSelectsAlAnunciosThenFilter,
     mdlDeleteAnuncio,
     mdlEncerrarAnuncio,
-    mdlUpdateAnuncio
+    mdlUpdateAnuncio,
+    mdlSelectAnuncioForTheFeed
 }

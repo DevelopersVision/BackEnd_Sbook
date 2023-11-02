@@ -67,6 +67,8 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const bodyParserJSON = bodyParser.json();
+const message = require('./controller/modulo/config.js')
 const mongoose = require('mongoose')
 
 //Cria o objeto app conforme a classe do express
@@ -77,11 +79,12 @@ const DB_USER = 'sbook_root'
 const DB_PASSWORD = 'mXYEFk0a6E8GBJBj'
 const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@sbookcluster.1itflnh.mongodb.net/Sbook-Chat?retryWrites=true&w=majority`
 
-const chatRoutes = require('./routes/chatRoutes')
+const chatRoutes = require('./routes/mongoDB/chatRoutes.js')
 app.use('/v1/sbook/chat', chatRoutes)
 
-const messageRoutes = require('./routes/mensagemRoutes')
+const messageRoutes = require('./routes/mongoDB/mensagemRoutes.js')
 app.use('/v1/sbook/message', messageRoutes)
+
 //Permissões do cors
 app.use((request, response, next) => {
     //Define quem poderá acessar a Api - '*' = Todos
@@ -92,31 +95,58 @@ app.use((request, response, next) => {
     next();
 });
 
-//Define que os dados que irão chegar no body da requisição será no padrao json
-const bodyParserJSON = bodyParser.json();
+const anuncioRoutes = require('./routes/anuncioRoutes.js')
+app.use('/v1/sbook/anuncio', anuncioRoutes)
 
-var message = require('./controller/modulo/config.js')
+const estaticosRoutes = require('./routes/estaticosRoutes.js')
+app.use('/v1/sbook/inserir', estaticosRoutes)
 
+const estadoLivroRoutes = require('./routes/estadoLivroRoutes.js')
+app.use('/v1/sbook/estado-livro', estadoLivroRoutes)
+
+const usuarioRoutes = require('./routes/usuarioRoutes.js')
+app.use('/v1/sbook/usuario', usuarioRoutes)
+
+const enderecoRoutes = require('./routes/enderecoRoutes.js')
+app.use('/v1/sbook/endereco', enderecoRoutes)
+
+const generoRoutes = require('./routes/generoRoutes.js')
+app.use('/v1/sbook/generos', generoRoutes)
+
+const generosPreferidos = require('./routes/generosPreferidos.js')
+app.use('/v1/sbook/generos-preferidos', generosPreferidos)
 
 /*****************************************************************************************************************
-* Objetivo: API de controle de Endereco
-* Data: 04/09/2023
-* Autor: Luiz e Felipe
+* Objetivo: Chat com Socket.IO
+* Data: 01/11/2023
+* Autor: Luiz
 * Versão: 1.0
 ******************************************************************************************************************/
+const server = require('http').createServer(app)
+const io = require('socket.io')(server)
 
-//Import do arquivo controller que irá solicitar a model os dados do Banco
-let controllerEndereco = require('./controller/controller_endereco.js')
+io.on('connection', socket => {
+    console.log('Usuario Conectado', socket.id);
 
-app.get('/v1/sbook/endereco', cors(), async function (request, response) {
+    socket.on('disconnect', reason => {
+        console.log('Usuário desconectado');
+    })
 
-    let enderecoData = await controllerEndereco.ctlGetEnderecos()
 
-    response.status(enderecoData.status)
-    response.json(enderecoData)
+    socket.on('set_username', username => {
+        console.log('foi' + username);
+        socket.data.username = username
+    })
+
+    socket.on('message', text => {
+        console.log(text + 'foi');
+        io.emit('receive_message', {
+            text,
+            authorId: socket.id,
+            author: socket.data.username
+        })
+    })
 })
-
-
 
 
 /*****************************************************************************************************************
@@ -147,25 +177,9 @@ const verifyJWT = async function (request, response, next) {
 }
 
 //Import do arquivo controller que irá solicitar a model os dados do Banco
-let controllerUsuario = require('./controller/controller_usuario.js')
+const controllerUsuario = require('./controller/controller_usuario.js')
 
-let controllerLogin = require('./controller/controller_login.js')
-
-app.get('/v1/sbook/usuario', bodyParserJSON, cors(), async function (request, response) {
-    let dadosUsuario = await controllerUsuario.ctlGetUsuario()
-
-    response.status(dadosUsuario.status)
-    response.json(dadosUsuario)
-})
-
-app.get('/v1/sbook/usuario/:id', bodyParserJSON, cors(), async function (request, response) {
-    let idUsuario = request.params.id
-
-    let dadosUsuario = await controllerUsuario.ctlGetUsuarioByID(idUsuario)
-
-    response.status(dadosUsuario.status)
-    response.json(dadosUsuario)
-})
+const controllerLogin = require('./controller/controller_login.js')
 
 app.post('/v1/sbook/login', cors(), bodyParserJSON, async function (request, response) {
     //Recebe o content-type da requisição
@@ -318,95 +332,6 @@ app.put('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (req
 })
 
 /*****************************************************************************************************************
-* Objetivo: API de escolhe de gêneros preferidos
-* Data: 08/09/2023
-* Autor: Luiz
-* Versão: 1.0
-******************************************************************************************************************/
-
-const controllerUsuarioGenero = require('./controller/controller_usuario-genero.js')
-
-app.get('/v1/sbook/generos', cors(), async function (request, response) {
-    let dadosGeneros = await controllerUsuarioGenero.ctlGetGeneros()
-
-    response.status(dadosGeneros.status)
-    response.json(dadosGeneros)
-})
-
-app.get('/v1/sbook/generos-preferidos/:id', cors(), async function (request, response) {
-    let idUsuario = request.params.id
-
-    let dadosGeneros = await controllerUsuarioGenero.ctlGetGenerosPreferidosByIdUsuario(idUsuario)
-
-    response.status(dadosGeneros.status)
-    response.json(dadosGeneros)
-})
-
-app.post('/v1/sbook/generos-preferidos', cors(), bodyParserJSON, async function (request, response) {
-    //Recebe o content-type da requisição
-    let contentType = request.headers['content-type']
-
-    //Validação para receber dados apenas no formato JSON
-    if (String(contentType).toLowerCase() == 'application/json') {
-        //Recebe os dados encaminhados na requisição
-        let dadosBody = request.body
-
-        let generosPreferidos = await controllerUsuarioGenero.ctlInserirUsuarioGenero(dadosBody)
-
-        response.status(generosPreferidos.status)
-        response.json(generosPreferidos)
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
-    }
-})
-
-app.put('/v1/sbook/generos-preferidos', cors(), bodyParserJSON, async function (request, response) {
-    //Recebe o content-type da requisição
-    let contentType = request.headers['content-type']
-
-    //Validação para receber dados apenas no formato JSON
-    if (String(contentType).toLowerCase() == 'application/json') {
-        //Recebe os dados encaminhados na requisição
-        let dadosBody = request.body
-
-        let generosPreferidos = await controllerUsuarioGenero.ctlAtualizarGenerosPreferidosByIdUsuario(dadosBody)
-
-        response.status(generosPreferidos.status)
-        response.json(generosPreferidos)
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
-    }
-})
-
-/*****************************************************************************************************************
-* Objetivo: API de escolhe de gêneros preferidos
-* Data: 08/09/2023
-* Autor: Luiz
-* Versão: 1.0
-******************************************************************************************************************/
-
-const controllerEstadoLivro = require('./controller/controller_estado-livro')
-
-app.get('/v1/sbook/estado-livro', cors(), async function (request, response) {
-    let dadosEstadoLivro = await controllerEstadoLivro.ctlGetEstadoLivro()
-
-    response.status(dadosEstadoLivro.status)
-    response.json(dadosEstadoLivro)
-})
-
-app.get('/v1/sbook/estado-livro/:id', cors(), async function (request, response) {
-    let idEstadoLivro = request.params.id
-
-    let dadosEstadoLivro = await controllerEstadoLivro.ctlGetEstadoLivroByID(idEstadoLivro)
-
-    response.status(dadosEstadoLivro.status)
-    response.json(dadosEstadoLivro)
-})
-
-
-/*****************************************************************************************************************
 * Objetivo: API de controle de Usuario Temporario
 * Data: 04/09/2023
 * Autor: Luiz e Felipe
@@ -475,23 +400,6 @@ app.get('/v1/sbook/anuncio-tipo-anuncio/:idAnuncio', cors(), async function (req
 
 const controllerAnuncio = require('./controller/controller_anuncio.js')
 
-app.get('/v1/sbook/anuncio', cors(), async function (request, response) {
-
-    let page = request.query.page
-
-    if (page) {
-        let dadosAnuncio = await controllerAnuncio.ctlGetAnuncioPage(page)
-
-        response.status(dadosAnuncio.status)
-        response.json(dadosAnuncio)
-    } else {
-        let dadosAnuncio = await controllerAnuncio.ctlGetAnuncios()
-
-        response.status(dadosAnuncio.status)
-        response.json(dadosAnuncio)
-    }
-})
-
 app.post('/v1/sbook/anuncio-proximos', cors(), bodyParserJSON, async function (request, response) {
 
     let page = request.query.page
@@ -532,16 +440,6 @@ app.get('/v1/sbook/todos-anuncios-for-search', cors(), async function (request, 
     response.json(dadosAnuncio)
 })
 
-
-app.get('/v1/sbook/anuncio/:id', cors(), async function (request, response) {
-    let id = request.params.id
-
-    let dadosAnuncio = await controllerAnuncio.ctlGetAnuncioByID(id)
-
-    response.status(dadosAnuncio.status)
-    response.json(dadosAnuncio)
-})
-
 app.get('/v1/sbook/anuncio-usuario/:id', cors(), async function (request, response) {
     let id = request.params.id
 
@@ -551,28 +449,11 @@ app.get('/v1/sbook/anuncio-usuario/:id', cors(), async function (request, respon
     response.json(dadosAnuncio)
 })
 
-app.post('/v1/sbook/publicar-anuncio', cors(), bodyParserJSON, async function (request, response) {
-    //Recebe o content-type da requisição
-    let contentType = request.headers['content-type']
+app.get('/v1/sbook/anuncio-feed', cors(), async function (request, response) {
 
-    //Validação para receber dados apenas no formato JSON
-    if (String(contentType).toLowerCase() == 'application/json') {
-        let body = request.body
+    let page = request.query.page
 
-        let dadosAnuncio = await controllerAnuncio.ctlInserirAnuncio(body)
-
-        response.status(dadosAnuncio.status)
-        response.json(dadosAnuncio)
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
-    }
-})
-
-app.delete('/v1/sbook/anuncio/:idAnuncio', cors(), bodyParserJSON, async function (request, response) {
-    let idAnuncio = request.params.idAnuncio
-
-    let dadosAnuncio = await controllerAnuncio.ctlExcluirAnuncio(idAnuncio)
+    let dadosAnuncio = await controllerAnuncio.ctlGetAnunciosParaFeed(page)
 
     response.status(dadosAnuncio.status)
     response.json(dadosAnuncio)
@@ -585,24 +466,6 @@ app.put('/v1/sbook/encerrar-anuncio/:idAnuncio', cors(), bodyParserJSON, async f
 
     response.status(dadosAnuncio.status)
     response.json(dadosAnuncio)
-})
-
-app.put('/v1/sbook/anuncio', cors(), bodyParserJSON, async function (request, response) {
-    //Recebe o content-type da requisição
-    let contentType = request.headers['content-type']
-
-    //Validação para receber dados apenas no formato JSON
-    if (String(contentType).toLowerCase() == 'application/json') {
-        let body = request.body
-
-        let dadosAnuncio = await controllerAnuncio.ctlAtualizarAnuncios(body)
-
-        response.status(dadosAnuncio.status)
-        response.json(dadosAnuncio)
-    } else {
-        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
-        response.json(message.ERROR_INVALID_CONTENT_TYPE)
-    }
 })
 
 /*****************************************************************************************************************
@@ -671,7 +534,6 @@ app.delete('/v1/sbook/remover-favorito/:user/:anuncio', cors(), bodyParserJSON, 
 ******************************************************************************************************************/
 
 //Import do arquivo controller que irá solicitar a model os dados do Banco
-const modelEstaticos = require('./model/estatico/model_estaticos.js')
 const controllerAutor = require('./controller/controller_autor.js')
 const controllerIdioma = require('./controller/controller_idioma.js')
 const controllerEditora = require('./controller/controller_editora.js')
@@ -698,43 +560,6 @@ app.get('/v1/sbook/editoras', cors(), async function (request, response) {
 
     response.status(dadosEditora.status)
     response.json(dadosEditora)
-})
-
-
-const idiomas = require('./controller/modulo/idiomas.js')
-app.post('/v1/sbook/inserir-idiomas', cors(), async function (request, response) {
-
-    let dadosIdioma = await modelEstaticos.adicionarIdiomas(idiomas.languagesList)
-
-    response.status(dadosIdioma.status)
-    response.json(dadosIdioma)
-})
-
-const generos = require('./controller/modulo/generos.js')
-app.post('/v1/sbook/inserir-generos', cors(), async function (request, response) {
-
-    let dadosGenero = await modelEstaticos.adicionarGeneros(generos.generosList)
-
-    response.status(dadosGenero.status)
-    response.json(dadosGenero)
-})
-
-const estadosLivros = require('./controller/modulo/estados-livros.js')
-app.post('/v1/sbook/inserir-estados-livros', cors(), async function (request, response) {
-
-    let dadosEstadoLivro = await modelEstaticos.adicionarEstadosLivros(estadosLivros.estadoLivrosList)
-
-    response.status(dadosEstadoLivro.status)
-    response.json(dadosEstadoLivro)
-})
-
-const tiposAnuncios = require('./controller/modulo/tipos-anuncios.js')
-app.post('/v1/sbook/inserir-tipos-anuncios', cors(), async function (request, response) {
-
-    let dadosTiposAnuncios = await modelEstaticos.adicionarTiposAnuncios(tiposAnuncios.tiposAnunciosList)
-
-    response.status(dadosTiposAnuncios.status)
-    response.json(dadosTiposAnuncios)
 })
 
 //Conexão com o banco

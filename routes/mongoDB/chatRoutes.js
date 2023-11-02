@@ -4,15 +4,16 @@
  *  Data: 24/10/2023
  *  Versão: 1.0
  **************************************************************************************/
+
 const router = require('express').Router()
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const moment = require('moment')
 const bodyParserJSON = bodyParser.json();
 
-const Message = require('../models_mongoDB/message.js')
-const Chat = require('../models_mongoDB/chat.js')
-const config = require('../models_mongoDB/modulo/config.js')
+const Message = require('../../models_mongoDB/message.js')
+const Chat = require('../../models_mongoDB/chat.js')
+const config = require('../../models_mongoDB/modulo/config.js')
 
 //Import da biblioteca do prisma client
 var { PrismaClient } = require('@prisma/client')

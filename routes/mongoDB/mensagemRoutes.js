@@ -5,9 +5,9 @@
  *  Versão: 1.0
  **************************************************************************************/
 
-const Message = require('../models_mongoDB/message.js')
+const Message = require('../../models_mongoDB/message.js')
 const router = require('express').Router()
-const config = require('../controller/modulo/config.js')
+const config = require('../../controller/modulo/config.js')
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const moment = require('moment')

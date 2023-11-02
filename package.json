@@ -9,7 +9,8 @@
     "mongoose": "^8.0.0",
     "nodemailer": "^6.9.5",
     "nodemailer-express-handlebars": "^6.1.0",
-    "prisma": "^5.2.0"
+    "prisma": "^5.2.0",
+    "socket.io": "^4.7.2"
   },
   "scripts": {
     "dev": "nodemon app.js",

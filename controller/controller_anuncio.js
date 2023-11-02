@@ -14,6 +14,54 @@ var anuncioFotoDAO = require('../model/model_foto.js')
 var usuarioDAO = require('../model/model_usuario.js')
 var anuncioEditoraDAO = require('../model/model_anuncio_editora.js')
 
+const ctlGetAnunciosParaFeed = async (page) => {
+    let dadosAnuncio = await anuncioDAO.mdlSelectAnuncioForTheFeed(page)
+
+    if (dadosAnuncio) {
+        let listaAnuncios = []
+
+        for (let i = 0; i < dadosAnuncio.length; i++) {
+            const anuncio = dadosAnuncio[i];
+
+            let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
+            let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
+
+            let anuncioJSON = {
+                anuncio: {
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    ano_lancamento: anuncio.ano_lancamento,
+                    data_criacao: anuncio.data_criacao,
+                    status_anuncio: anuncio.status_anuncio,
+                    preco: anuncio.preco,
+                    anunciante: anuncio.id_usuario
+                },
+                estado_livro: {
+                    id: anuncio.id_estado_livro,
+                    estado: anuncio.estado_livro
+                },
+                foto: fotosAnuncio,
+                autores: autoresAnuncio
+            }
+
+            listaAnuncios.push(anuncioJSON)
+        }
+
+        let dadosAnuncioJSON = {
+            status: message.SUCCESS_REQUEST.status,
+            message: message.SUCCESS_REQUEST.message,
+            quantidade: listaAnuncios.length,
+            anuncios: listaAnuncios
+        }
+
+        return dadosAnuncioJSON
+    } else {
+        return message.ERROR_REGISTER_NOT_FOUND
+    }
+}
+
 const ctlGetAnuncios = async () => {
     let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio()
 
@@ -743,9 +791,9 @@ const ctlAtualizarAnuncios = async (dadosAnuncio) => {
         dadosAnuncio.id_idioma == "" || dadosAnuncio.id_idioma == null || dadosAnuncio.id_idioma == undefined || isNaN(dadosAnuncio.id_idioma) ||
         dadosAnuncio.id_editora == "" || dadosAnuncio.id_editora == null || dadosAnuncio.id_editora == undefined ||
         dadosAnuncio.fotos == "" || dadosAnuncio.fotos == null || dadosAnuncio.fotos == undefined || dadosAnuncio.fotos.length == 0 ||
-         dadosAnuncio.tipos_anuncio == null || dadosAnuncio.tipos_anuncio == "" || dadosAnuncio.tipos_anuncio.length == 0 || dadosAnuncio.tipos_anuncio == undefined  ||
-         dadosAnuncio.generos == null || dadosAnuncio.generos == undefined || dadosAnuncio.generos == "" || dadosAnuncio.generos.length == 0 ||
-         dadosAnuncio.autores == null || dadosAnuncio.autores == undefined || dadosAnuncio.autores == "" || dadosAnuncio.autores.length == 0
+        dadosAnuncio.tipos_anuncio == null || dadosAnuncio.tipos_anuncio == "" || dadosAnuncio.tipos_anuncio.length == 0 || dadosAnuncio.tipos_anuncio == undefined ||
+        dadosAnuncio.generos == null || dadosAnuncio.generos == undefined || dadosAnuncio.generos == "" || dadosAnuncio.generos.length == 0 ||
+        dadosAnuncio.autores == null || dadosAnuncio.autores == undefined || dadosAnuncio.autores == "" || dadosAnuncio.autores.length == 0
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
@@ -767,7 +815,7 @@ const ctlAtualizarAnuncios = async (dadosAnuncio) => {
                     message: message.SUCCESS_UPDATED_ITEM.message,
                     anuncio_atualizado: novoAnuncio.anuncios
                 }
-    
+
                 return dadosAnuncioAtualizadoJSON
 
             } else {
@@ -846,11 +894,6 @@ const ctlGetALLAnunciosForSearchPage = async () => {
         return message.ERROR_REGISTER_NOT_FOUND
     }
 }
-
-
-
-
-
 
 
 const array_estado_livro = ["Usado", "Seminovo"]; // Inclua estados válidos
@@ -936,5 +979,6 @@ module.exports = {
     ctlGetALLAnunciosForSearchPage,
     ctlExcluirAnuncio,
     ctlEncerrarAnuncio,
-    ctlAtualizarAnuncios
+    ctlAtualizarAnuncios,
+    ctlGetAnunciosParaFeed
 }
