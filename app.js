@@ -80,7 +80,7 @@ const DB_PASSWORD = 'mXYEFk0a6E8GBJBj'
 const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@sbookcluster.1itflnh.mongodb.net/Sbook-Chat?retryWrites=true&w=majority`
 
 const chatRoutes = require('./routes/mongoDB/chatRoutes.js')
-app.use('/v1/sbook/chat', chatRoutes)
+app.use('/v1/sbook/chat', chatRoutes.router)
 
 const messageRoutes = require('./routes/mongoDB/mensagemRoutes.js')
 app.use('/v1/sbook/message', messageRoutes)
@@ -127,6 +127,12 @@ const io = require('socket.io')(server, {cors: {origin: '*'}})
 
 io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
+
+    socket.on('listContacts', async user => {
+        const listContacts = await chatRoutes.getListContacts(user)
+
+        io.emit('receive_contacts', listContacts)
+    })
 
     socket.on('disconnect', reason => {
         console.log('Usuário desconectado');

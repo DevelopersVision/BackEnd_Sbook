@@ -121,6 +121,37 @@ router.get('/:idChat', cors(), async (request, response) => {
     }
 });
 
+const getListContacts = async (idUsuario) => {
+    try {
+        const result = await Chat.find({ 'users.id': parseInt(idUsuario)});
+
+        if (result) {
+            let listUsers = []
+
+            for (let i = 0; i < result.length; i++) {
+
+                const user = result[i];
+
+                const newUser = {
+                    id_chat: user._id.toString(),
+                    users: user.users,
+                    isGroup: user.isGroup,
+                    data_criacao: user.data_criacao,
+                    hora_criacao: user.hora_criacao
+                }
+
+                listUsers.push(newUser)
+            }
+
+            return listUsers
+        } else {
+            return config.ERROR_CHAT_NOT_FOUND
+        }
+    } catch (err) {
+        return config.ERROR_INTERNAL_SERVER
+    }
+}
+
 router.get('/user/:idUsuario', cors(), async (request, response) => {
     const idUsuario = request.params.idUsuario;
 
@@ -161,4 +192,7 @@ router.get('/user/:idUsuario', cors(), async (request, response) => {
 });
 
 
-module.exports = router
+module.exports = {
+    router, 
+    getListContacts
+}
