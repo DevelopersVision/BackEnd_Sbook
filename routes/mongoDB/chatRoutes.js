@@ -143,7 +143,7 @@ const getListContacts = async (idUsuario) => {
                 listUsers.push(newUser)
             }
 
-            return listUsers
+            return {users: listUsers}
         } else {
             return config.ERROR_CHAT_NOT_FOUND
         }
