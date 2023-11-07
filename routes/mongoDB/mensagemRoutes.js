@@ -49,6 +49,40 @@ router.post('/', bodyParserJSON, cors(), async (request, response) => {
     }
 })
 
+const createMessage = async ( messageBy, messageTo, message, image, chatId) => {
+
+    if (
+        !messageBy || messageBy == undefined || isNaN(messageBy) ||
+        !messageTo || messageTo == undefined || isNaN(messageTo) ||
+        message == undefined ||
+        !chatId || chatId == undefined ||
+        image == undefined
+    ) {
+        return `Morreu, mBy: ${messageBy}, mTo: ${messageTo}, m: ${message}, chat: ${chatId}`
+    } else {
+        const data_criacao = moment().format("YYYY-MM-DD")
+        const hora_criacao = moment().format("HH:mm:ss")
+
+        const mensagem = {
+            messageBy,
+            messageTo,
+            message,
+            image,
+            data_criacao,
+            hora_criacao,
+            chatId
+        }
+
+        try {
+            await Message.create(mensagem)
+
+            return config.SUCCESS_CREATED_ITEM
+        } catch (error) {
+            return error
+        }
+    }
+}
+
 router.get('/:idChat', cors(), async (request, response) => {
     const idChat = request.params.idChat;
 
@@ -90,4 +124,7 @@ router.get('/:idChat', cors(), async (request, response) => {
     }
 });
 
-module.exports = router
+module.exports = {
+    router,
+    createMessage
+}

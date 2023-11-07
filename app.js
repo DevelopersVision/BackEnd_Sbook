@@ -83,7 +83,7 @@ const chatRoutes = require('./routes/mongoDB/chatRoutes.js')
 app.use('/v1/sbook/chat', chatRoutes.router)
 
 const messageRoutes = require('./routes/mongoDB/mensagemRoutes.js')
-app.use('/v1/sbook/message', messageRoutes)
+app.use('/v1/sbook/message', messageRoutes.router)
 
 //Permissões do cors
 app.use((request, response, next) => {
@@ -131,6 +131,8 @@ io.on('connection', socket => {
     socket.on('listContacts', async user => {
         const listContacts = await chatRoutes.getListContacts(user)
 
+        socket.data.usuario = user
+
         io.emit('receive_contacts', listContacts)
     })
 
@@ -138,21 +140,24 @@ io.on('connection', socket => {
         console.log('Usuário desconectado');
     })
 
+    socket.on('listMessages', async chat => {
+        console.log("Chat: " + chat);
 
-    socket.on('set_username', username => {
-        console.log("Username: " + username);
-        socket.data.username = username
+        const listMessages = await chatRoutes.getChat(chat)
+        
+        io.emit('receive_message', listMessages)
     })
 
     socket.on('message', text => {
         console.log("Mensagem: " + text);
 
+        messageRoutes.createMessage(text)
         
-        io.emit('receive_message', {
-            text,
-            authorId: socket.id,
-            author: socket.data.username
-        })
+        // io.emit('receive_message', {
+        //     text,
+        //     authorId: socket.id,
+        //     author: socket.data.usuario
+        // })
     })
 })
 

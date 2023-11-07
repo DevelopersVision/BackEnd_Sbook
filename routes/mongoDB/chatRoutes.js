@@ -121,6 +121,33 @@ router.get('/:idChat', cors(), async (request, response) => {
     }
 });
 
+const getChat = async (idChat) => {
+
+    try {
+        const resultChat = await Chat.findOne({ _id: idChat});
+
+        if(resultChat){
+            const listMessages = await Message.find({chatId: idChat})
+
+            const dadosJSON = {
+                status: config.SUCCESS_REQUEST.status,
+                message: config.SUCCESS_REQUEST.message,
+                id_chat: resultChat._id,
+                usuarios: resultChat.users,
+                data_criacao: resultChat.data_criacao,
+                hora_criacao: resultChat.hora_criacao,
+                mensagens: listMessages
+            }
+
+            return dadosJSON
+        }else{
+            return config.ERROR_CHAT_NOT_FOUND
+        }
+    } catch (err) {
+        return config.ERROR_INTERNAL_SERVER
+    }
+}
+
 const getListContacts = async (idUsuario) => {
     try {
         const result = await Chat.find({ 'users.id': parseInt(idUsuario)});
@@ -149,6 +176,37 @@ const getListContacts = async (idUsuario) => {
         }
     } catch (err) {
         return config.ERROR_INTERNAL_SERVER
+    }
+}
+
+const insertChat = async (users) => {
+    if (
+        !users || users.length == 0 || users == undefined
+    ) {
+        response.status(config.ERROR_REQUIRE_FIELDS.status).json(config.ERROR_REQUIRE_FIELDS)
+    } else {
+        const data_criacao = moment().format("YYYY-MM-DD")
+        const hora_criacao = moment().format("HH:mm:ss")
+
+        const chat = {
+            users,
+            data_criacao,
+            hora_criacao
+        }
+
+        try {
+            await Chat.create(chat)
+
+            const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
+
+            const lastId = lastChat[0]._id.toString()
+
+            const insertSQL = await createChat(users, lastId)
+
+            return insertSQL
+        } catch (error) {
+            return config.ERROR_INTERNAL_SERVER
+        }
     }
 }
 
@@ -194,5 +252,7 @@ router.get('/user/:idUsuario', cors(), async (request, response) => {
 
 module.exports = {
     router, 
-    getListContacts
+    getListContacts,
+    getChat,
+    insertChat
 }
