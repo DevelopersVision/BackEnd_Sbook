@@ -64,8 +64,6 @@ const mdlAtualizarIDAnuncioAutor = async (idAnuncio, arrayIdAutores) => {
     for (let i = 0; i < arrayIdAutores.length; i++) {
         const idAutor = arrayIdAutores[i];
 
-        console.log(idAutor);
-
         let sql = `insert into tbl_anuncio_autor(id_autor, id_anuncio) values (${idAutor}, ${idAnuncio})`
 
         await prisma.$executeRawUnsafe(sql)

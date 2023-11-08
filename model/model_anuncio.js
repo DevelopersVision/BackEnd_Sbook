@@ -448,9 +448,6 @@ const mdlSelectsFiltros = async (arrayGenero, arrayEstado_livro) => {
         rsAnuncio = array
     }
 
-
-    console.log("TESTEEEE" + rsAnuncio);
-
     if (rsAnuncio) {
         return rsAnuncio
     } else {

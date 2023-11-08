@@ -475,6 +475,8 @@ app.get('/v1/sbook/anuncio-feed', cors(), async function (request, response) {
 })
 
 app.put('/v1/sbook/encerrar-anuncio/:idAnuncio', cors(), bodyParserJSON, async function (request, response) {
+    console.log('Entrou 2');
+
     let idAnuncio = request.params.idAnuncio
 
     let dadosAnuncio = await controllerAnuncio.ctlEncerrarAnuncio(idAnuncio)

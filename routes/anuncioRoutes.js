@@ -40,6 +40,7 @@ router.get('/:id', cors(), async function (request, response) {
 })
 
 router.post('/', cors(), bodyParserJSON, async function (request, response) {
+    console.log('entrou post');
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
 
@@ -58,6 +59,8 @@ router.post('/', cors(), bodyParserJSON, async function (request, response) {
 })
 
 router.put('/', cors(), bodyParserJSON, async function (request, response) {
+    console.log('entrou');
+    
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
 

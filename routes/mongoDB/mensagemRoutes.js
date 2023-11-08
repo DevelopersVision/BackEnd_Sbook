@@ -58,7 +58,7 @@ const createMessage = async ( messageBy, messageTo, message, image, chatId) => {
         !chatId || chatId == undefined ||
         image == undefined
     ) {
-        return `Morreu, mBy: ${messageBy}, mTo: ${messageTo}, m: ${message}, chat: ${chatId}`
+        return config.ERROR_REQUIRE_FIELDS
     } else {
         const data_criacao = moment().format("YYYY-MM-DD")
         const hora_criacao = moment().format("HH:mm:ss")

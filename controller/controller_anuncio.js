@@ -276,7 +276,6 @@ const ctlGetAnuncioByIdUsuario = async (idUsuario) => {
     } else {
         let verificarUsuario = await usuarioDAO.mdlSelectUsuarioByID(idUsuario)
 
-        console.log(verificarUsuario);
         if (!verificarUsuario) {
             return message.ERROR_INVALID_ID
         } else {
@@ -899,35 +898,6 @@ const ctlGetALLAnunciosForSearchPage = async () => {
 const array_estado_livro = ["Usado", "Seminovo"]; // Inclua estados válidos
 const arrayGeneros = ["Coleção", "Biografia"]; // Inclua gêneros válidos
 
-// ctlGetAnunciosThenFilterByEstadoAndGenero(array_estado_livro, arrayGeneros)
-//     .then((result) => {
-//         if (result) {
-//             console.log("Anúncios filtrados:");
-//             console.log(result.anuncios);
-//         } else {
-//             console.log("Nenhum anúncio atende aos critérios de filtro.");
-//         }
-//     })
-//     .catch((error) => {
-//         console.error("Erro ao chamar a função ctlGetAnunciosThenFilter:", error);
-//     });
-
-
-
-
-// ctlGetAnunciosThenFilterByEstadoOnly(array_estado_livro)
-//     .then((result) => {
-//         if (result) {
-//             console.log("Anúncios filtrados:");
-//             console.log(result.anuncios);
-//         } else {
-//             console.log("Nenhum anúncio atende aos critérios de filtro.");
-//         }
-//     })
-//     .catch((error) => {
-//         console.error("Erro ao chamar a função ctlGetAnunciosThenFilter:", error);
-//     });
-
 ctlGetAnunciosThenFilterByGenerosOnly(arrayGeneros)
     .then((result) => {
         if (result) {
@@ -941,30 +911,6 @@ ctlGetAnunciosThenFilterByGenerosOnly(arrayGeneros)
         console.error("Erro ao chamar a função ctlGetAnunciosThenFilter:", error);
     });
 
-
-/*
-    nome,
-    numero_paginas null,
-    ano_lancamento,
-    descricao,
-    data_criacao,
-    edicao null,
-    isbn null,
-    preco null,
-    id_usuario,
-    id_estado_livro,
-    id_idioma,
-    id_editora
-
-    id_anuncio
-    id_autor
-
-    id_anuncio
-    id_genero
-
-    id_anuncio
-    id_tipo_anuncio
-*/
 
 module.exports = {
     ctlGetAnuncios,
