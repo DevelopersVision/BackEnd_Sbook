@@ -124,40 +124,37 @@ app.use('/v1/sbook/generos-preferidos', generosPreferidos)
 ******************************************************************************************************************/
 const server = require('http').createServer(app)
 const io = require('socket.io')(server, {cors: {origin: '*'}})
+var lista = []
 
 io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
 
-    socket.on('listContacts', async user => {
-        const listContacts = await chatRoutes.getListContacts(user)
-
-        socket.data.usuario = user
-
-        io.emit('receive_contacts', listContacts)
-    })
-
-    socket.on('disconnect', reason => {
-        console.log('Usuário desconectado');
-    })
-
     socket.on('listMessages', async chat => {
-        console.log("Chat: " + chat);
-
         const listMessages = await chatRoutes.getChat(chat)
+
+        lista = listMessages
         
         io.emit('receive_message', listMessages)
     })
 
-    socket.on('message', text => {
+    socket.on('listContacts', async user => {
+        const listContacts = await chatRoutes.getListContacts(user)
+
+        io.emit('receive_contacts', listContacts)
+    })
+
+    socket.on('message', async text => {
         console.log("Mensagem: " + text);
 
-        messageRoutes.createMessage(text)
+        let retornoMensagem = await messageRoutes.createMessage(text.messageBy, text.messageTo, text.message, text.image, text.chatId)
         
-        // io.emit('receive_message', {
-        //     text,
-        //     authorId: socket.id,
-        //     author: socket.data.usuario
-        // })
+        let retorno = lista.mensagens.push(retornoMensagem)
+        
+        io.emit('receive_message', retorno)
+    })
+
+    socket.on('disconnect', reason => {
+        console.log('Usuário desconectado');
     })
 })
 
@@ -495,6 +492,44 @@ app.put('/v1/sbook/encerrar-anuncio/:idAnuncio', cors(), bodyParserJSON, async f
     response.json(dadosAnuncio)
 })
 
+app.post('/v1/sbook/anuncio-post', cors(), bodyParserJSON, async function (request, response) {
+    console.log('entrou post');
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let body = request.body
+
+        let dadosAnuncio = await controllerAnuncio.ctlInserirAnuncio(body)
+
+        response.status(dadosAnuncio.status)
+        response.json(dadosAnuncio)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+})
+
+app.put('/v1/sbook/anuncio-put', cors(), bodyParserJSON, async function (request, response) {
+    console.log('entrou');
+    
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        let body = request.body
+
+        let dadosAnuncio = await controllerAnuncio.ctlAtualizarAnuncios(body)
+
+        response.status(dadosAnuncio.status)
+        response.json(dadosAnuncio)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+})
 /*****************************************************************************************************************
 * Objetivo: API de manipulação de anuncios favoritados
 * Data: 15/09/2023
@@ -563,7 +598,8 @@ app.delete('/v1/sbook/remover-favorito/:user/:anuncio', cors(), bodyParserJSON, 
 //Import do arquivo controller que irá solicitar a model os dados do Banco
 const controllerAutor = require('./controller/controller_autor.js')
 const controllerIdioma = require('./controller/controller_idioma.js')
-const controllerEditora = require('./controller/controller_editora.js')
+const controllerEditora = require('./controller/controller_editora.js');
+const { log } = require('console');
 
 app.get('/v1/sbook/idiomas', cors(), async function (request, response) {
 

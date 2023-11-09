@@ -52,11 +52,10 @@ router.post('/', bodyParserJSON, cors(), async (request, response) => {
 const createMessage = async ( messageBy, messageTo, message, image, chatId) => {
 
     if (
-        !messageBy || messageBy == undefined || isNaN(messageBy) ||
-        !messageTo || messageTo == undefined || isNaN(messageTo) ||
+        messageBy == null || messageBy == undefined || isNaN(messageBy) ||
+        messageTo == null  || messageTo == undefined || isNaN(messageTo) ||
         message == undefined ||
-        !chatId || chatId == undefined ||
-        image == undefined
+        chatId == null  || chatId == undefined
     ) {
         return config.ERROR_REQUIRE_FIELDS
     } else {
@@ -74,9 +73,9 @@ const createMessage = async ( messageBy, messageTo, message, image, chatId) => {
         }
 
         try {
-            await Message.create(mensagem)
+            let newMessage = await Message.create(mensagem)
 
-            return config.SUCCESS_CREATED_ITEM
+            return newMessage
         } catch (error) {
             return error
         }
