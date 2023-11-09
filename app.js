@@ -430,18 +430,28 @@ app.get('/v1/sbook/anuncios-filtros', cors(), async function (request, response)
     const array_estado_livro = request.query.array_estado_livro;
     const array_generos = request.query.array_generos;
 
-    if (array_estado_livro != null && array_estado_livro != "" && array_generos != null && array_generos != "") {
+
+    console.log('Parâmetros de consulta - array_estado_livro:', array_estado_livro);
+    console.log('Parâmetros de consulta - array_generos:', array_generos);
+
+    if (array_estado_livro != null && array_estado_livro != "" && array_estado_livro != undefined && array_generos != null && array_generos != "" && array_generos != undefined) {
         let dadosAnunciosFiltrados = await controllerAnuncio.ctlGetAnunciosThenFilterByEstadoAndGenero(array_estado_livro, array_generos);
         response.status(dadosAnunciosFiltrados.status);
         response.json(dadosAnunciosFiltrados);
-    } else if (array_estado_livro != null && array_estado_livro != "") {
+
+
+    } else if (array_estado_livro != null && array_estado_livro != "" && array_estado_livro != undefined) {
         let dadosAnunciosFiltrados = await controllerAnuncio.ctlGetAnunciosThenFilterByEstadoOnly(array_estado_livro);
         response.status(dadosAnunciosFiltrados.status);
         response.json(dadosAnunciosFiltrados);
-    } else if (array_generos != null && array_generos != "") {
+
+
+    } else if (array_generos != null && array_generos != "" && array_generos != undefined) {
         let dadosAnunciosFiltrados = await controllerAnuncio.ctlGetAnunciosThenFilterByGenerosOnly(array_generos);
         response.status(dadosAnunciosFiltrados.status);
         response.json(dadosAnunciosFiltrados);
+
+
     } else {
         response.status(400); // Status de Bad Request
         response.json({ mensagem: 'Parâmetros inválidos' });
