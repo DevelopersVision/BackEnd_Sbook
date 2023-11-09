@@ -147,10 +147,10 @@ io.on('connection', socket => {
         console.log("Mensagem: " + text);
 
         let retornoMensagem = await messageRoutes.createMessage(text.messageBy, text.messageTo, text.message, text.image, text.chatId)
+
+        lista.mensagens.push(retornoMensagem)
         
-        let retorno = lista.mensagens.push(retornoMensagem)
-        
-        io.emit('receive_message', retorno)
+        io.emit('receive_message', lista)
     })
 
     socket.on('disconnect', reason => {
