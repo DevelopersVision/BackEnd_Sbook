@@ -452,9 +452,6 @@ const ctlInserirAnuncio = async (dadosAnuncio) => {
     } else if (dadosAnuncio.tipos_anuncio.length > 2) {
         return message.ERRO_INVALID_LENGTH_TIPO
     } else {
-        let idEditora = await anuncioEditoraDAO.checkAnuncioEditora(dadosAnuncio.id_editora)
-
-        dadosAnuncio.id_editora = idEditora
         let dadosAnuncioPrincipal = await anuncioDAO.mdlInsertAnuncio(dadosAnuncio)
 
         if (dadosAnuncioPrincipal) {
