@@ -333,7 +333,7 @@ app.put('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (req
     if (String(contentType).toLowerCase() == 'application/json') {
         let body = request.body
 
-        let dadosUsuario = await controllerUsuario.ctlAterarSenha(body)
+        let dadosUsuario = await controllerUsuario.ctlAlterarSenha(body)
 
         response.status(200)
         response.json(dadosUsuario)

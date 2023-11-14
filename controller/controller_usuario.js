@@ -43,7 +43,7 @@ const ctlGetUsuarioByID = async function (id) {
 
             return dadosUsuarioJSON
         } else {
-            return message.ERROR_INTERNAL_SERVER
+            return message.ERROR_REGISTER_NOT_FOUND
         }
     }
 }
@@ -101,12 +101,10 @@ const ctlAtualizarEnderecoUsuario = async function (dadosEnderecoUsuario) {
         dadosEnderecoUsuario.estado_endereco == '' || dadosEnderecoUsuario.estado_endereco == null || dadosEnderecoUsuario.estado_endereco == undefined || dadosEnderecoUsuario.estado_endereco.lenth > 50 ||
         dadosEnderecoUsuario.nome_usuario == '' || dadosEnderecoUsuario.nome_usuario == null || dadosEnderecoUsuario.nome_usuario == undefined || dadosEnderecoUsuario.nome_usuario.lenth > 60 ||
         dadosEnderecoUsuario.data_nascimento_usuario == '' || dadosEnderecoUsuario.data_nascimento_usuario == null || dadosEnderecoUsuario.data_nascimento_usuario == undefined ||
-        dadosEnderecoUsuario.cep_endereco == undefined || dadosEnderecoUsuario.cep_endereco.lenth > 10 || dadosEnderecoUsuario.cep_endereco == null
+        dadosEnderecoUsuario.cep_endereco == undefined || dadosEnderecoUsuario.cep_endereco.lenth > 18 || dadosEnderecoUsuario.cep_endereco == null
     ) {
         return message.ERROR_REQUIRE_FIELDS
-    }else if(Object.keys(dadosEnderecoUsuario).length != 9){
-        return message.ERROR_INVALID_VALORES
-    } else {
+    }else {
         let resultStatus = await usuarioDAO.mdlupdateUsuario(dadosEnderecoUsuario)
 
         if (resultStatus) {
@@ -125,11 +123,11 @@ const ctlAtualizarEnderecoUsuario = async function (dadosEnderecoUsuario) {
 
 }
 
-const ctlAterarSenha = async (dados) => {
+const ctlAlterarSenha = async (dados) => {
 
     if (
         dados.id == null || dados.id == undefined || isNaN(dados.id) ||
-        dados.password == null || dados.password == undefined || dados.password.length > 256
+        dados.password == null || dados.password == undefined || dados.password.length > 256 || dados.password == ""
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
@@ -156,7 +154,7 @@ const ctlAterarSenha = async (dados) => {
 const ctlAlterarFoto = async (usuario) => {
     if (
         usuario.id == null || usuario.id == undefined || isNaN(usuario.id) ||
-        usuario.foto == null || usuario.foto == undefined
+        usuario.foto == null || usuario.foto == undefined || usuario.foto == ""
     ) {
         return message.ERROR_REQUIRE_FIELDS
     } else {
@@ -184,6 +182,6 @@ module.exports = {
     ctlInserirEnderecoUsuario,
     ctlGetUsuarioByID,
     ctlAtualizarEnderecoUsuario,
-    ctlAterarSenha,
+    ctlAlterarSenha,
     ctlAlterarFoto
 }
