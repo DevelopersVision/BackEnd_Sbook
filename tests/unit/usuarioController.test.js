@@ -58,7 +58,7 @@ describe(`Teste de cadastro usuário`, () => {
         expect(res.status).toBe(400)
     })
 
-    test('Deve inserir usuário || SUCESSO - 422, EMAIL JÁ EXISTENTE', async () => {
+    test('Deve inserir usuário || ERRO - 422, EMAIL JÁ EXISTENTE', async () => {
         const usuario = {
             "nome_usuario": "Millena", 
             "cpf_usuario": "128-403-234-80", 
@@ -79,9 +79,9 @@ describe(`Teste de cadastro usuário`, () => {
     test('Deve inserir usuário || SUCESSO - 201', async () => {
         const usuario = {
             "nome_usuario": "Millena", 
-            "cpf_usuario": "123-605-493-80", 
+            "cpf_usuario": "123-625-493-80", 
             "data_nascimento_usuario": "2003/10/29", 
-            "email_usuario": "millenamills19@gmail.com",
+            "email_usuario": "millenamills49@gmail.com",
             "senha_usuario": "temporaria2",
             "cep_endereco": "06420-340",
             "logradouro_endereco": "Rua Elton",

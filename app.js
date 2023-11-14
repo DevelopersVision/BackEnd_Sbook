@@ -124,10 +124,13 @@ app.use('/v1/sbook/generos-preferidos', generosPreferidos)
 ******************************************************************************************************************/
 const server = require('http').createServer(app)
 const io = require('socket.io')(server, {cors: {origin: '*'}})
+const chatFunctions = require('./routes/mongoDB/chatFuction.js')
 var lista = []
 
 io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
+
+    socket.on
 
     socket.on('listMessages', async chat => {
         const listMessages = await chatRoutes.getChat(chat)

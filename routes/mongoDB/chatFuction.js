@@ -1,16 +1,11 @@
 /**************************************************************************************
- *  Objetivo: ROTAS DA ENTIDADE CHAT
+ *  Objetivo: FUNÇÕES DE CONTROLE DE DADOS DA ENTIDADE CHAT
  *  Autor: Luiz Gustavo
- *  Data: 24/10/2023
+ *  Data: 14/11/2023
  *  Versão: 1.0
  **************************************************************************************/
 
-const router = require('express').Router()
-const cors = require('cors');
-const bodyParser = require('body-parser');
 const moment = require('moment')
-const bodyParserJSON = bodyParser.json();
-
 const Message = require('../../models_mongoDB/message.js')
 const Chat = require('../../models_mongoDB/chat.js')
 const config = require('../../models_mongoDB/modulo/config.js')
@@ -20,41 +15,6 @@ var { PrismaClient } = require('@prisma/client')
 
 //Instancia da Classe PrismaClient 
 var prisma = new PrismaClient()
-
-router.post('/', bodyParserJSON, cors(), async (request, response) => {
-
-    const { users } = request.body
-
-    if (
-        !users || users.length == 0 || users == undefined
-    ) {
-        response.status(config.ERROR_REQUIRE_FIELDS.status).json(config.ERROR_REQUIRE_FIELDS)
-    } else {
-        const data_criacao = moment().format("YYYY-MM-DD")
-        const hora_criacao = moment().format("HH:mm:ss")
-
-        const chat = {
-            users,
-            data_criacao,
-            hora_criacao
-        }
-
-        try {
-            await Chat.create(chat)
-
-            const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
-
-            const lastId = lastChat[0]._id.toString()
-
-            const insertSQL = await createChat(users, lastId)
-
-            response.status(insertSQL.status).json(insertSQL)
-
-        } catch (error) {
-            response.status(config.ERROR_INTERNAL_SERVER.status).json(config.ERROR_INTERNAL_SERVER);
-        }
-    }
-})
 
 const createChat = async (users, chatId) => {
 
@@ -93,14 +53,13 @@ const createChat = async (users, chatId) => {
     }
 }
 
-router.get('/:idChat', cors(), async (request, response) => {
-    const idChat = request.params.idChat;
+const getChat = async (idChat) => {
 
     try {
-        const resultChat = await Chat.findOne({ _id: idChat});
+        const resultChat = await Chat.findOne({ _id: idChat });
 
-        if(resultChat){
-            const listMessages = await Message.find({chatId: idChat})
+        if (resultChat) {
+            const listMessages = await Message.find({ chatId: idChat })
 
             const dadosJSON = {
                 status: config.SUCCESS_REQUEST.status,
@@ -112,20 +71,18 @@ router.get('/:idChat', cors(), async (request, response) => {
                 mensagens: listMessages
             }
 
-            response.status(dadosJSON.status).json(dadosJSON)
-        }else{
-            response.status(config.ERROR_CHAT_NOT_FOUND.status).json(config.ERROR_CHAT_NOT_FOUND)
+            return dadosJSON
+        } else {
+            return config.ERROR_CHAT_NOT_FOUND
         }
     } catch (err) {
-        response.status(config.ERROR_INTERNAL_SERVER.status).json(config.ERROR_INTERNAL_SERVER);
+        return config.ERROR_INTERNAL_SERVER
     }
-});
+}
 
-router.get('/user/:idUsuario', cors(), async (request, response) => {
-    const idUsuario = request.params.idUsuario;
-
+const getListContacts = async (idUsuario) => {
     try {
-        const result = await Chat.find({ 'users.id': parseInt(idUsuario)});
+        const result = await Chat.find({ 'users.id': parseInt(idUsuario) });
 
         if (result) {
             let listUsers = []
@@ -145,22 +102,48 @@ router.get('/user/:idUsuario', cors(), async (request, response) => {
                 listUsers.push(newUser)
             }
 
-            const dadosJSON = {
-                status: config.SUCCESS_REQUEST.status,
-                message: config.SUCCESS_REQUEST.message,
-                usuarios: listUsers
-            }
-
-            response.status(dadosJSON.status).json(dadosJSON);
+            return { users: listUsers }
         } else {
-            response.status(config.ERROR_CHAT_NOT_FOUND.status).json(config.ERROR_CHAT_NOT_FOUND);
+            return config.ERROR_CHAT_NOT_FOUND
         }
     } catch (err) {
-        response.status(config.ERROR_INTERNAL_SERVER.status).json(config.ERROR_INTERNAL_SERVER);
+        return config.ERROR_INTERNAL_SERVER
     }
-});
+}
 
+const insertChat = async (users) => {
+    if (
+        !users || users.length == 0 || users == undefined
+    ) {
+        response.status(config.ERROR_REQUIRE_FIELDS.status).json(config.ERROR_REQUIRE_FIELDS)
+    } else {
+        const data_criacao = moment().format("YYYY-MM-DD")
+        const hora_criacao = moment().format("HH:mm:ss")
+
+        const chat = {
+            users,
+            data_criacao,
+            hora_criacao
+        }
+
+        try {
+            await Chat.create(chat)
+
+            const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
+
+            const lastId = lastChat[0]._id.toString()
+
+            const insertSQL = await createChat(users, lastId)
+
+            return insertSQL
+        } catch (error) {
+            return config.ERROR_INTERNAL_SERVER
+        }
+    }
+}
 
 module.exports = {
-    router
+    getChat,
+    getListContacts,
+    insertChat
 }
