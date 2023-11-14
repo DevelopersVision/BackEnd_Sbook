@@ -9,6 +9,7 @@ const request = require("supertest");
 const app = request("http://localhost:8080");
 
 describe(`Teste de integração com controller de usuário`, () => {
+    const ID = 20
 
     test('Deve pegar todos os usuários salvos no sistema', async () => {
         
@@ -20,14 +21,28 @@ describe(`Teste de integração com controller de usuário`, () => {
         expect(response.body.dados).toBeInstanceOf(Array)
     })
 
-    test('Deve pegar todos os usuários salvos no sistema', async () => {
+    test('Deve pegar os dados de um usuário pelo ID', async () => {
         
         const response = await app
-            .get('/v1/sbook/usuario')
+            .get(`/v1/sbook/usuario/${ID}`)
 
         expect(response.status).toBe(200)
         expect(response.body).toBeInstanceOf(Object)
-        expect(response.body.dados).toBeInstanceOf(Array)
+        expect(response.body.dados).toBeInstanceOf(Object)
+    })
+
+    test('Deve fazer o login do usuário', async () => {
+        
+        const response = await app
+            .post(`/v1/sbook/login`)
+            .send({
+                "email": "luizgustavo.sp2020@gmail.com",
+                "senha": "luiz1234"
+            })
+
+        expect(response.status).toBe(200)
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body.dados).toBeInstanceOf(Object)
     })
 
 
