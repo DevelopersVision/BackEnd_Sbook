@@ -125,15 +125,20 @@ app.use('/v1/sbook/generos-preferidos', generosPreferidos)
 const server = require('http').createServer(app)
 const io = require('socket.io')(server, {cors: {origin: '*'}})
 const chatFunctions = require('./routes/mongoDB/chatFuction.js')
+const mensagemFunctions = require('./routes/mongoDB/mensagemFunction.js')
 var lista = []
 
 io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
 
-    socket.on
+    socket.on('createRooom', async listUsers => {
+        const newChat = await chatFunctions.insertChat(listUsers)
+
+        io.emit('newChat', newChat)
+    })
 
     socket.on('listMessages', async chat => {
-        const listMessages = await chatRoutes.getChat(chat)
+        const listMessages = await chatFunctions.getChat(chat)
 
         lista = listMessages
         
@@ -141,19 +146,23 @@ io.on('connection', socket => {
     })
 
     socket.on('listContacts', async user => {
-        const listContacts = await chatRoutes.getListContacts(user)
+        const listContacts = await chatFunctions.getListContacts(user)
 
         io.emit('receive_contacts', listContacts)
     })
 
     socket.on('message', async text => {
-        console.log("Mensagem: " + text);
+        console.log("Mensagem: " + text); 
 
-        let retornoMensagem = await messageRoutes.createMessage(text.messageBy, text.messageTo, text.message, text.image, text.chatId)
+        let retornoMensagem = await mensagemFunctions.createMessage(text.messageBy, text.messageTo, text.message, text.image, text.chatId)
 
         lista.mensagens.push(retornoMensagem)
         
         io.emit('receive_message', lista)
+    })
+
+    socket.on('deleteMessage', async message => {
+        //const messageUpdated = 
     })
 
     socket.on('disconnect', reason => {
