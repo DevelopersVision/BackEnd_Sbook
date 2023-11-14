@@ -34,7 +34,6 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
 
             let dados = dadosUsuario[0]
 
-            let anuncios = await controllerAnuncios.ctlGetAnuncioByIdUsuario(dados.id_usuario)
             let generos = await controllerUsuarioGenero.ctlGetGenerosPreferidosByIdUsuario(dados.id_usuario)
 
             let jsonUsuario = {
@@ -57,7 +56,6 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
                     cidade: dados.cidade,
                     estado: dados.estado
                 },
-                anuncios: anuncios.anuncios,
                 generos: generos.generos_preferidos
             }
 

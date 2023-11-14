@@ -892,23 +892,6 @@ const ctlGetALLAnunciosForSearchPage = async () => {
 }
 
 
-const array_estado_livro = ["Usado", "Seminovo"]; // Inclua estados válidos
-const arrayGeneros = ["Coleção", "Biografia"]; // Inclua gêneros válidos
-
-ctlGetAnunciosThenFilterByGenerosOnly(arrayGeneros)
-    .then((result) => {
-        if (result) {
-            console.log("Anúncios filtrados:");
-            // console.log(result.anuncios);
-        } else {
-            console.log("Nenhum anúncio atende aos critérios de filtro.");
-        }
-    })
-    .catch((error) => {
-        console.error("Erro ao chamar a função ctlGetAnunciosThenFilter:", error);
-    });
-
-
 module.exports = {
     ctlGetAnuncios,
     ctlGetAnuncioByID,
