@@ -116,6 +116,9 @@ app.use('/v1/sbook/generos', generoRoutes)
 const generosPreferidos = require('./routes/generosPreferidos.js')
 app.use('/v1/sbook/generos-preferidos', generosPreferidos)
 
+const appV2 = require('./routes/appV2Routes.js')
+app.use('/v2/sbook', appV2)
+
 /*****************************************************************************************************************
 * Objetivo: Chat com Socket.IO
 * Data: 01/11/2023
@@ -162,7 +165,11 @@ io.on('connection', socket => {
     })
 
     socket.on('deleteMessage', async message => {
-        //const messageUpdated = 
+        const messageDeleted = await mensagemFunctions.deleteMessage(message)
+
+        lista.mensagens.filter( mensagem => (mensagem != message))
+
+        io.emit('receive_message', messageDeleted)
     })
 
     socket.on('disconnect', reason => {
@@ -541,6 +548,15 @@ app.put('/v1/sbook/anuncio-put', cors(), bodyParserJSON, async function (request
         response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
+})
+
+app.delete('/v1/sbook/anuncio-delete/:idAnuncio', cors(), bodyParserJSON, async function (request, response) {
+    let idAnuncio = request.params.idAnuncio
+
+    let dadosAnuncio = await controllerAnuncio.ctlExcluirAnuncio(idAnuncio)
+
+    response.status(dadosAnuncio.status)
+    response.json(dadosAnuncio)
 })
 /*****************************************************************************************************************
 * Objetivo: API de manipulação de anuncios favoritados

@@ -28,6 +28,10 @@ const Message = mongoose.model('Message', {
         type: String,
         required: true
     },
+    status: {
+        type: Boolean,
+        default: true
+    },
     chatId: {
         type: mongoose.Types.ObjectId,
         ref: "Chat",

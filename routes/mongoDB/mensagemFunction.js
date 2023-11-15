@@ -42,11 +42,27 @@
     }
 }
 
-const daleteMessage = async () => {
+const deleteMessage = async (idMessage) => {
+    if(
+        idMessage == null || idMessage == undefined || idMessage == ''
+    ){
+        return config.ERROR_REQUIRE_FIELDS
+    }else{
 
+        const message = await Message.findOne({_id: idMessage})
+
+        if(!message){
+            return config.ERROR_REGISTER_NOT_FOUND
+        }else{
+            message.status = false
+            await Message.updateOne({_id: idMessage}, message)
+
+            return true
+        }
+    }
 }
 
 module.exports = {
     createMessage,
-    updateMessage
+    deleteMessage
 }

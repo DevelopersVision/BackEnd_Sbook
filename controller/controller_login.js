@@ -72,6 +72,59 @@ const ctlAutenticarUsuarioByEmailAndSenha = async function (email, senha) {
     }
 }
 
+const ctlLoginV2 = async (email, senha) => {
+    if (email == null || email == undefined || email == '' || email.length > 255 ||
+        senha == null || senha == undefined || senha == ''
+    ) {
+        return message.ERROR_REQUIRE_FIELDS
+    } else {
+        let dadosUsuario = await loginDAO.mdlSelectUsuarioByEmailAndSenha(email, senha)
+
+        if (dadosUsuario && dadosUsuario[0].status_usuario == true) {
+            //Gera o token pelo jwt
+            let tokenUser = await jwt.createJWT(dadosUsuario.id);
+
+            let dados = dadosUsuario[0]
+
+            let jsonUsuario = {
+                usuario: {
+                    id: dados.id_usuario,
+                    nome: dados.nome,
+                    telefone: dados.telefone,
+                    cpf: dados.cpf,
+                    data_nascimento: dados.data_nascimento,
+                    data_criacao: dados.data_criacao,
+                    email: dados.email,
+                    status_usuario: dados.status_usuario,
+                    foto: dados.foto
+                },
+                endereco: {
+                    id: dados.id_endereco,
+                    cep: dados.cep,
+                    logradouro: dados.logradouro,
+                    bairro:dados.bairro,
+                    cidade: dados.cidade,
+                    estado: dados.estado
+                }
+            }
+
+            let dadosUsuarioJSON = {
+                token: tokenUser,
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                usuario: jsonUsuario
+            }
+
+            return dadosUsuarioJSON
+        } else if(dadosUsuario && dadosUsuario[0].status_usuario == false) {
+            return message.ERROR_USUARIO_DESATIVADO
+        } else {
+            return message.ERROR_INVALID_EMAIL_SENHA
+        }
+    }
+}
+
 module.exports = {
-    ctlAutenticarUsuarioByEmailAndSenha
+    ctlAutenticarUsuarioByEmailAndSenha,
+    ctlLoginV2
 }

@@ -10,7 +10,8 @@ const router = require('express').Router()
 const config = require('../../controller/modulo/config.js')
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const moment = require('moment')
+const moment = require('moment');
+const { getChat } = require('./chatFuction.js');
 const bodyParserJSON = bodyParser.json();
 
 router.post('/', bodyParserJSON, cors(), async (request, response) => {
@@ -89,6 +90,31 @@ router.get('/:idChat', cors(), async (request, response) => {
         response.status(500).json({ error: err });
     }
 });
+
+router.put('/:idMensagem', bodyParserJSON, cors(), async (request, response) => {
+
+    const idMessage = request.params.idMensagem;
+
+    if(
+        idMessage == null || idMessage == undefined || idMessage == ''
+    ){
+        response.status(config.ERROR_REQUIRE_FIELDS.status).json(config.ERROR_REQUIRE_FIELDS)
+    }else{
+
+        const message = await Message.findOne({_id: idMessage})
+
+        if(!message){
+            response.status(config.ERROR_REGISTER_NOT_FOUND.status).json(config.ERROR_REGISTER_NOT_FOUND)
+        }else{
+            message.status = false
+            await Message.updateOne({_id: idMessage}, message)
+
+            const lista = await getChat(message.chatId)
+
+            response.status(200).json(lista)
+        }
+    }
+})
 
 module.exports = {
     router

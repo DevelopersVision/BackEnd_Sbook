@@ -59,7 +59,7 @@ const getChat = async (idChat) => {
         const resultChat = await Chat.findOne({ _id: idChat });
 
         if (resultChat) {
-            const listMessages = await Message.find({ chatId: idChat })
+            const listMessages = await Message.find({ chatId: idChat, status: true})
 
             const dadosJSON = {
                 status: config.SUCCESS_REQUEST.status,
