@@ -8,6 +8,7 @@
 var message = require('./modulo/config.js')
 
 var usuarioDAO = require('../model/model_usuario.js');
+var usuarioGeneroDAO = require('../model/model_usuario-genero.js');
 
 const ctlGetUsuario = async () => {
     let dadosUsuarios = await usuarioDAO.mdlSelectAllUsuario()
@@ -24,6 +25,31 @@ const ctlGetUsuario = async () => {
         return dadosUsuariosJSON
     } else {
         return message.ERROR_INTERNAL_SERVER
+    }
+}
+
+const ctlGetUseByIdWithGenero = async (id) => {
+    if (id == null || id == undefined || isNaN(id)) {
+        return message.ERROR_REQUIRE_FIELDS
+    } else {
+        let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(id)
+
+        let generosUser = await usuarioGeneroDAO.mdlSelectGeneroPreferidoByIdUsuario(id)
+
+        dadosUsuario[0].generos = generosUser
+
+        if (dadosUsuario) {
+
+            let dadosUsuarioJSON = {
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                dados: dadosUsuario[0]
+            }
+
+            return dadosUsuarioJSON
+        } else {
+            return message.ERROR_REGISTER_NOT_FOUND
+        }
     }
 }
 
@@ -183,5 +209,6 @@ module.exports = {
     ctlGetUsuarioByID,
     ctlAtualizarEnderecoUsuario,
     ctlAlterarSenha,
-    ctlAlterarFoto
+    ctlAlterarFoto,
+    ctlGetUseByIdWithGenero
 }

@@ -15,6 +15,7 @@ const message = require('../controller/modulo/config.js')
 //Import do arquivo controller que irá solicitar a model os dados do Banco
 const controllerAnuncio = require('../controller/controller_anuncio.js')
 const controllerLogin = require('../controller/controller_login.js')
+const controllerUsuario = require('../controller/controller_usuario.js')
 
 //Login Usuário
 router.post('/login', cors(), bodyParserJSON, async function (request, response) {
@@ -34,6 +35,16 @@ router.post('/login', cors(), bodyParserJSON, async function (request, response)
         response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
     }
+})
+
+//Get usuário para o profile
+router.get('/usuario/:id', cors(), async function (request, response) {
+    let idUsuario = request.params.id
+
+    let dadosUsuario = await controllerUsuario.ctlGetUseByIdWithGenero(idUsuario)
+
+    response.status(dadosUsuario.status)
+    response.json(dadosUsuario)
 })
 
 //Anúncios FEED
