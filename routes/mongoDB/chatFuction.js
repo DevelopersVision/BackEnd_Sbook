@@ -59,7 +59,7 @@ const getChat = async (idChat) => {
         const resultChat = await Chat.findOne({ _id: idChat });
 
         if (resultChat) {
-            const listMessages = await Message.find({ chatId: idChat, status: true})
+            const listMessages = await Message.find({ chatId: idChat, status: true })
 
             const dadosJSON = {
                 status: config.SUCCESS_REQUEST.status,
@@ -127,15 +127,25 @@ const insertChat = async (users) => {
         }
 
         try {
-            await Chat.create(chat)
+            const verificarChat = await Chat.find({ 'users.id': users[0].id && users[1].id })
 
-            const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
+            if (verificarChat.length > 0) {
+                const chatOld = await getChat(verificarChat[0]._id)
 
-            const lastId = lastChat[0]._id.toString()
+                return chatOld
+            } else {
+                await Chat.create(chat)
 
-            const insertSQL = await createChat(users, lastId)
+                const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
 
-            return insertSQL
+                const lastId = lastChat[0]._id.toString()
+
+                //const insertSQL = await createChat(users, lastId)
+
+                const newChat = await getChat(lastChat)
+
+                return newChat
+            }
         } catch (error) {
             return config.ERROR_INTERNAL_SERVER
         }

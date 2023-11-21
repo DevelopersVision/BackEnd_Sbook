@@ -14,6 +14,7 @@ const bodyParserJSON = bodyParser.json();
 const Message = require('../../models_mongoDB/message.js')
 const Chat = require('../../models_mongoDB/chat.js')
 const config = require('../../models_mongoDB/modulo/config.js')
+const chatFunctions = require('./chatFuction.js')
 
 //Import da biblioteca do prisma client
 var { PrismaClient } = require('@prisma/client')
@@ -40,18 +41,27 @@ router.post('/', bodyParserJSON, cors(), async (request, response) => {
         }
 
         try {
-            await Chat.create(chat)
+            const verificarChat = await Chat.find({ 'users.id': users[0].id && users[1].id })
 
-            const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
+            if (verificarChat.length > 0) {
+                const chatOld = await chatFunctions.getChat(verificarChat[0]._id.toString())
 
-            const lastId = lastChat[0]._id.toString()
+                response.status(200).json(chatOld)
+            } else {
+                await Chat.create(chat)
 
-            const insertSQL = await createChat(users, lastId)
+                const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
 
-            response.status(insertSQL.status).json(insertSQL)
+                const lastId = lastChat[0]._id.toString()
 
+                //const insertSQL = await createChat(users, lastId)
+
+                const newChat = await chatFunctions.getChat(lastChat)
+
+                response.status(200).json(newChat)
+            }
         } catch (error) {
-            response.status(config.ERROR_INTERNAL_SERVER.status).json(config.ERROR_INTERNAL_SERVER);
+            response.status(config.ERROR_INTERNAL_SERVER.status).json(config.ERROR_INTERNAL_SERVER)
         }
     }
 })
@@ -64,32 +74,32 @@ const createChat = async (users, chatId) => {
     ) {
         return config.ERROR_REQUIRE_FIELDS
     } else {
-        for (let i = 0; i < users.length; i++) {
-            const idUser = users[i].id;
+        const verificarChat = await Chat.find({'users.id': users[0].id && users[1].id})
 
-            const sql = `insert into tbl_chat(id_mongo, id_usuario) values ("${chatId}", ${idUser})`
+        console.log(verificarChat);
 
-            const resultStatus = await prisma.$executeRawUnsafe(sql)
+        // for (let i = 0; i < users.length; i++) {
+        //     const idUser = users[i].id;
 
-            if (!resultStatus)
-                return config.ERROR_INTERNAL_SERVER
-        }
+        //     const sql = `insert into tbl_chat(id_mongo, id_usuario) values ("${chatId}", ${idUser})`
 
-        const lastIds = `select * from tbl_chat order by id desc limit 2`
+        //     const resultStatus = await prisma.$executeRawUnsafe(sql)
 
-        const rsChat = await prisma.$queryRawUnsafe(lastIds)
+        //     if (!resultStatus)
+        //         return config.ERROR_INTERNAL_SERVER
+        // }
 
-        const dadosJSON = {
-            status: config.SUCCESS_REQUEST.status,
-            config: config.SUCCESS_REQUEST.config,
-            chat: rsChat
-        }
+        // const lastIds = `select * from tbl_chat order by id desc limit 2`
 
-        if (lastIds.length > 0) {
-            return dadosJSON
-        } else {
-            return config.ERROR_INTERNAL_SERVER.status
-        }
+        // const rsChat = await prisma.$queryRawUnsafe(lastIds)
+
+        // const newChat = await chatFunctions.getChat(chatId)
+
+        // if (lastIds.length > 0) {
+            return verificarChat
+        // } else {
+        //     return config.ERROR_INTERNAL_SERVER.status
+        // }
     }
 }
 
