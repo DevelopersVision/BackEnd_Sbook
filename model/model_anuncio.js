@@ -124,7 +124,7 @@ const mdlSelectAnuncioPage = async (page) => {
 	    inner join tbl_editora as editora
 		    on editora.id = anuncio.id_editora
         where anuncio.status_anuncio = true
-        order by id asc limit 10 offset ${page}0`
+        order by id desc limit 10 offset ${page}0`
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)
 
