@@ -111,14 +111,16 @@ const getListContacts = async (idUsuario) => {
     }
 }
 
-const insertChat = async (users) => {
+const insertChat = async (usuarios) => {
     if (
-        !users || users.length == 0 || users == undefined
+        !usuarios || usuarios.length == 0 || usuarios == undefined
     ) {
         response.status(config.ERROR_REQUIRE_FIELDS.status).json(config.ERROR_REQUIRE_FIELDS)
     } else {
         const data_criacao = moment().format("YYYY-MM-DD")
         const hora_criacao = moment().format("HH:mm:ss")
+
+        const users = usuarios.users
 
         const chat = {
             users,
@@ -134,12 +136,11 @@ const insertChat = async (users) => {
 
                 return chatOld
             } else {
-                await Chat.create(chat)
+                const createChat = await Chat.create(chat)
+
+                console.log(createChat);
 
                 const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
-
-                const lastId = lastChat[0]._id.toString()
-
                 //const insertSQL = await createChat(users, lastId)
 
                 const newChat = await getChat(lastChat)

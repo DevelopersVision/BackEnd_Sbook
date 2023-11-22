@@ -135,6 +135,8 @@ io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
 
     socket.on('createRooom', async listUsers => {
+        console.log(listUsers);
+
         const newChat = await chatFunctions.insertChat(listUsers)
 
         io.emit('newChat', newChat)
