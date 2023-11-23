@@ -11,6 +11,14 @@ var { PrismaClient } = require('@prisma/client')
 //Instancia da Classe PrismaClient 
 var prisma = new PrismaClient()
 
+const mdlSelectPages = async () => {
+    let sql = `call sp_quantidade_paginacao`
+
+    let rsAnuncio = await prisma.$queryRawUnsafe(sql)
+
+    return rsAnuncio
+}
+
 const mdlSelectAllAnuncio = async () => {
 
     let sql = `select 
@@ -566,5 +574,6 @@ module.exports = {
     mdlDeleteAnuncio,
     mdlEncerrarAnuncio,
     mdlUpdateAnuncio,
-    mdlSelectAnuncioForTheFeed
+    mdlSelectAnuncioForTheFeed,
+    mdlSelectPages
 }

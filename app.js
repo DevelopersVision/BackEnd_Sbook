@@ -135,9 +135,17 @@ io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
 
     socket.on('createRooom', async listUsers => {
-        console.log(listUsers);
+        const list = JSON.parse(listUsers)
 
-        const newChat = await chatFunctions.insertChat(listUsers)
+        let newChat = await chatFunctions.insertChat(list)
+
+        // if(list.status == true){
+        //     console.log('list' + list.users);
+        //     newChat = await chatFunctions.insertChat(list)
+        // }else{
+        //     console.log('listUser' + listUsers);
+        //     newChat = await chatFunctions.insertChat(listUsers)
+        // }
 
         io.emit('newChat', newChat)
     })
@@ -432,6 +440,20 @@ app.get('/v1/sbook/anuncio-tipo-anuncio/:idAnuncio', cors(), async function (req
 ******************************************************************************************************************/
 
 const controllerAnuncio = require('./controller/controller_anuncio.js')
+
+app.get('/v1/sbook/paginacao', cors(), async function (request, response) {
+    const modelAnucio = require('./model/model_anuncio.js')
+
+    let selectPage = await modelAnucio.mdlSelectPages()
+
+    let retornoJSON = {
+        status: message.SUCCESS_REQUEST.status,
+        message: message.SUCCESS_REQUEST.message,
+        pages: parseInt(selectPage[0].f0)
+    }
+
+    response.status(retornoJSON.status).json(retornoJSON)
+})
 
 app.post('/v1/sbook/anuncio-proximos', cors(), bodyParserJSON, async function (request, response) {
 

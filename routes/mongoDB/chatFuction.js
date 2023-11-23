@@ -120,7 +120,7 @@ const insertChat = async (usuarios) => {
         const data_criacao = moment().format("YYYY-MM-DD")
         const hora_criacao = moment().format("HH:mm:ss")
 
-        const users = usuarios.users
+        let users = usuarios.users
 
         const chat = {
             users,
@@ -129,18 +129,24 @@ const insertChat = async (usuarios) => {
         }
 
         try {
-            const verificarChat = await Chat.find({ 'users.id': users[0].id && users[1].id })
+            const verificarChat = await Chat.find({
+                $and: [
+                  { 'users.id': users[0].id },
+                  { 'users.id': users[1].id }
+                ]
+              })
 
             if (verificarChat.length > 0) {
-                const chatOld = await getChat(verificarChat[0]._id)
+                const chatOld = await getChat(verificarChat[0]._id.toString())
 
                 return chatOld
             } else {
-                const createChat = await Chat.create(chat)
-
-                console.log(createChat);
+                await Chat.create(chat)
 
                 const lastChat = await Chat.find({}).sort({ _id: -1 }).limit(1)
+
+                const lastId = lastChat[0]._id.toString()
+
                 //const insertSQL = await createChat(users, lastId)
 
                 const newChat = await getChat(lastChat)
