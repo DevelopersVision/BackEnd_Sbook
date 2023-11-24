@@ -139,14 +139,6 @@ io.on('connection', socket => {
 
         let newChat = await chatFunctions.insertChat(list)
 
-        // if(list.status == true){
-        //     console.log('list' + list.users);
-        //     newChat = await chatFunctions.insertChat(list)
-        // }else{
-        //     console.log('listUser' + listUsers);
-        //     newChat = await chatFunctions.insertChat(listUsers)
-        // }
-
         io.emit('newChat', newChat)
     })
 
