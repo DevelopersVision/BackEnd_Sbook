@@ -9,6 +9,7 @@ var message = require('./modulo/config.js')
 
 var usuarioDAO = require('../model/model_usuario.js');
 var usuarioGeneroDAO = require('../model/model_usuario-genero.js');
+const Chat = require('../models_mongoDB/chat.js');
 
 const ctlGetUsuario = async () => {
     let dadosUsuarios = await usuarioDAO.mdlSelectAllUsuario()
@@ -130,10 +131,15 @@ const ctlAtualizarEnderecoUsuario = async function (dadosEnderecoUsuario) {
         dadosEnderecoUsuario.cep_endereco == undefined || dadosEnderecoUsuario.cep_endereco.lenth > 18 || dadosEnderecoUsuario.cep_endereco == null
     ) {
         return message.ERROR_REQUIRE_FIELDS
-    }else {
+    } else {
         let resultStatus = await usuarioDAO.mdlupdateUsuario(dadosEnderecoUsuario)
 
         if (resultStatus) {
+
+            const filtro = { 'users.id': parseInt(dadosEnderecoUsuario.id_usuario) }
+            const update = { $set: { "users.$.nome": nome } };
+
+            const updateChat = await Chat.updateMany(filtro, update)
 
             let dadosEnderecoUsuarioJSON = {
                 status: message.SUCCESS_UPDATED_ITEM.status,
@@ -188,6 +194,11 @@ const ctlAlterarFoto = async (usuario) => {
 
         if (resultStatus) {
 
+            const filtro = { 'users.id': parseInt(usuario.id) }
+            const update = { $set: { "users.$.foto": usuario.foto } };
+
+            const updateChat = await Chat.updateMany(filtro, update)
+
             let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(usuario.id)
 
             let dadosUsuarioJSON = {
@@ -210,5 +221,5 @@ module.exports = {
     ctlAtualizarEnderecoUsuario,
     ctlAlterarSenha,
     ctlAlterarFoto,
-    ctlGetUseByIdWithGenero
+    ctlGetUseByIdWithGenero,
 }

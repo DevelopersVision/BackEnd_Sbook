@@ -122,6 +122,9 @@ const insertChat = async (usuarios) => {
 
         let users = usuarios.users
 
+        // usuarios.users[0].status_user = true
+        // usuarios.users[1].status_user = true
+
         const chat = {
             users,
             data_criacao,
