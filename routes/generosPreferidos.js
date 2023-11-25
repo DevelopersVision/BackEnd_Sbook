@@ -27,7 +27,7 @@ router.post('/', cors(), bodyParserJSON, async function (request, response) {
     let contentType = request.headers['content-type']
 
     //Validação para receber dados apenas no formato JSON
-    if (String(contentType).toLowerCase() == 'routerlication/json') {
+    if (String(contentType).toLowerCase() == 'application/json') {
         //Recebe os dados encaminhados na requisição
         let dadosBody = request.body
 
@@ -46,7 +46,7 @@ router.put('/', cors(), bodyParserJSON, async function (request, response) {
     let contentType = request.headers['content-type']
 
     //Validação para receber dados apenas no formato JSON
-    if (String(contentType).toLowerCase() == 'routerlication/json') {
+    if (String(contentType).toLowerCase() == 'application/json') {
         //Recebe os dados encaminhados na requisição
         let dadosBody = request.body
 
