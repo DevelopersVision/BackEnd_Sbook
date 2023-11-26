@@ -11,7 +11,8 @@ const {
     ctlAlterarSenha,
     ctlInserirEnderecoUsuario,
     ctlAtualizarEnderecoUsuario,
-    ctlGetUsuarioByID
+    ctlGetUsuarioByID,
+    ctlAlterarFotoTeste
 } = require('../../controller/controller_usuario.js')
 
 describe(`Teste de pegar todos usuários`, () => {
@@ -79,9 +80,9 @@ describe(`Teste de cadastro usuário`, () => {
     test('Deve inserir usuário || SUCESSO - 201', async () => {
         const usuario = {
             "nome_usuario": "Millena", 
-            "cpf_usuario": "123-625-493-80", 
+            "cpf_usuario": "253-895-493-80", 
             "data_nascimento_usuario": "2003/10/29", 
-            "email_usuario": "millenamills49@gmail.com",
+            "email_usuario": "millenamills59@gmail.com",
             "senha_usuario": "temporaria2",
             "cep_endereco": "06420-340",
             "logradouro_endereco": "Rua Elton",
@@ -117,7 +118,7 @@ describe(`Teste de trocar foto de perfil do usuário pelo ID`, () => {
 
     test('Deve trocar a foto de perfil || SUCESSO - 200', async () => {
         const usuario = {"id": 20, "foto": "https://i.pinimg.com/originals/b1/85/54/b1855492768711416e253cc496bae52a.png"}
-        const res = await ctlAlterarFoto(usuario)
+        const res = await ctlAlterarFotoTeste(usuario)
 
         expect(res.status).toBe(200)
     })
