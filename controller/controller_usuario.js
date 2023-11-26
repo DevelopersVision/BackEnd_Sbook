@@ -136,10 +136,10 @@ const ctlAtualizarEnderecoUsuario = async function (dadosEnderecoUsuario) {
 
         if (resultStatus) {
 
-            const filtro = { 'users.id': parseInt(dadosEnderecoUsuario.id_usuario) }
-            const update = { $set: { "users.$.nome": nome } };
+            // const filtro = { 'users.id': parseInt(dadosEnderecoUsuario.id_usuario) }
+            // const update = { $set: { "users.$.nome": nome } };
 
-            const updateChat = await Chat.updateMany(filtro, update)
+            // const updateChat = await Chat.updateMany(filtro, update)
 
             let dadosEnderecoUsuarioJSON = {
                 status: message.SUCCESS_UPDATED_ITEM.status,
@@ -194,10 +194,39 @@ const ctlAlterarFoto = async (usuario) => {
 
         if (resultStatus) {
 
-            const filtro = { 'users.id': parseInt(usuario.id) }
-            const update = { $set: { "users.$.foto": usuario.foto } };
+            const id = usuario.id
+            const foto = usuario.foto
 
-            const updateChat = await Chat.updateMany(filtro, update)
+            const filtro = { 'users.id': parseInt(id) }
+            const update = { $set: { "users.$.foto": foto } };
+
+            const updateUserPicture = await Chat.updateMany(filtro, update)
+
+            let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(usuario.id)
+
+            let dadosUsuarioJSON = {
+                status: message.SUCCESS_UPDATED_ITEM.status,
+                message: message.SUCCESS_UPDATED_ITEM.message,
+                usuario: dadosUsuario
+            }
+
+            return dadosUsuarioJSON
+        } else {
+            return message.ERROR_INTERNAL_SERVER
+        }
+    }
+}
+
+const ctlAlterarFotoTeste = async (usuario) => {
+    if (
+        usuario.id == null || usuario.id == undefined || isNaN(usuario.id) ||
+        usuario.foto == null || usuario.foto == undefined || usuario.foto == ""
+    ) {
+        return message.ERROR_REQUIRE_FIELDS
+    } else {
+        let resultStatus = await usuarioDAO.mdlUpdateFoto(usuario.id, usuario.foto)
+
+        if (resultStatus) {
 
             let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(usuario.id)
 
@@ -222,4 +251,5 @@ module.exports = {
     ctlAlterarSenha,
     ctlAlterarFoto,
     ctlGetUseByIdWithGenero,
+    ctlAlterarFotoTeste
 }

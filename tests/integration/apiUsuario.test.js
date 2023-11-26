@@ -51,9 +51,9 @@ describe(`Teste de integração com controller de usuário`, () => {
             .post(`/v1/sbook/registro-usuario`)
             .send({
                 "nome_usuario": "Millena",
-                "cpf_usuario": "123-253-423-85",
+                "cpf_usuario": "923-173-423-85",
                 "data_nascimento_usuario": "2003/10/29",
-                "email_usuario": "millenamills42@gmail.com",
+                "email_usuario": "millenamills60@gmail.com",
                 "senha_usuario": "temporaria2",
                 "cep_endereco": "06420-340",
                 "logradouro_endereco": "Rua Elton",
