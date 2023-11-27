@@ -63,6 +63,7 @@ const ctlValidarToken = async (dados) => {
     ) {
         returnFunction = message.ERROR_REQUIRE_FIELDS
     } else {
+        dados.email = dados.email.replace(/"/g, '')
         let checkEmail = await usuarioDAO.selectByEmail(dados.email)
 
         let id = checkEmail[0].id

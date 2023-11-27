@@ -338,6 +338,8 @@ app.post('/v1/sbook/validar-token', cors(), bodyParserJSON, async function (requ
 
         let dadosUsuario = await controllerEmail.ctlValidarToken(body)
 
+        console.log(dadosUsuario);
+
         response.status(dadosUsuario.status)
         response.json(dadosUsuario)
     } else {
