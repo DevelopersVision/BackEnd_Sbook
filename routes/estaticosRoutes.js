@@ -47,4 +47,13 @@ router.post('/tipos-anuncios', cors(), async function (request, response) {
     response.json(dadosTiposAnuncios)
 })
 
+const editoras = require('../controller/modulo/editoras.js')
+router.post('/editoras', cors(), async function (request, response) {
+
+    let dadosTiposAnuncios = await modelEstaticos.adicionarEditoras(editoras.editoraLista)
+
+    response.status(dadosTiposAnuncios.status)
+    response.json(dadosTiposAnuncios)
+})
+
 module.exports = router

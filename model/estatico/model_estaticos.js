@@ -112,11 +112,34 @@ const adicionarTiposAnuncios = async (listaTiposAnuncios) => {
     }
 }
 
+const adicionarEditoras = async (listaEditoras) => {
+    let lista = []
+
+    for (let index = 0; index < listaEditoras.length; index++) {
+        const editora = listaEditoras[index];
+        
+        let sql = `insert into tbl_editora(nome) values ('${editora}')`
+
+        let insertEditora = await prisma.$executeRawUnsafe(sql)
+
+        if(insertEditora){
+            lista.push(editora)
+        }
+    }
+
+
+    return {
+        status: 200,
+        tipos_anuncios: lista
+    }
+}
+
 module.exports = {
     adicionarIdiomas,
     adicionarGeneros,
     adicionarEstadosLivros,
     adicionarTiposAnuncios,
+    adicionarEditoras,
 
     mdlSelectAllIdiomas
 }
