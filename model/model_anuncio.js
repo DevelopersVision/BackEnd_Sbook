@@ -76,6 +76,9 @@ const mdlSelectAnuncioForDonations = async (page) => {
         date_format(anuncio.data_criacao, '%d-%m-%Y %H:%i') as data_criacao,
         anuncio.status_anuncio,
         anuncio.preco,
+        anuncio.edicao,
+        anuncio.descricao,
+        anuncio.numero_paginas,
         anuncio.id_usuario,
         anuncio.id_estado_livro,
         anuncio_tipo_anuncio.id_tipo_anuncio

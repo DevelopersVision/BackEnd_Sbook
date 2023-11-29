@@ -78,13 +78,14 @@ const ctlGetAnunciosParaDoacao = async (page) => {
                 anuncio: {
                     id: anuncio.id,
                     nome: anuncio.nome,
-                    id: anuncio.id,
-                    nome: anuncio.nome,
                     ano_lancamento: anuncio.ano_lancamento,
                     data_criacao: anuncio.data_criacao,
                     status_anuncio: anuncio.status_anuncio,
                     preco: anuncio.preco,
-                    anunciante: anuncio.id_usuario
+                    anunciante: anuncio.id_usuario,
+                    edicao: anuncio.edicao,
+                    descricao: anuncio.descricao,
+                    numero_paginas: anuncio.numero_paginas
                 },
                 foto: fotosAnuncio,
                 autores: autoresAnuncio
@@ -97,6 +98,7 @@ const ctlGetAnunciosParaDoacao = async (page) => {
             status: message.SUCCESS_REQUEST.status,
             message: message.SUCCESS_REQUEST.message,
             quantidade: listaAnuncios.length,
+            page: parseInt(page),
             anuncios: listaAnuncios
         }
 
