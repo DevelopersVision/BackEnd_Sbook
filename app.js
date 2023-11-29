@@ -170,9 +170,11 @@ io.on('connection', socket => {
     socket.on('deleteMessage', async message => {
         const messageDeleted = await mensagemFunctions.deleteMessage(message)
 
-        lista.mensagens.filter( mensagem => (mensagem != message))
+        let newList = lista.mensagens.filter(mensagem => mensagem._id != message)
 
-        io.emit('receive_message', messageDeleted)
+        lista.mensagens = newList
+
+        io.emit('receive_message', lista)
     })
 
     socket.on('disconnect', reason => {
