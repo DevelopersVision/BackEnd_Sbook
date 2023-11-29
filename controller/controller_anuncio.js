@@ -62,6 +62,51 @@ const ctlGetAnunciosParaFeed = async (page) => {
     }
 }
 
+const ctlGetAnunciosParaDoacao = async (page) => {
+    let dadosAnuncio = await anuncioDAO.mdlSelectAnuncioForDonations(page)
+
+    if (dadosAnuncio) {
+        let listaAnuncios = []
+
+        for (let i = 0; i < dadosAnuncio.length; i++) {
+            const anuncio = dadosAnuncio[i];
+
+            let autoresAnuncio = await anuncioAutor.mdlSelectAutorByIdAnuncio(anuncio.id)
+            let fotosAnuncio = await anuncioFotoDAO.mdlSelectFotoByIdAnuncio(anuncio.id)
+
+            let anuncioJSON = {
+                anuncio: {
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    id: anuncio.id,
+                    nome: anuncio.nome,
+                    ano_lancamento: anuncio.ano_lancamento,
+                    data_criacao: anuncio.data_criacao,
+                    status_anuncio: anuncio.status_anuncio,
+                    preco: anuncio.preco,
+                    anunciante: anuncio.id_usuario
+                },
+                foto: fotosAnuncio,
+                autores: autoresAnuncio
+            }
+
+            listaAnuncios.push(anuncioJSON)
+        }
+
+        let dadosAnuncioJSON = {
+            status: message.SUCCESS_REQUEST.status,
+            message: message.SUCCESS_REQUEST.message,
+            quantidade: listaAnuncios.length,
+            anuncios: listaAnuncios
+        }
+
+        return dadosAnuncioJSON
+    } else {
+        return message.ERROR_REGISTER_NOT_FOUND
+    }
+}
+
+
 const ctlGetAnuncios = async () => {
     let dadosAnuncio = await anuncioDAO.mdlSelectAllAnuncio()
 
@@ -906,5 +951,6 @@ module.exports = {
     ctlExcluirAnuncio,
     ctlEncerrarAnuncio,
     ctlAtualizarAnuncios,
-    ctlGetAnunciosParaFeed
+    ctlGetAnunciosParaFeed,
+    ctlGetAnunciosParaDoacao
 }

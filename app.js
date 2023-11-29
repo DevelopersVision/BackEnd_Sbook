@@ -521,6 +521,16 @@ app.get('/v1/sbook/anuncio-feed', cors(), async function (request, response) {
     response.json(dadosAnuncio)
 })
 
+app.get('/v1/sbook/anuncio-doacao', cors(), async function (request, response) {
+
+    let page = request.query.page
+
+    let dadosAnuncio = await controllerAnuncio.ctlGetAnunciosParaDoacao(page)
+
+    response.status(dadosAnuncio.status)
+    response.json(dadosAnuncio)
+})
+
 app.put('/v1/sbook/encerrar-anuncio/:idAnuncio', cors(), bodyParserJSON, async function (request, response) {
     console.log('Entrou 2');
 
