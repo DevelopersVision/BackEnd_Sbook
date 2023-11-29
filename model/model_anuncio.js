@@ -86,7 +86,7 @@ const mdlSelectAnuncioForDonations = async (page) => {
         inner join tbl_anuncio_tipo_anuncio as anuncio_tipo_anuncio
             on anuncio_tipo_anuncio.id_anuncio = anuncio.id
         where anuncio.status_anuncio = true and anuncio_tipo_anuncio.id_tipo_anuncio = 1
-        order by id desc limit 8 offset 00
+        order by id desc limit 8 offset ${page}0
     `
 
     let rsAnuncio = await prisma.$queryRawUnsafe(sql)

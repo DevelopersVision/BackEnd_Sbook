@@ -154,6 +154,10 @@ io.on('connection', socket => {
     socket.on('listContacts', async user => {
         const listContacts = await chatFunctions.getListContacts(user)
 
+        listContacts.id_user = parseInt(user)
+
+        console.log(listContacts);
+
         io.emit('receive_contacts', listContacts)
     })
 
