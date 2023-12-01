@@ -127,7 +127,7 @@ app.use('/v2/sbook', appV2)
 * Versão: 1.0
 ******************************************************************************************************************/
 const server = require('http').createServer(app)
-const io = require('socket.io')(server, {cors: {origin: '*'}})
+const io = require('socket.io')(server, { cors: { origin: '*' } })
 const chatFunctions = require('./routes/mongoDB/chatFuction.js')
 const mensagemFunctions = require('./routes/mongoDB/mensagemFunction.js')
 var lista = []
@@ -147,7 +147,7 @@ io.on('connection', socket => {
         const listMessages = await chatFunctions.getChat(chat)
 
         lista = listMessages
-        
+
         io.emit('receive_message', listMessages)
     })
 
@@ -162,12 +162,12 @@ io.on('connection', socket => {
     })
 
     socket.on('message', async text => {
-        console.log("Mensagem: " + text); 
+        console.log("Mensagem: " + text);
 
         let retornoMensagem = await mensagemFunctions.createMessage(text.messageBy, text.messageTo, text.message, text.image, text.chatId)
 
         lista.mensagens.push(retornoMensagem)
-        
+
         io.emit('receive_message', lista)
     })
 
@@ -220,6 +220,15 @@ const verifyJWT = async function (request, response, next) {
 const controllerUsuario = require('./controller/controller_usuario.js')
 
 const controllerLogin = require('./controller/controller_login.js')
+
+app.get('/v1/sbook/anunciante/:id', cors(), bodyParserJSON, async function (request, response) {
+    let id = request.params.id
+
+    let resultDadosUsuario = await controllerUsuario.ctlGetUsuarioAnunciante(id)
+
+    response.status(resultDadosUsuario.status)
+    response.json(resultDadosUsuario)
+})
 
 app.post('/v1/sbook/login', cors(), bodyParserJSON, async function (request, response) {
     //Recebe o content-type da requisição
@@ -567,7 +576,7 @@ app.post('/v1/sbook/anuncio-post', cors(), bodyParserJSON, async function (reque
 
 app.put('/v1/sbook/anuncio-put', cors(), bodyParserJSON, async function (request, response) {
     console.log('entrou');
-    
+
     //Recebe o content-type da requisição
     let contentType = request.headers['content-type']
 
@@ -696,6 +705,6 @@ mongoose
     .then(() => {
         app.listen(8080, function () {
             console.log('Servidor aguardando requisições na porta 8080');
-        })        
+        })
     })
     .catch((err) => console.log(err))

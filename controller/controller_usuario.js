@@ -10,6 +10,7 @@ var message = require('./modulo/config.js')
 var usuarioDAO = require('../model/model_usuario.js');
 var usuarioGeneroDAO = require('../model/model_usuario-genero.js');
 const Chat = require('../models_mongoDB/chat.js');
+const { ctlGetAnuncioByIdUsuario } = require('./controller_anuncio.js');
 
 const ctlGetUsuario = async () => {
     let dadosUsuarios = await usuarioDAO.mdlSelectAllUsuario()
@@ -61,6 +62,32 @@ const ctlGetUsuarioByID = async function (id) {
         let dadosUsuario = await usuarioDAO.mdlSelectUsuarioByID(id)
 
         if (dadosUsuario) {
+
+            let dadosUsuarioJSON = {
+                status: message.SUCCESS_REQUEST.status,
+                message: message.SUCCESS_REQUEST.message,
+                dados: dadosUsuario[0]
+            }
+
+            return dadosUsuarioJSON
+        } else {
+            return message.ERROR_REGISTER_NOT_FOUND
+        }
+    }
+}
+
+const ctlGetUsuarioAnunciante = async function (id) {
+    if (id == null || id == undefined || isNaN(id)) {
+        return message.ERROR_REQUIRE_FIELDS
+    } else {
+        let dadosUsuario = await usuarioDAO.mdlSelectUsuarioAnunciante(id)
+
+        if (dadosUsuario) {
+            let generos = await usuarioGeneroDAO.mdlSelectGeneroPreferidoByIdUsuario(id)
+            let anuncios = await ctlGetAnuncioByIdUsuario(id)
+
+            dadosUsuario[0].generos = generos
+            dadosUsuario[0].anuncios = anuncios
 
             let dadosUsuarioJSON = {
                 status: message.SUCCESS_REQUEST.status,
@@ -251,5 +278,6 @@ module.exports = {
     ctlAlterarSenha,
     ctlAlterarFoto,
     ctlGetUseByIdWithGenero,
-    ctlAlterarFotoTeste
+    ctlAlterarFotoTeste,
+    ctlGetUsuarioAnunciante
 }

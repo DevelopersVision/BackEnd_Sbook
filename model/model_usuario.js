@@ -98,6 +98,31 @@ from tbl_usuario as usuario
     }
 }
 
+const mdlSelectUsuarioAnunciante = async function (id) {
+    let sql = `select 
+	usuario.id as id_usuario,
+	usuario.nome, 
+    usuario.email,
+    usuario.foto,
+    usuario.status_usuario,
+    endereco.id as id_endereco,
+    endereco.cidade,
+    endereco.estado
+from tbl_usuario as usuario
+	inner join tbl_endereco as endereco 
+    on usuario.id_endereco = endereco.id
+    
+    where usuario.id = ${id};`
+
+    let rsEnderecoUsuario = await prisma.$queryRawUnsafe(sql)
+
+    if (rsEnderecoUsuario.length > 0) {
+        return rsEnderecoUsuario
+    } else {
+        return false
+    }
+}
+
 const selectByEmail = async function (email_usuario) {
     let sqlEmail = `SELECT tbl_usuario.id, tbl_usuario.senha_reset_token, tbl_usuario.senha_reset_expiracao FROM tbl_usuario WHERE tbl_usuario.email = '${email_usuario}'`
 
@@ -247,5 +272,6 @@ module.exports = {
     selectByEmail,
     mdlAlterPassword,
     mdlUpdateForgotPasswordUsuario,
-    mdlUpdateFoto
+    mdlUpdateFoto,
+    mdlSelectUsuarioAnunciante
 }

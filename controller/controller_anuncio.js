@@ -274,6 +274,7 @@ const ctlGetAnuncioByID = async (idAnuncio) => {
                     data_criacao: anuncio.data_criacao,
                     status_anuncio: anuncio.status_anuncio,
                     edicao: anuncio.edicao,
+                    descricao: anuncio.decricao,
                     preco: anuncio.preco,
                     descricao: anuncio.descricao,
                     numero_paginas: anuncio.numero_paginas,
@@ -299,7 +300,12 @@ const ctlGetAnuncioByID = async (idAnuncio) => {
                 foto: fotosAnuncio,
                 generos: generosAnuncio,
                 tipo_anuncio: tiposAnuncio,
-                autores: autoresAnuncio
+                autores: autoresAnuncio,
+                anunciante: {
+                    id: anuncio.id_anunciante,
+                    nome: anuncio.nome_usuario,
+                    foto: anuncio.foto_usuario
+                }
             }
 
 
