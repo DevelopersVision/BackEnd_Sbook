@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://dev_root:sbook2023@@sbook-servidor.mysql.database.azure.com:3306/db_sbook"
 }
 
 model tbl_teste{

@@ -76,8 +76,8 @@ const app = express();
 require('dotenv').config();
 
 //Constantes MongoDB
-const DB_USER = process.env.DB_USER_MONGODB
-const DB_PASSWORD = process.env.DB_PASSWORD_MONGODB
+const DB_USER = 'sbook_root'
+const DB_PASSWORD = 'mXYEFk0a6E8GBJBj'
 const STRING_CONNECTION = `mongodb+srv://${DB_USER}:${DB_PASSWORD}@sbookcluster.1itflnh.mongodb.net/Sbook-Chat?retryWrites=true&w=majority`
 
 const chatRoutes = require('./routes/mongoDB/chatRoutes.js')
