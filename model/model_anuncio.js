@@ -98,6 +98,58 @@ const mdlSelectAnuncioForDonations = async (page) => {
     }
 }
 
+const mdlSelectAnuncioForDonationsWeb = async (page) => {
+    page = Number(page) - 1
+
+    const sql = `select 
+    anuncio.id, 
+    anuncio.nome, 
+    anuncio.ano_lancamento,
+    date_format(anuncio.data_criacao, '%d-%m-%Y %H:%i') as data_criacao,
+    anuncio.status_anuncio,
+    anuncio.edicao,
+    anuncio.preco,
+    anuncio.descricao,
+    anuncio.status_anuncio,
+    anuncio.numero_paginas,
+    anuncio.id_usuario,
+    anuncio.isbn,
+    endereco.estado,
+    endereco.cidade,
+    endereco.bairro,
+    anuncio.id_estado_livro,
+    estado_livro.estado as estado_livro,
+    anuncio.id_idioma,
+    anuncio.id_usuario as id_anunciante,
+    idioma.nome as nome_idioma,
+    anuncio.id_editora,
+    editora.nome as nome_editora
+    from tbl_anuncio as anuncio
+    	inner join tbl_usuario as usuario
+	    	on usuario.id = anuncio.id_usuario
+	    inner join tbl_endereco as endereco 
+    		on endereco.id = usuario.id_endereco
+	    inner join tbl_estado_livro as estado_livro
+		    on estado_livro.id = anuncio.id_estado_livro
+	    inner join tbl_idioma as idioma
+    		on anuncio.id_idioma = idioma.id
+	    inner join tbl_editora as editora
+		    on editora.id = anuncio.id_editora
+        inner join tbl_anuncio_tipo_anuncio as anuncio_tipo_anuncio
+            on anuncio_tipo_anuncio.id_anuncio = anuncio.id
+        where anuncio.status_anuncio = true and anuncio_tipo_anuncio.id_tipo_anuncio = 1
+        order by id desc limit 8 offset ${page}0
+    `
+
+    let rsAnuncio = await prisma.$queryRawUnsafe(sql)
+
+    if (rsAnuncio.length > 0) {
+        return rsAnuncio
+    } else {
+        return false
+    }
+}
+
 const mdlSelectAnuncioForTheFeed = async (page) => {
     page = Number(page) - 1
 
@@ -142,6 +194,7 @@ const mdlSelectAnuncioPage = async (page) => {
     anuncio.status_anuncio,
     anuncio.numero_paginas,
     anuncio.id_usuario,
+    anuncio.isbn,
     endereco.estado,
     endereco.cidade,
     endereco.bairro,
@@ -187,6 +240,7 @@ const mdlSelectAnuncioById = async (id) => {
     anuncio.descricao,
     anuncio.status_anuncio,
     anuncio.numero_paginas,
+    anuncio.isbn,
     endereco.estado,
     endereco.cidade,
     endereco.bairro,
@@ -610,5 +664,6 @@ module.exports = {
     mdlUpdateAnuncio,
     mdlSelectAnuncioForTheFeed,
     mdlSelectPages,
-    mdlSelectAnuncioForDonations
+    mdlSelectAnuncioForDonations,
+    mdlSelectAnuncioForDonationsWeb
 }
