@@ -114,8 +114,8 @@ app.use('/v1/sbook/endereco', enderecoRoutes)
 const generoRoutes = require('./routes/generoRoutes.js')
 app.use('/v1/sbook/generos', generoRoutes)
 
-const generosPreferidos = require('./routes/generosPreferidos.js')
-app.use('/v1/sbook/generos-preferidos', generosPreferidos)
+// const generosPreferidos = require('./routes/generosPreferidos.js')
+// app.use('/v1/sbook/generos-preferidos', generosPreferidos)
 
 const appV2 = require('./routes/appV2Routes.js')
 app.use('/v2/sbook', appV2)
@@ -131,6 +131,13 @@ const io = require('socket.io')(server, {cors: {origin: '*'}})
 const chatFunctions = require('./routes/mongoDB/chatFuction.js')
 const mensagemFunctions = require('./routes/mongoDB/mensagemFunction.js')
 var lista = []
+
+const { useAzureSocketIO } = require("@azure/web-pubsub-socket.io");
+
+useAzureSocketIO(io, {
+    hub: "Hub", // The hub name can be any valid string.
+    connectionString: "Endpoint=https://testewebsocketsbook.webpubsub.azure.com;AccessKey=4kDlWvCJ0T31Y/f5KOpgEBVjt8S4aL8jwpiyhXmhKgc=;Version=1.0;"
+});
 
 io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
@@ -377,6 +384,55 @@ app.put('/v1/sbook/recuperar-conta', cors(), bodyParserJSON, async function (req
 
         response.status(200)
         response.json(dadosUsuario)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+})
+
+const controllerUsuarioGenero = require('./controller/controller_usuario-genero.js')
+
+app.get('/v1/sbook/generos-preferidos/:id', cors(), async function (request, response) {
+    let idUsuario = request.params.id
+
+    let dadosGeneros = await controllerUsuarioGenero.ctlGetGenerosPreferidosByIdUsuario(idUsuario)
+
+    response.status(dadosGeneros.status)
+    response.json(dadosGeneros)
+})
+
+app.post('/v1/sbook/generos-preferidos/', cors(), bodyParserJSON, async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let generosPreferidos = await controllerUsuarioGenero.ctlInserirUsuarioGenero(dadosBody)
+
+        response.status(generosPreferidos.status)
+        response.json(generosPreferidos)
+    } else {
+        response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
+        response.json(message.ERROR_INVALID_CONTENT_TYPE)
+    }
+})
+
+app.put('/v1/sbook/generos-preferidos/', cors(), bodyParserJSON, async function (request, response) {
+    //Recebe o content-type da requisição
+    let contentType = request.headers['content-type']
+
+    //Validação para receber dados apenas no formato JSON
+    if (String(contentType).toLowerCase() == 'application/json') {
+        //Recebe os dados encaminhados na requisição
+        let dadosBody = request.body
+
+        let generosPreferidos = await controllerUsuarioGenero.ctlAtualizarGenerosPreferidosByIdUsuario(dadosBody)
+
+        response.status(generosPreferidos.status)
+        response.json(generosPreferidos)
     } else {
         response.status(message.ERROR_INVALID_CONTENT_TYPE.status)
         response.json(message.ERROR_INVALID_CONTENT_TYPE)
