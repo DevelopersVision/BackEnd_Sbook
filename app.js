@@ -132,12 +132,12 @@ const chatFunctions = require('./routes/mongoDB/chatFuction.js')
 const mensagemFunctions = require('./routes/mongoDB/mensagemFunction.js')
 var lista = []
 
-// const { useAzureSocketIO } = require("@azure/web-pubsub-socket.io");
+const { useAzureSocketIO } = require("@azure/web-pubsub-socket.io");
 
-// useAzureSocketIO(io, {
-//     hub: "Hub", // The hub name can be any valid string.
-//     connectionString: "Endpoint=https://testewebsocketsbook.webpubsub.azure.com;AccessKey=4kDlWvCJ0T31Y/f5KOpgEBVjt8S4aL8jwpiyhXmhKgc=;Version=1.0;"
-// });
+useAzureSocketIO(io, {
+    hub: "Hub", // The hub name can be any valid string.
+    connectionString: "Endpoint=https://testewebsocketsbook.webpubsub.azure.com;AccessKey=4kDlWvCJ0T31Y/f5KOpgEBVjt8S4aL8jwpiyhXmhKgc=;Version=1.0;"
+});
 
 io.on('connection', socket => {
     console.log('Usuario Conectado', socket.id);
