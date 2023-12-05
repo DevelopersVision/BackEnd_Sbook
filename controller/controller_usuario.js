@@ -87,7 +87,7 @@ const ctlGetUsuarioAnunciante = async function (id) {
             let anuncios = await ctlGetAnuncioByIdUsuario(id)
 
             dadosUsuario[0].generos = generos
-            dadosUsuario[0].anuncios = anuncios
+            dadosUsuario[0].anuncios = anuncios.anuncios
 
             let dadosUsuarioJSON = {
                 status: message.SUCCESS_REQUEST.status,
