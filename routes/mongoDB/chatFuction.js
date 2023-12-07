@@ -48,7 +48,15 @@ const createChat = async (users, chatId) => {
         if (lastIds.length > 0) {
             return dadosJSON
         } else {
-            return config.ERROR_INTERNAL_SERVER.status
+            return {
+                status: config.ERROR_INTERNAL_SERVER.status,
+                message: config.ERROR_INTERNAL_SERVER.message,
+                id_chat: "",
+                usuarios: [],
+                data_criacao: "",
+                hora_criacao: "",
+                mensagens: []
+            }
         }
     }
 }
@@ -73,10 +81,26 @@ const getChat = async (idChat) => {
 
             return dadosJSON
         } else {
-            return config.ERROR_CHAT_NOT_FOUND
+            return {
+                status: config.ERROR_CHAT_NOT_FOUND.status,
+                message: config.ERROR_CHAT_NOT_FOUND.message,
+                id_chat: "",
+                usuarios: [],
+                data_criacao: "",
+                hora_criacao: "",
+                mensagens: []
+            }
         }
     } catch (err) {
-        return config.ERROR_INTERNAL_SERVER
+        return {
+            status: config.ERROR_INTERNAL_SERVER.status,
+            message: config.ERROR_INTERNAL_SERVER.message,
+            id_chat: "",
+            usuarios: [],
+            data_criacao: "",
+            hora_criacao: "",
+            mensagens: []
+        }
     }
 }
 
@@ -104,10 +128,27 @@ const getListContacts = async (idUsuario) => {
 
             return { users: listUsers }
         } else {
-            return config.ERROR_CHAT_NOT_FOUND
+            //return config.ERROR_CHAT_NOT_FOUND
+            return {
+                status: config.ERROR_CHAT_NOT_FOUND.status,
+                message: config.ERROR_CHAT_NOT_FOUND.message,
+                id_chat: "",
+                usuarios: [],
+                data_criacao: "",
+                hora_criacao: "",
+                mensagens: []
+            }
         }
     } catch (err) {
-        return config.ERROR_INTERNAL_SERVER
+        return {
+            status: config.ERROR_INTERNAL_SERVER.status,
+            message: config.ERROR_INTERNAL_SERVER.message,
+            id_chat: "",
+            usuarios: [],
+            data_criacao: "",
+            hora_criacao: "",
+            mensagens: []
+        }
     }
 }
 
@@ -152,12 +193,20 @@ const insertChat = async (usuarios) => {
 
                 //const insertSQL = await createChat(users, lastId)
 
-                const newChat = await getChat(lastChat)
+                const newChat = await getChat(lastId)
 
                 return newChat
             }
         } catch (error) {
-            return config.ERROR_INTERNAL_SERVER
+            return {
+                status: config.ERROR_INTERNAL_SERVER.status,
+                message: config.ERROR_INTERNAL_SERVER.message,
+                id_chat: "",
+                usuarios: [],
+                data_criacao: "",
+                hora_criacao: "",
+                mensagens: []
+            }
         }
     }
 }

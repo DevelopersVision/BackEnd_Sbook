@@ -136,7 +136,7 @@ const { useAzureSocketIO } = require("@azure/web-pubsub-socket.io");
 
 useAzureSocketIO(io, {
     hub: "Hub", // The hub name can be any valid string.
-    connectionString: "Endpoint=https://testewebsocketsbook.webpubsub.azure.com;AccessKey=4kDlWvCJ0T31Y/f5KOpgEBVjt8S4aL8jwpiyhXmhKgc=;Version=1.0;"
+    connectionString: "Endpoint=https://socket-grupo6.webpubsub.azure.com;AccessKey=wLLKCETaabfo7tSdOmV0pyFM2dE0akUxJL6GnDKmndg=;Version=1.0;"
 });
 
 io.on('connection', socket => {
@@ -173,7 +173,9 @@ io.on('connection', socket => {
 
         let retornoMensagem = await mensagemFunctions.createMessage(text.messageBy, text.messageTo, text.message, text.image, text.chatId)
 
-        lista.mensagens.push(retornoMensagem)
+        if(lista.mensagens != undefined){
+            lista.mensagens.push(retornoMensagem)
+        }
         
         io.emit('receive_message', lista)
     })
