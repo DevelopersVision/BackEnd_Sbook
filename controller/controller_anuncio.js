@@ -521,7 +521,7 @@ const ctlGetAnuncioByLocalizacao = async (bairro, cidade, estado, page) => {
                         preco: anuncio.preco,
                         descricao: anuncio.descricao,
                         numero_paginas: anuncio.numero_paginas,
-                        anunciante: anuncio.id_anunciantes
+                        anunciante: anuncio.id_anunciante
                     },
                     idioma: {
                         id: anuncio.id_idioma,
