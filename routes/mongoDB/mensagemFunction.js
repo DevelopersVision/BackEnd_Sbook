@@ -20,7 +20,7 @@
         return config.ERROR_REQUIRE_FIELDS
     } else {
         const data_criacao = moment().format("YYYY-MM-DD")
-        const hora_criacao = moment().subtract(3, 'hours').format('HH:mm:ss');
+        const hora_criacao = moment().format("HH:mm:ss")
 
         const mensagem = {
             messageBy,

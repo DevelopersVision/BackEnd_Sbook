@@ -221,6 +221,8 @@ const mdlUpdateForgotPasswordUsuario = async (passwordResetToken, passwordResetE
         `
     }
 
+    console.log(sql);
+
     let resultStatus = await prisma.$executeRawUnsafe(sql)
 
     if (resultStatus) {
