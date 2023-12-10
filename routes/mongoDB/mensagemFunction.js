@@ -5,22 +5,31 @@
  *  Versão: 1.0
  **************************************************************************************/
 
- const Message = require('../../models_mongoDB/message.js')
- const config = require('../../controller/modulo/config.js')
- const moment = require('moment')
+const Message = require('../../models_mongoDB/message.js')
+const config = require('../../controller/modulo/config.js')
+const moment = require('moment')
+// Importe as bibliotecas necessárias
+const moment2 = require('moment-timezone');
 
- const createMessage = async ( messageBy, messageTo, message, image, chatId) => {
+const createMessage = async (messageBy, messageTo, message, image, chatId) => {
 
     if (
         messageBy == null || messageBy == undefined || isNaN(messageBy) ||
-        messageTo == null  || messageTo == undefined || isNaN(messageTo) ||
+        messageTo == null || messageTo == undefined || isNaN(messageTo) ||
         message == undefined ||
-        chatId == null  || chatId == undefined
+        chatId == null || chatId == undefined
     ) {
         return config.ERROR_REQUIRE_FIELDS
     } else {
+        // Configure o fuso horário para Brasília
+        const brasiliaTimeZone = 'America/Sao_Paulo';
+
         const data_criacao = moment().format("YYYY-MM-DD")
-        const hora_criacao = moment().format("HH:mm:ss")
+        const hora_criacao = moment2().tz(brasiliaTimeZone).format("HH:mm:ss")
+
+        console.log('====================================');
+        console.log(hora_criacao);
+        console.log('====================================');
 
         const mensagem = {
             messageBy,
@@ -43,19 +52,19 @@
 }
 
 const deleteMessage = async (idMessage) => {
-    if(
+    if (
         idMessage == null || idMessage == undefined || idMessage == ''
-    ){
+    ) {
         return config.ERROR_REQUIRE_FIELDS
-    }else{
+    } else {
 
-        const message = await Message.findOne({_id: idMessage})
+        const message = await Message.findOne({ _id: idMessage })
 
-        if(!message){
+        if (!message) {
             return config.ERROR_REGISTER_NOT_FOUND
-        }else{
+        } else {
             message.status = false
-            await Message.updateOne({_id: idMessage}, message)
+            await Message.updateOne({ _id: idMessage }, message)
 
             return true
         }
